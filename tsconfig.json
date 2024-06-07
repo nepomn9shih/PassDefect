@@ -1,0 +1,21 @@
+{
+    "include": ["src"],
+    "compilerOptions": {
+        "target": "esnext",
+        "module": "commonjs",
+        "noImplicitAny": true,
+        "strictNullChecks": true,
+        "esModuleInterop": true,
+        "skipLibCheck": true,
+        "forceConsistentCasingInFileNames": true,
+        "jsx": "react-jsx",
+        "isolatedModules": true,
+        "resolveJsonModule": true,
+        "removeComments": true,
+        "outDir": "dist"
+    },
+    "ts-node": {
+        "transpileOnly": true,
+        "swc": true
+    }
+}
