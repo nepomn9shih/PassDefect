@@ -8,7 +8,6 @@ const data = (window as any).__data__;
 // Удаляем данные, необходимо для сборки мусора
 delete (window as any).__data__;
 
-
 if (element) {
   const root = ReactDOM.createRoot(element);
 

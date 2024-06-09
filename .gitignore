@@ -8,6 +8,8 @@
 
 # production
 /build
+tok.txt
+gh.exe
 
 # misc
 .DS_Store

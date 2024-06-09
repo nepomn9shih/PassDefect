@@ -1,6 +1,11 @@
 import {combineReducers} from 'redux';
-import {weaponReducer} from './slices/weapon';
+import {
+	gameReducer,
+	weaponReducer
+} from './slices';
+import {AllGameState} from './types';
 
-export const rootReducer = combineReducers<any>({
+export const rootReducer = combineReducers<AllGameState>({
+	game: gameReducer,
 	weapon: weaponReducer
 });

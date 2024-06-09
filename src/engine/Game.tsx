@@ -1,14 +1,16 @@
 import React, {useEffect, useState} from 'react';
 import Phaser from 'phaser';
 import {useStore} from 'react-redux';
+import {Action, Store} from '@reduxjs/toolkit';
 
 import {GAME_PASS_DEFECT_ID} from './constants';
 import {getGameConfig} from './utils/getGameConfig';
 import {BootScene, MainScene} from './scenes';
+import { AllGameState } from '../reducers/types';
 
 export const Game = () => {
     const [game, setGame] = useState<Phaser.Game>();
-    const store = useStore();
+    const store: Store<AllGameState, Action<string>> = useStore();
 
     useEffect(() => {
         const scenes: Phaser.Scene[] = [

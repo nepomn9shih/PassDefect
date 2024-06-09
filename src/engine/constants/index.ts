@@ -1,7 +1,13 @@
 export const GAME_PASS_DEFECT_ID = 'pass-defect-game-id';
 
-export const screenWidth = window.screen.width;
-export const screenHeight = window.screen.height;
+/** Стиль шрифта */
+export const FONT_FAMILY_STYLE = 'Rubik,Arial,sans-serif';
 
-export const BOOT_SCENE_NAME = 'BootScene';
-export const MAIN_SCENE_NAME = 'MainScene';
+/** Коэффициент увеличения четкости текста */
+export const TEXT_SCALE = 2;
+
+/** Ширина прогресс-бара загрузки */
+export const LOADING_BOX_WIDTH = 320;
+
+/** Высота прогресс-бара загрузки */
+export const LOADING_BOX_HEIGHT = 20;
