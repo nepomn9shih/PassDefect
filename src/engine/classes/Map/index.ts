@@ -30,7 +30,7 @@ export class GameMap {
 		this.map = this.scene.make.tilemap({key: this.key});
 
 		// Добавляем картинку тайлсета карты
-		this.tiles = this.map.addTilesetImage(this.key, this.tileSetName);
+		this.tiles = this.map.addTilesetImage(this.key, this.tileSetName, 64, 64, 2, 4);
 
 		if (this.tiles) {
 			// Создаем слой с фоном карты
