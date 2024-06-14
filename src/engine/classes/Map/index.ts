@@ -7,20 +7,24 @@ export class GameMap {
 	key: string;
 	tileSetName: string;
 	mapLayerName: string;
+	playerLayerName: string;
 	map: Tilemaps.Tilemap;
 	tiles: Tilemaps.Tileset | null;
 	mapLayer: Tilemaps.TilemapLayer | null;
+	playerLayer: Phaser.GameObjects.Layer | null;
 
 	constructor({
 		scene,
 		key,
 		tileSetName,
-		mapLayerName
+		mapLayerName,
+		playerLayerName
 	}: MapProps) {
 		this.scene = scene;
 		this.key = key;
 		this.tileSetName = tileSetName;
 		this.mapLayerName = mapLayerName;
+		this.playerLayerName = playerLayerName;
 
 		this.createMap();
 	}
@@ -35,6 +39,10 @@ export class GameMap {
 		if (this.tiles) {
 			// Создаем слой с фоном карты
 			this.mapLayer = this.map.createLayer(this.mapLayerName, this.tiles, 0, 0);
+			// Создаем слой с игроком
+			this.playerLayer = this.scene.add.layer();
+			// если надо сменить очередность слоев
+			// this.playerLayer.setDepth(layesrsZIndexes.playersLayer);
 			// Создаем границы карты
 			this.scene.physics.world.bounds.width = this.map.widthInPixels;
 			this.scene.physics.world.bounds.height = this.map.heightInPixels;

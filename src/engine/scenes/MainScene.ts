@@ -2,24 +2,30 @@ import {Action, Store} from '@reduxjs/toolkit';
 import {Scene} from 'phaser';
 
 import {GameMap} from '../classes/Map';
-import {LevelMaps, MapLayersNames, SceneNames} from '../enums';
+import {LevelMaps, MapLayersNames, PlayerSkinVariations, SceneNames} from '../enums';
 import {AllGameState} from '../../reducers/types';
-import { CameraManager } from '../managers/CameraManager';
+import {CameraManager} from '../managers/CameraManager';
+import {Player} from '../classes/Player';
 
 export class MainScene extends Scene {
     store: Store<AllGameState, Action<string>>;
     state: AllGameState;
     map: GameMap;
+    player: Player;
+    playerSkin: PlayerSkinVariations;
     cameraManager: CameraManager;
 
     constructor(store: Store<AllGameState, Action<string>>) {
         super(SceneNames.MAIN);
         this.store = store;
         this.state = store.getState();
+        // потом брать из стейта
+        this.playerSkin = PlayerSkinVariations.SPACEMAN
     }
 
     create() {
         this.createMap();
+        this.createPlayer();
         this.createGameManager();
     }
 
@@ -30,6 +36,17 @@ export class MainScene extends Scene {
 			key: LevelMaps.SWAMP_PLANET,
 			tileSetName: LevelMaps.SWAMP_PLANET,
 			mapLayerName: MapLayersNames.MAP,
+            playerLayerName: MapLayersNames.PLAYER,
+		});
+	}
+
+    createPlayer() {
+		// Создаем игрока
+		this.player = new Player({
+			scene: this,
+			skin: this.playerSkin,
+            x: 200,
+            y: 200
 		});
 	}
 

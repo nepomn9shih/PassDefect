@@ -3,7 +3,8 @@ export enum LevelMaps {
 }
 
 export enum MapLayersNames {
-    MAP = 'map-layer'
+    MAP = 'map-layer',
+    PLAYER = 'player-layer'
 }
 
 export enum SceneNames {
@@ -15,4 +16,8 @@ export enum WeaponVariations {
     SWORD = 'sword',
     GUN = 'gun',
     RIFLE = 'rifle'
+}
+
+export enum PlayerSkinVariations {
+    SPACEMAN = 'player-skin-spaceman'
 }

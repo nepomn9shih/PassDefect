@@ -7,4 +7,6 @@ export type MapProps = {
 	tileSetName: string;
 	/** Слой с фоном карты */
 	mapLayerName: string;
+	/** Слой с игроком */
+	playerLayerName: string;
 };

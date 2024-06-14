@@ -7,10 +7,11 @@ import {
     LOADING_BOX_WIDTH,
     TEXT_SCALE
 } from '../constants';
-import {LevelMaps, SceneNames} from '../enums';
+import {LevelMaps, PlayerSkinVariations, SceneNames} from '../enums';
 import {MAP_ATLASES} from '../assets/map';
 import {DPR} from '../constants/zoom';
 import {AllGameState} from '../../reducers/types';
+import {PLAYER_ATLASES} from '../assets/player';
 
 export class BootScene extends Scene {
     store: Store<AllGameState, Action<string>>;
@@ -66,11 +67,11 @@ export class BootScene extends Scene {
         //     );
 		// });
 
-		// this.load.atlas(
-		// 	`atlas`,
-		// 	ATLASES['atlas'].imgUrl,
-		// 	ATLASES['atlas'].jsonUrl
-		// );
+		this.load.atlas(
+			PlayerSkinVariations.SPACEMAN,
+			PLAYER_ATLASES[PlayerSkinVariations.SPACEMAN].imgUrl,
+			PLAYER_ATLASES[PlayerSkinVariations.SPACEMAN].jsonUrl
+		);
 	}
 
 	createLoadingBar() {
