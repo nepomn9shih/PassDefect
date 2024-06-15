@@ -4,7 +4,7 @@ export enum LevelMaps {
 
 export enum MapLayersNames {
     MAP = 'map-layer',
-    PLAYER = 'player-layer'
+    BLOCKER = 'blocker-layer'
 }
 
 export enum SceneNames {

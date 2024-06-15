@@ -1,5 +1,5 @@
 import {Scene, Types} from 'phaser';
-import GesturesPlugin from 'phaser3-rex-plugins/plugins/gestures-plugin.js';
+// import GesturesPlugin from 'phaser3-rex-plugins/plugins/gestures-plugin.js';
 
 import {GAME_PASS_DEFECT_ID} from '../constants';
 import { screenHeight, screenWidth } from '../constants/zoom';
@@ -24,6 +24,8 @@ export const getGameConfig = (scenes: Scene[]): Types.Core.GameConfig => ({
     },
     // убираем ограничение по одновременной загрузке текстур
     maxTextures: -1,
+    pixelArt: true,
+    roundPixels: true,
     // plugins: {
     //     scene: [{
     //         key: 'rexGestures',

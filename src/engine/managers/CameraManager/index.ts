@@ -30,17 +30,18 @@ export class CameraManager {
 
 		// Изначально центрируем камеру на игрока
 		// cam.centerOn(player);
-        cam.centerToBounds();
+        // cam.centerToBounds();
 
 		// Настраиваем скролл при нажатии левой кнопки мыши и перетаскивании
-		this.scene.input.on('pointermove', (p: Phaser.Input.Pointer) => {
-			if (!p.isDown) {
-				return;
-			}
+		// this.scene.input.on('pointermove', (p: Phaser.Input.Pointer) => {
+		// 	if (!p.isDown) {
+		// 		return;
+		// 	}
 
-			cam.scrollX -= (p.position.x - p.prevPosition.x) / cam.zoom;
-			cam.scrollY -= (p.position.y - p.prevPosition.y) / cam.zoom;
-		});
+		// 	cam.scrollX -= (p.position.x - p.prevPosition.x) / cam.zoom;
+		// 	cam.scrollY -= (p.position.y - p.prevPosition.y) / cam.zoom;
+		// });
+	
 		// Настраиваем зумирование колесиком мыши
 		this.scene.input.on('wheel', ({deltaY}: {deltaY: number}) => {
 			if (deltaY > 0) {
