@@ -11,3 +11,8 @@ export const LOADING_BOX_WIDTH = 320;
 
 /** Высота прогресс-бара загрузки */
 export const LOADING_BOX_HEIGHT = 20;
+
+/** Название свойства для идентификации спавнера */
+export const SPAWNER_PROPERTY_NAME = 'spawner';
+
+export const DEFAULT_POSITION = {x: 200, y: 200};

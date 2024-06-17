@@ -1,12 +1,16 @@
+import {ChestModel} from '../../classes/ChestModel';
+import {Spawner} from '../../classes/Spawner';
+import {SPAWNER_PROPERTY_NAME} from '../../constants';
+import {GameEvents, ObjectLayersNames, SpawnObjects} from '../../enums';
 import {MainScene} from '../../scenes';
-import { getTiledProperty } from '../../utils/getTiledProperty';
+import {getTiledProperty} from '../../utils/getTiledProperty';
 import {GameManagerProps} from './types';
 
 export class GameManager {
 	scene: MainScene;
 	mapData: Phaser.Tilemaps.ObjectLayer[];
-	spawners: unknown;
-	chests: unknown;
+	spawners: Record<string, Spawner>;
+	chests: Record<string, ChestModel>;
 	playerLocations: (number | undefined)[][];
 	chestLocations: Record<any, (number | undefined)[][]>;
 	monsterLocations: Record<any, (number | undefined)[][]>;
@@ -30,13 +34,13 @@ export class GameManager {
 
 	parseMapData() {
 		this.mapData.forEach((layer)=> {
-			if (layer.name === 'player-locations') {
+			if (layer.name === ObjectLayersNames.PLAYER_LOCATIONS) {
 				layer.objects.forEach((obj) => {
 					this.playerLocations.push([obj.x, obj.y]);
 				});
-			} else if (layer.name === 'chest-locations') {
+			} else if (layer.name === ObjectLayersNames.CHEST_LOCATIONS) {
 				layer.objects.forEach((obj) => {
-					const spawner = getTiledProperty(obj, 'spawner');
+					const spawner = getTiledProperty(obj, SPAWNER_PROPERTY_NAME);
 
 					if (this.chestLocations[spawner]) {
 						this.chestLocations[spawner].push([obj.x, obj.y]);
@@ -44,9 +48,9 @@ export class GameManager {
 						this.chestLocations[spawner] = [[obj.x, obj.y]];
 					}
 				});
-			} else if (layer.name === 'monster-locations') {
+			} else if (layer.name === ObjectLayersNames.MONSTER_LOCATIONS) {
 				layer.objects.forEach((obj) => {
-					const spawner = getTiledProperty(obj, 'spawner');
+					const spawner = getTiledProperty(obj, SPAWNER_PROPERTY_NAME);
 
 					if (this.monsterLocations[spawner]) {
 						this.monsterLocations[spawner].push([obj.x, obj.y]);
@@ -60,11 +64,38 @@ export class GameManager {
 
 	setupEventListener() {}
 
-	setupSpawners() {}
+	setupSpawners() {
+		// Создаем спавнер сундука
+		Object.keys(this.chestLocations).forEach((key) => {
+			const config = {
+				spawnInterval: 3000,
+				limit: 1,
+				spawnerType: SpawnObjects.CHEST,
+				id: `chest-${key}`
+			};
+
+			const spawner = new Spawner({
+				config, 
+				spawnLocations: this.chestLocations[key], 
+				addObject: this.addChest.bind(this), 
+				deleteObject: this.deleteChest.bind(this)
+			});
+	
+			this.spawners[spawner.id] = spawner;
+		});
+	}
 
 	spawnPlayer() {
 		const location = this.playerLocations[Math.floor(Math.random() * this.playerLocations.length)];
 		
-		this.scene.events.emit('spawnPlayer', location);	
+		this.scene.events.emit(GameEvents.SPAWN_PLAYER, location);	
+	}
+
+	addChest(id: string, chest: ChestModel) {
+		this.chests[id] = chest;
+		console.log(chest);
+	}
+
+	deleteChest() {
 	}
 }

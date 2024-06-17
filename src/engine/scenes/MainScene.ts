@@ -2,7 +2,13 @@ import {Action, Store} from '@reduxjs/toolkit';
 import {Scene} from 'phaser';
 
 import {GameMap} from '../classes/Map';
-import {LevelMaps, MapLayersNames, PlayerSkinVariations, SceneNames} from '../enums';
+import {
+    GameEvents,
+    LevelMaps,
+    MapLayersNames,
+    PlayerSkinVariations,
+    SceneNames
+} from '../enums';
 import {AllGameState} from '../../reducers/types';
 import {CameraManager} from '../managers/CameraManager';
 import {Player} from '../classes/Player';
@@ -58,7 +64,7 @@ export class MainScene extends Scene {
 	}
 
     createGameManager() {
-        this.events.on('spawnPlayer', (location: number[]) => {
+        this.events.on(GameEvents.SPAWN_PLAYER, (location: number[]) => {
             this.createPlayer(location);
             this.addCollisions();
         });

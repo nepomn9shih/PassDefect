@@ -7,11 +7,12 @@ import {
     LOADING_BOX_WIDTH,
     TEXT_SCALE
 } from '../constants';
-import {LevelMaps, PlayerSkinVariations, SceneNames} from '../enums';
+import {AtlasesKeys, SceneNames} from '../enums';
 import {MAP_ATLASES} from '../assets/map';
 import {DPR} from '../constants/zoom';
 import {AllGameState} from '../../reducers/types';
 import {PLAYER_ATLASES} from '../assets/player';
+import {OBJECTS_ATLASES} from '../assets/objects';
 
 export class BootScene extends Scene {
     store: Store<AllGameState, Action<string>>;
@@ -48,13 +49,13 @@ export class BootScene extends Scene {
 	loadTileMap() {
 		// Картинка тайлов для карты
 		this.load.image(
-			LevelMaps.SWAMP_PLANET,
-			MAP_ATLASES[LevelMaps.SWAMP_PLANET].imgUrl
+			AtlasesKeys.SWAMP_PLANET_LEVEL_MAP,
+			MAP_ATLASES[AtlasesKeys.SWAMP_PLANET_LEVEL_MAP].imgUrl
 		);
 		// Конфиги карт созданные в Tiled в формате JSON (TMJ)
 		this.load.tilemapTiledJSON(
-			LevelMaps.SWAMP_PLANET,
-			MAP_ATLASES[LevelMaps.SWAMP_PLANET].jsonUrl
+			AtlasesKeys.SWAMP_PLANET_LEVEL_MAP,
+			MAP_ATLASES[AtlasesKeys.SWAMP_PLANET_LEVEL_MAP].jsonUrl
 		);
 	}
 
@@ -68,9 +69,15 @@ export class BootScene extends Scene {
 		// });
 
 		this.load.atlas(
-			PlayerSkinVariations.SPACEMAN,
-			PLAYER_ATLASES[PlayerSkinVariations.SPACEMAN].imgUrl,
-			PLAYER_ATLASES[PlayerSkinVariations.SPACEMAN].jsonUrl
+			AtlasesKeys.SPACEMAN_PLAYER_SKIN,
+			PLAYER_ATLASES[AtlasesKeys.SPACEMAN_PLAYER_SKIN].imgUrl,
+			PLAYER_ATLASES[AtlasesKeys.SPACEMAN_PLAYER_SKIN].jsonUrl
+		);
+
+		this.load.atlas(
+			AtlasesKeys.PICK_UP_OBJECTS,
+			OBJECTS_ATLASES[AtlasesKeys.PICK_UP_OBJECTS].imgUrl,
+			OBJECTS_ATLASES[AtlasesKeys.PICK_UP_OBJECTS].jsonUrl
 		);
 	}
 

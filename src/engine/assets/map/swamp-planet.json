@@ -8,13 +8,13 @@
             0, 11, 0, 11, 12, 11, 14, 11, 11, 11, 12, 11, 14, 11, 11, 16, 11, 12, 15, 0,
             0, 16, 11, 11, 11, 15, 0, 0, 0, 0, 11, 11, 11, 15, 13, 11, 11, 15, 15, 0,
             0, 11, 12, 11, 16, 11, 0, 0, 0, 0, 0, 13, 11, 11, 15, 0, 11, 11, 13, 0,
-            0, 11, 15, 11, 11, 15, 0, 0, 0, 0, 0, 15, 11, 12, 11, 11, 11, 11, 15, 0,
+            0, 11, 15, 11, 11, 15, 0, 0, 0, 0, 0, 16, 15, 12, 11, 11, 11, 11, 15, 0,
             0, 11, 11, 11, 12, 11, 11, 14, 0, 0, 0, 0, 11, 11, 11, 13, 11, 12, 11, 0,
             0, 11, 13, 11, 11, 11, 16, 11, 15, 0, 0, 0, 14, 11, 15, 11, 11, 15, 11, 0,
-            0, 0, 11, 11, 15, 11, 13, 12, 11, 11, 0, 0, 0, 11, 0, 0, 0, 0, 11, 0,
+            0, 0, 11, 11, 15, 11, 13, 12, 11, 11, 0, 0, 0, 11, 0, 0, 0, 0, 16, 0,
             0, 0, 11, 12, 11, 11, 11, 11, 11, 11, 15, 0, 0, 11, 0, 0, 0, 0, 0, 0,
             0, 14, 11, 11, 11, 11, 11, 14, 13, 11, 11, 16, 11, 11, 11, 11, 0, 0, 0, 0,
-            0, 11, 11, 15, 11, 13, 11, 15, 11, 11, 11, 12, 11, 15, 11, 12, 11, 0, 0, 0,
+            0, 16, 11, 15, 11, 13, 11, 15, 11, 11, 11, 12, 11, 15, 11, 12, 11, 0, 0, 0,
             0, 0, 12, 11, 11, 0, 11, 11, 11, 12, 11, 11, 11, 11, 11, 11, 11, 14, 0, 0,
             0, 0, 11, 11, 16, 11, 11, 0, 0, 11, 11, 13, 11, 12, 16, 11, 15, 11, 15, 0,
             0, 0, 15, 11, 12, 11, 11, 0, 0, 14, 11, 11, 15, 11, 11, 11, 11, 11, 11, 0,
@@ -69,6 +69,7 @@
         {
          "draworder":"topdown",
          "id":3,
+         "locked":true,
          "name":"player-locations",
          "objects":[
                 {
@@ -152,8 +153,314 @@
         {
          "draworder":"topdown",
          "id":4,
-         "name":"chaest-locations",
-         "objects":[],
+         "name":"chest-locations",
+         "objects":[
+                {
+                 "class":"",
+                 "height":0,
+                 "id":7,
+                 "name":"",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"spawner",
+                         "type":"string",
+                         "value":"1"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":990,
+                 "y":160
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":8,
+                 "name":"",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"spawner",
+                         "type":"string",
+                         "value":"2"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":735,
+                 "y":100
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":9,
+                 "name":"",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"spawner",
+                         "type":"string",
+                         "value":"3"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":480,
+                 "y":100
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":10,
+                 "name":"",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"spawner",
+                         "type":"string",
+                         "value":"4"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":95,
+                 "y":225
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":11,
+                 "name":"",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"spawner",
+                         "type":"string",
+                         "value":"5"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":290,
+                 "y":290
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":12,
+                 "name":"",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"spawner",
+                         "type":"string",
+                         "value":"6"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":420,
+                 "y":485
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":13,
+                 "name":"",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"spawner",
+                         "type":"string",
+                         "value":"7"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":290,
+                 "y":865
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":14,
+                 "name":"",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"spawner",
+                         "type":"string",
+                         "value":"8"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":355,
+                 "y":1185
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":15,
+                 "name":"",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"spawner",
+                         "type":"string",
+                         "value":"9"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":610,
+                 "y":1060
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":16,
+                 "name":"",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"spawner",
+                         "type":"string",
+                         "value":"10"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":800,
+                 "y":1125
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":17,
+                 "name":"",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"spawner",
+                         "type":"string",
+                         "value":"11"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":740,
+                 "y":675
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":18,
+                 "name":"",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"spawner",
+                         "type":"string",
+                         "value":"12"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":1000,
+                 "y":995
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":19,
+                 "name":"",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"spawner",
+                         "type":"string",
+                         "value":"13"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":1185,
+                 "y":1125
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":20,
+                 "name":"",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"spawner",
+                         "type":"string",
+                         "value":"14"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":930,
+                 "y":870
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":21,
+                 "name":"",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"spawner",
+                         "type":"string",
+                         "value":"15"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":1185,
+                 "y":550
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":22,
+                 "name":"",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"spawner",
+                         "type":"string",
+                         "value":"16"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":100,
+                 "y":740
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":23,
+                 "name":"",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"spawner",
+                         "type":"string",
+                         "value":"17"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":735,
+                 "y":355
+                }],
          "opacity":1,
          "type":"objectgroup",
          "visible":true,
@@ -172,7 +479,7 @@
          "y":0
         }],
  "nextlayerid":6,
- "nextobjectid":5,
+ "nextobjectid":24,
  "orientation":"orthogonal",
  "renderorder":"left-up",
  "tiledversion":"1.9.2",
