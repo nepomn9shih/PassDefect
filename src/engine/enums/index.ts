@@ -29,11 +29,16 @@ export enum PlayerSkinVariations {
 }
 
 export enum SpawnObjects {
-    CHEST = 'chest'
+    CHEST = 'chest',
+    MONSTER = 'monster'
 }
 
 export enum GameEvents {
-    SPAWN_PLAYER = 'spawnPlayer'
+    SPAWN_PLAYER = 'spawnPlayer',
+    SPAWN_CHEST = 'chestSpawned',
+    SPAWN_MONSTER = 'monsterSpawned',
+    PICK_UP_CHEST = 'pickUpChest',
+    UPDATE_SCORE = 'updateScore'
 }
 
 export enum AtlasesKeys {

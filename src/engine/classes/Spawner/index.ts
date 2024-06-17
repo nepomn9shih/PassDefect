@@ -1,5 +1,6 @@
-import { DEFAULT_POSITION } from "../../constants";
+import {DEFAULT_POSITION} from "../../constants";
 import {SpawnObjects} from "../../enums";
+import {getRandomNumber} from "../../utils/getRandomNumber";
 import {ChestModel} from "../ChestModel";
 import {SpawnerProps} from "./types";
 
@@ -36,7 +37,6 @@ export class Spawner {
     }
 
     spawnObject() {
-        console.log('spawning object');
         if (this.objectType === SpawnObjects.CHEST) {
             this.spawnChest();
         }
@@ -48,8 +48,7 @@ export class Spawner {
         const chest = new ChestModel({
             x: location[0] || DEFAULT_POSITION.x,
             y: location[1] || DEFAULT_POSITION.x,
-            // gold: randomNumber(10, 20),
-            gold: 10,
+            gold: getRandomNumber(10, 20),
             spawnerId: this.id
         });
 
@@ -74,8 +73,9 @@ export class Spawner {
         return location;
     }
 
-    removeObject() {
+    removeObject(id: string) {
+        this.objectsCreated = this.objectsCreated.filter(obj => obj.id !== id);
+        this.deleteObject(id);
     }
-    
 }
    

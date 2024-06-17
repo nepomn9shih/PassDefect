@@ -62,7 +62,15 @@ export class GameManager {
 		});
 	}
 
-	setupEventListener() {}
+	setupEventListener() {
+		this.scene.events.on(GameEvents.PICK_UP_CHEST, (chestId: string) => {
+			// Обновляем спавнер
+			if (this.chests[chestId]) {
+				// Удаляем сундук
+				this.spawners[this.chests[chestId].spawnerId].removeObject(chestId);
+			}
+		});
+	}
 
 	setupSpawners() {
 		// Создаем спавнер сундука
@@ -91,11 +99,13 @@ export class GameManager {
 		this.scene.events.emit(GameEvents.SPAWN_PLAYER, location);	
 	}
 
-	addChest(id: string, chest: ChestModel) {
-		this.chests[id] = chest;
-		console.log(chest);
+	addChest(chestId: string, chest: ChestModel) {
+		this.chests[chestId] = chest;
+
+		this.scene.events.emit(GameEvents.SPAWN_CHEST, chest);
 	}
 
-	deleteChest() {
-	}
+	deleteChest(chestId: string) {
+		delete this.chests[chestId];
+	}	   
 }
