@@ -11,13 +11,15 @@ import {AtlasesKeys, SceneNames} from '../enums';
 import {MAP_ATLASES} from '../assets/map';
 import {DPR} from '../constants/zoom';
 import {AllGameState} from '../../reducers/types';
+import {MONSTERS_ATLASES} from '../assets/monsters';
 import {PLAYER_ATLASES} from '../assets/player';
 import {OBJECTS_ATLASES} from '../assets/objects';
+import {GameStore} from '../types';
 
 export class BootScene extends Scene {
-    store: Store<AllGameState, Action<string>>;
+    store: GameStore;
 
-    constructor(store: Store<AllGameState, Action<string>>) {
+    constructor(store: GameStore) {
         super(SceneNames.BOOT);
         this.store = store;
     }
@@ -60,13 +62,13 @@ export class BootScene extends Scene {
 	}
 
 	loadAtlas() {
-		// Object.keys(atlases).forEach((key) => {
-        //     this.load.atlas(
-        //         `${key}`,
-        //         ATLASES[key].imgUrl,
-        //         ATLASES[key].jsonUrl
-        //     );
-		// });
+		Object.keys(MONSTERS_ATLASES).forEach((key) => {
+            this.load.atlas(
+                `${key}`,
+                MONSTERS_ATLASES[key].imgUrl,
+                MONSTERS_ATLASES[key].jsonUrl
+            );
+		});
 
 		this.load.atlas(
 			AtlasesKeys.SPACEMAN_PLAYER_SKIN,

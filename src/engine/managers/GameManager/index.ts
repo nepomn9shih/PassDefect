@@ -1,4 +1,5 @@
 import {ChestModel} from '../../classes/ChestModel';
+import {MonsterModel} from '../../classes/MonsterModel';
 import {Spawner} from '../../classes/Spawner';
 import {SPAWNER_PROPERTY_NAME} from '../../constants';
 import {GameEvents, ObjectLayersNames, SpawnObjects} from '../../enums';
@@ -11,6 +12,7 @@ export class GameManager {
 	mapData: Phaser.Tilemaps.ObjectLayer[];
 	spawners: Record<string, Spawner>;
 	chests: Record<string, ChestModel>;
+	monsters: Record<string, MonsterModel>;
 	playerLocations: (number | undefined)[][];
 	chestLocations: Record<any, (number | undefined)[][]>;
 	monsterLocations: Record<any, (number | undefined)[][]>;
@@ -20,6 +22,7 @@ export class GameManager {
 		this.mapData = mapData;
 		this.spawners = {};
 		this.chests = {};
+		this.monsters = {};
 		this.playerLocations = [];
 		this.chestLocations = {};
 		this.monsterLocations = {};
@@ -36,26 +39,32 @@ export class GameManager {
 		this.mapData.forEach((layer)=> {
 			if (layer.name === ObjectLayersNames.PLAYER_LOCATIONS) {
 				layer.objects.forEach((obj) => {
-					this.playerLocations.push([obj.x, obj.y]);
+					const x = obj.x! + (obj.width! / 2);
+					const y = obj.y! - (obj.height! / 2);
+					this.playerLocations.push([x, y]);
 				});
 			} else if (layer.name === ObjectLayersNames.CHEST_LOCATIONS) {
 				layer.objects.forEach((obj) => {
 					const spawner = getTiledProperty(obj, SPAWNER_PROPERTY_NAME);
+					const x = obj.x! + (obj.width! / 2);
+					const y = obj.y! - (obj.height! / 2);
 
 					if (this.chestLocations[spawner]) {
-						this.chestLocations[spawner].push([obj.x, obj.y]);
+						this.chestLocations[obj.properties.spawner].push([x, y]);
 					} else {
-						this.chestLocations[spawner] = [[obj.x, obj.y]];
+						this.chestLocations[spawner] = [[x, y]];
 					}
 				});
 			} else if (layer.name === ObjectLayersNames.MONSTER_LOCATIONS) {
 				layer.objects.forEach((obj) => {
 					const spawner = getTiledProperty(obj, SPAWNER_PROPERTY_NAME);
+					const x = obj.x! + (obj.width! / 2);
+					const y = obj.y! - (obj.height! / 2);
 
 					if (this.monsterLocations[spawner]) {
-						this.monsterLocations[spawner].push([obj.x, obj.y]);
+						this.monsterLocations[spawner].push([x, y]);
 					} else {
-						this.monsterLocations[spawner] = [[obj.x, obj.y]];
+						this.monsterLocations[spawner] = [[x, y]];
 					}
 				});
 			}
@@ -73,22 +82,40 @@ export class GameManager {
 	}
 
 	setupSpawners() {
+		const config = {
+			spawnInterval: 3000,
+			limit: 1,
+			spawnerType: SpawnObjects.CHEST,
+			id: '',
+		};
+			
+		let spawner: Spawner;
+
 		// Создаем спавнер сундука
 		Object.keys(this.chestLocations).forEach((key) => {
-			const config = {
-				spawnInterval: 3000,
-				limit: 1,
-				spawnerType: SpawnObjects.CHEST,
-				id: `chest-${key}`
-			};
+			config.id = `chest-${key}`;
 
-			const spawner = new Spawner({
+			spawner = new Spawner({
 				config, 
 				spawnLocations: this.chestLocations[key], 
 				addObject: this.addChest.bind(this), 
 				deleteObject: this.deleteChest.bind(this)
 			});
 	
+			this.spawners[spawner.id] = spawner;
+		});
+
+		// Создаем спавнер монстров
+		Object.keys(this.monsterLocations).forEach((key) => {
+			config.id = `monster-${key}`; 
+			
+			spawner = new Spawner({
+				config,
+				spawnLocations: this.monsterLocations[key],
+				addObject: this.addMonster.bind(this),
+				deleteObject: this.deleteMonster.bind(this),
+			});
+
 			this.spawners[spawner.id] = spawner;
 		});
 	}
@@ -107,5 +134,14 @@ export class GameManager {
 
 	deleteChest(chestId: string) {
 		delete this.chests[chestId];
-	}	   
+	}
+	
+	addMonster(monsterId: string, monster: MonsterModel) {
+		this.monsters[monsterId] = monster;
+		this.scene.events.emit(GameEvents.SPAWN_MONSTER, monster);
+	}
+	
+	deleteMonster(monsterId: string) {
+		delete this.monsters[monsterId];
+	}
 }

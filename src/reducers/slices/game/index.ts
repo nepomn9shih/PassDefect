@@ -5,9 +5,9 @@ import type {GameState} from './types';
 
 const gameSlice = createSlice({
 	name: 'game',
-	initialState: <GameState>{
+	initialState: {
 		zoom: INITIAL_ZOOM
-	},
+	} as GameState,
 	reducers: {
 		setZoom(state, {payload}: PayloadAction<number>) {
             state.zoom = payload;

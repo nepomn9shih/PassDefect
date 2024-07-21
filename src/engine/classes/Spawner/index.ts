@@ -1,8 +1,11 @@
 import {DEFAULT_POSITION} from "../../constants";
 import {SpawnObjects} from "../../enums";
+import { getRandomMonsterVariation } from "../../utils/getRandomMonsterVariation";
 import {getRandomNumber} from "../../utils/getRandomNumber";
 import {ChestModel} from "../ChestModel";
-import {SpawnerProps} from "./types";
+import {MonsterModel} from "../MonsterModel";
+import {MONSTERS_PARAMS} from "../MonsterModel/constants";
+import {AddObject, SpawnerProps} from "./types";
 
 export class Spawner {
     id: string;
@@ -10,10 +13,10 @@ export class Spawner {
     limit: number;
     objectType: SpawnObjects;
     spawnLocations: (number | undefined)[][];
-    addObject: any;
-    deleteObject: any;
+    addObject: AddObject;
+    deleteObject: (id: string) => void;
     objectsCreated: any[];
-    interval: NodeJS.Timeout;
+    interval?: NodeJS.Timeout;
 
     constructor({config, spawnLocations, addObject, deleteObject}: SpawnerProps) {
         this.id = config.id;
@@ -39,7 +42,9 @@ export class Spawner {
     spawnObject() {
         if (this.objectType === SpawnObjects.CHEST) {
             this.spawnChest();
-        }
+        } else if (this.objectType === SpawnObjects.MONSTER) {
+            this.spawnMonster();
+            }
     }
 
     spawnChest() {
@@ -54,6 +59,24 @@ export class Spawner {
 
         this.objectsCreated.push(chest);
         this.addObject(chest.id, chest);
+    }
+
+    spawnMonster() {
+        const location = this.pickRandomLocation();
+        const type = getRandomMonsterVariation();
+        const {health, attack} = MONSTERS_PARAMS[type];
+
+        const monster = new MonsterModel({
+            x: location[0] || DEFAULT_POSITION.x,
+            y: location[1] || DEFAULT_POSITION.x,
+            gold: getRandomNumber(10, 20),
+            spawnerId: this.id,
+            type,
+            health,
+            attack
+        });
+        this.objectsCreated.push(monster);
+        this.addObject(monster.id, monster);
     }
 
     pickRandomLocation(): (number | undefined)[] {

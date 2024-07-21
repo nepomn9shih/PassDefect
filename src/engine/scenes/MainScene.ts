@@ -7,6 +7,7 @@ import {
     GameEvents,
     LevelMaps,
     MapLayersNames,
+    MonstersVariations,
     PlayerSkinVariations,
     SceneNames,
     SpawnObjects
@@ -17,16 +18,20 @@ import {Player} from '../classes/Player';
 import {GameManager} from '../managers/GameManager';
 import {ChestModel} from '../classes/ChestModel';
 import {Chest} from '../classes/ChestModel/Chest';
+import {MonsterModel} from '../classes/MonsterModel';
+import { Monster } from '../classes/MonsterModel/Monster';
+import { getRandomMonsterVariation } from '../utils/getRandomMonsterVariation';
 
 export class MainScene extends Scene {
     store: Store<AllGameState, Action<string>>;
     state: AllGameState;
-    map: GameMap;
-    player: Player;
+    map!: GameMap;
+    player!: Player;
     playerSkin: PlayerSkinVariations;
-    cameraManager: CameraManager;
-    gameManager: GameManager;
-    chests: Phaser.Physics.Arcade.Group;
+    cameraManager!: CameraManager;
+    gameManager!: GameManager;
+    chests!: Phaser.Physics.Arcade.Group;
+    monsters!: Phaser.Physics.Arcade.Group;
     score: number;
 
     constructor(store: Store<AllGameState, Action<string>>) {
@@ -34,7 +39,8 @@ export class MainScene extends Scene {
         this.store = store;
         this.state = store.getState();
         // потом брать из стейта
-        this.playerSkin = PlayerSkinVariations.SPACEMAN
+        this.playerSkin = PlayerSkinVariations.SPACEMAN;
+        this.score = 0;
     }
 
     create() {
@@ -81,6 +87,10 @@ export class MainScene extends Scene {
             this.spawnChest(chest);
         });
 
+        this.events.on(GameEvents.SPAWN_MONSTER, (monster: MonsterModel) => {
+            this.spawnMonster(monster);
+            });
+
 		this.gameManager = new GameManager({scene: this, mapData: this.map.map.objects});
 		this.gameManager.setup();
 	}
@@ -88,6 +98,8 @@ export class MainScene extends Scene {
     createGroups() {
 		// Создаем группу для сундуков
 		this.chests = this.physics.add.group();
+        // Создаем группу для монстров
+        this.monsters = this.physics.add.group();
 	}
 
     spawnChest(chestObject: ChestModel) {
@@ -106,11 +118,39 @@ export class MainScene extends Scene {
 
             // Добавляем сундук к группе сундуков
             this.chests.add(chest);
+            chest.setCollideWorldBounds(true);
         } else {
             chest.coins = chestObject.gold;
             chest.id = chestObject.id;
             chest.setPosition(chestObject.x, chestObject.y);
             chest.makeActive();
+        }
+    }
+
+    spawnMonster(monsterObject: MonsterModel) {
+        let monster = this.monsters.getFirstDead();
+    
+        if (!monster) {
+            const type = getRandomMonsterVariation();
+            monster = new Monster({
+                scene: this,
+                x: monsterObject.x,
+                y: monsterObject.y,
+                type: getRandomMonsterVariation(),
+                id: monsterObject.id,
+                health: monsterObject.health,
+                maxHealth: monsterObject.maxHealth
+            });
+
+            this.monsters.add(monster);
+            monster.setCollideWorldBounds(true);
+        } else {
+            monster.id = monsterObject.id;
+            monster.health = monsterObject.health;
+            monster.maxHealth = monsterObject.maxHealth;
+            monster.setTexture(monsterObject.type);
+            monster.setPosition(monsterObject.x, monsterObject.y);
+            monster.makeActive();
         }
     }
 

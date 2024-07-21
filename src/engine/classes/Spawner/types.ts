@@ -1,4 +1,6 @@
-import {SpawnObjects} from "../../enums";
+import {SpawnObjects} from '../../enums';
+import {ChestModel} from '../ChestModel';
+import {MonsterModel} from '../MonsterModel';
 
 export type SpawnerProps = {
 	config: {
@@ -8,6 +10,8 @@ export type SpawnerProps = {
 		id: string;
 	}
 	spawnLocations: (number | undefined)[][];
-	addObject: () => void;
-	deleteObject: () => void;
+	addObject: AddObject;
+    deleteObject: (id: string) => void;
 };
+
+export type AddObject = (id: string, item: ChestModel | MonsterModel) => void;

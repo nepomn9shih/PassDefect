@@ -1,3 +1,6 @@
+import {Store, UnknownAction} from '@reduxjs/toolkit';
+import {AllGameState} from '../../reducers/types';
+
 export type JSONImageType = {
 	anchor: {
 		x: number;
@@ -11,3 +14,5 @@ export type JSONImageType = {
 		y: number;
 	};
 };
+
+export type GameStore = Store<AllGameState, UnknownAction, unknown>

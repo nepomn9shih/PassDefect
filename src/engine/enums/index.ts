@@ -28,6 +28,10 @@ export enum PlayerSkinVariations {
     SPACEMAN = 'player-skin-spaceman'
 }
 
+export enum MonstersVariations {
+    INFECTED = 'monster-infected'
+}
+
 export enum SpawnObjects {
     CHEST = 'chest',
     MONSTER = 'monster'
@@ -43,6 +47,6 @@ export enum GameEvents {
 
 export enum AtlasesKeys {
     PICK_UP_OBJECTS = 'pick-up',
-    SPACEMAN_PLAYER_SKIN = PlayerSkinVariations.SPACEMAN,
-    SWAMP_PLANET_LEVEL_MAP = LevelMaps.SWAMP_PLANET
+    SPACEMAN_PLAYER_SKIN = 'player-skin-spaceman',
+    SWAMP_PLANET_LEVEL_MAP = 'swamp-planet'
 }

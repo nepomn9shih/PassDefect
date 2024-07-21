@@ -153,6 +153,7 @@
         {
          "draworder":"topdown",
          "id":4,
+         "locked":true,
          "name":"chest-locations",
          "objects":[
                 {
@@ -471,7 +472,79 @@
          "draworder":"topdown",
          "id":5,
          "name":"monster-locations",
-         "objects":[],
+         "objects":[
+                {
+                 "class":"",
+                 "height":0,
+                 "id":24,
+                 "name":"",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"spawner",
+                         "type":"string",
+                         "value":"1"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":545,
+                 "y":805
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":25,
+                 "name":"",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"spawner",
+                         "type":"string",
+                         "value":"2"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":1120,
+                 "y":930
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":26,
+                 "name":"",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"spawner",
+                         "type":"string",
+                         "value":"3"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":350,
+                 "y":160
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":27,
+                 "name":"",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"spawner",
+                         "type":"string",
+                         "value":"4"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":1130,
+                 "y":360
+                }],
          "opacity":1,
          "type":"objectgroup",
          "visible":true,
@@ -479,7 +552,7 @@
          "y":0
         }],
  "nextlayerid":6,
- "nextobjectid":24,
+ "nextobjectid":28,
  "orientation":"orthogonal",
  "renderorder":"left-up",
  "tiledversion":"1.9.2",
