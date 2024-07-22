@@ -58,7 +58,7 @@
          "height":20,
          "id":2,
          "locked":true,
-         "name":"blocker-layer",
+         "name":"blocked-layer",
          "opacity":1,
          "type":"tilelayer",
          "visible":true,

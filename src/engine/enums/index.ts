@@ -4,7 +4,7 @@ export enum LevelMaps {
 
 export enum MapLayersNames {
     MAP = 'map-layer',
-    BLOCKER = 'blocker-layer'
+    BLOCKER = 'blocked-layer'
 }
 
 export enum ObjectLayersNames {

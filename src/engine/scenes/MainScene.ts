@@ -14,7 +14,7 @@ import {
 } from '../enums';
 import {AllGameState} from '../../reducers/types';
 import {CameraManager} from '../managers/CameraManager';
-import {Player} from '../classes/Player';
+import {PlayerContainer} from '../classes/Player/PlayerContainer';
 import {GameManager} from '../managers/GameManager';
 import {ChestModel} from '../classes/ChestModel';
 import {Chest} from '../classes/ChestModel/Chest';
@@ -26,7 +26,7 @@ export class MainScene extends Scene {
     store: Store<AllGameState, Action<string>>;
     state: AllGameState;
     map!: GameMap;
-    player!: Player;
+    player!: PlayerContainer;
     playerSkin: PlayerSkinVariations;
     cameraManager!: CameraManager;
     gameManager!: GameManager;
@@ -45,9 +45,10 @@ export class MainScene extends Scene {
 
     create() {
         this.createMap();
+        // createGroups должно отработать раньше createGameManager
+        this.createGroups();
         this.createCameraManager();
         this.createGameManager();
-        this.createGroups();
         // this.createInput();
     }
 
@@ -64,7 +65,7 @@ export class MainScene extends Scene {
 
     createPlayer(location: number[]) {
 		// Создаем игрока
-		this.player = new Player({
+		this.player = new PlayerContainer({
 			scene: this,
 			skin: this.playerSkin,
             x: location[0],
@@ -154,7 +155,7 @@ export class MainScene extends Scene {
         }
     }
 
-    collectChest(player: Player, chest: Chest) {
+    collectChest(player: PlayerContainer, chest: Chest) {
         // this.goldPickupAudio.play();
         this.score += chest.coins;
         // Обновляем счет в UI
@@ -165,7 +166,7 @@ export class MainScene extends Scene {
         this.events.emit(GameEvents.PICK_UP_CHEST, chest.id);
     }
 
-    enemyOverlap(player: Player, enemy: Monster) {
+    enemyOverlap(player: PlayerContainer, enemy: Monster) {
         enemy.makeInactive();
         this.events.emit(GameEvents.DESTROY_MONSTER, enemy.id);
     }
