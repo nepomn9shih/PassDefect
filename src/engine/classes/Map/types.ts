@@ -8,5 +8,5 @@ export type MapProps = {
 	/** Слой с фоном карты */
 	mapLayerName: string;
 	/** Слой с блокирующими элементами */
-	blockerLayerName: string;
+	blockedLayerName: string;
 };

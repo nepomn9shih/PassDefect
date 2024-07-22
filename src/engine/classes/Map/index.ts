@@ -7,24 +7,24 @@ export class GameMap {
 	key: string;
 	tileSetName: string;
 	mapLayerName: string;
-	blockerLayerName: string;
+	blockedLayerName: string;
 	map: Tilemaps.Tilemap;
 	tiles: Tilemaps.Tileset | null;
 	mapLayer: Tilemaps.TilemapLayer | null;
-	blockerLayer: Tilemaps.TilemapLayer | null;
+	blockedLayer: Tilemaps.TilemapLayer | null;
 
 	constructor({
 		scene,
 		key,
 		tileSetName,
 		mapLayerName,
-		blockerLayerName
+		blockedLayerName
 	}: MapProps) {
 		this.scene = scene;
 		this.key = key;
 		this.tileSetName = tileSetName;
 		this.mapLayerName = mapLayerName;
-		this.blockerLayerName = blockerLayerName;
+		this.blockedLayerName = blockedLayerName;
 
 		this.createMap();
 	}
@@ -40,12 +40,12 @@ export class GameMap {
 			// Создаем слой с фоном карты
 			this.mapLayer = this.map.createLayer(this.mapLayerName, this.tiles, 0, 0);
 			// Создаем слой с игроком
-			this.blockerLayer = this.map.createLayer(this.blockerLayerName, this.tiles, 0, 0);
+			this.blockedLayer = this.map.createLayer(this.blockedLayerName, this.tiles, 0, 0);
 			// если надо сменить очередность слоев
-			// this.blockerLayer.setDepth(layesrsZIndexes.playersLayer);
+			// this.blockedLayer.setDepth(layesrsZIndexes.playersLayer);
 
 			// Настраиваем коллизии. [-1] значит что все тайлы слоя будут проверены на коллизию
-			this.blockerLayer?.setCollisionByExclusion([-1]);
+			this.blockedLayer?.setCollisionByExclusion([-1]);
 
 			// Создаем границы карты
 			this.scene.physics.world.bounds.width = this.map.widthInPixels;

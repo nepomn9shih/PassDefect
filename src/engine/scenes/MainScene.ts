@@ -58,7 +58,7 @@ export class MainScene extends Scene {
 			key: LevelMaps.SWAMP_PLANET,
 			tileSetName: LevelMaps.SWAMP_PLANET,
 			mapLayerName: MapLayersNames.MAP,
-            blockerLayerName: MapLayersNames.BLOCKER,
+            blockedLayerName: MapLayersNames.BLOCKER,
 		});
 	}
 
@@ -163,17 +163,28 @@ export class MainScene extends Scene {
         chest.makeInactive();
         
         this.events.emit(GameEvents.PICK_UP_CHEST, chest.id);
-    }       
+    }
+
+    enemyOverlap(player: Player, enemy: Monster) {
+        enemy.makeInactive();
+        this.events.emit(GameEvents.DESTROY_MONSTER, enemy.id);
+    }
 
     addCollisions() {
-        if (this.map.blockerLayer) {
+        if (this.map.blockedLayer) {
             // Проверка коллизий между игроком и слоем заблоченных тайлов
-            this.physics.add.collider(this.player, this.map.blockerLayer);
+            this.physics.add.collider(this.player, this.map.blockedLayer);
+
+             // Проверка коллизий между монстром и слоем заблоченных тайлов
+            this.physics.add.collider(this.monsters, this.map.blockedLayer);
         }
         
-        // Проверка коллизий между игроком и сундуков
+        // Проверка коллизий между игроком и сундуками
         // @ts-ignore не понимает что коллбек нужного формата
         this.physics.add.overlap(this.player, this.chests, this.collectChest, null, this);
+        // Проверка коллизий между игроком и монстрами
+        // @ts-ignore не понимает что коллбек нужного формата
+        this.physics.add.overlap(this.player, this.monsters, this.enemyOverlap, null, this);
     }
 
     update() {
