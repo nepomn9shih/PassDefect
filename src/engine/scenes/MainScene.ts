@@ -7,7 +7,6 @@ import {
     GameEvents,
     LevelMaps,
     MapLayersNames,
-    MonstersVariations,
     PlayerSkinVariations,
     SceneNames,
     SpawnObjects
@@ -19,8 +18,8 @@ import {GameManager} from '../managers/GameManager';
 import {ChestModel} from '../classes/ChestModel';
 import {Chest} from '../classes/ChestModel/Chest';
 import {MonsterModel} from '../classes/MonsterModel';
-import { Monster } from '../classes/MonsterModel/Monster';
-import { getRandomMonsterVariation } from '../utils/getRandomMonsterVariation';
+import {Monster} from '../classes/MonsterModel/Monster';
+import {getRandomMonsterVariation} from '../utils/getRandomMonsterVariation';
 
 export class MainScene extends Scene {
     store: Store<AllGameState, Action<string>>;
@@ -33,6 +32,7 @@ export class MainScene extends Scene {
     chests!: Phaser.Physics.Arcade.Group;
     monsters!: Phaser.Physics.Arcade.Group;
     score: number;
+    cursors?: Phaser.Types.Input.Keyboard.CursorKeys;
 
     constructor(store: Store<AllGameState, Action<string>>) {
         super(SceneNames.MAIN);
@@ -50,6 +50,7 @@ export class MainScene extends Scene {
         this.createCameraManager();
         this.createGameManager();
         // this.createInput();
+        this.cursors= this?.input?.keyboard?.createCursorKeys();
     }
 
     createMap() {
@@ -133,11 +134,12 @@ export class MainScene extends Scene {
     
         if (!monster) {
             const type = getRandomMonsterVariation();
+
             monster = new Monster({
                 scene: this,
                 x: monsterObject.x,
                 y: monsterObject.y,
-                type: getRandomMonsterVariation(),
+                type,
                 id: monsterObject.id,
                 health: monsterObject.health,
                 maxHealth: monsterObject.maxHealth
@@ -160,6 +162,7 @@ export class MainScene extends Scene {
         this.score += chest.coins;
         // Обновляем счет в UI
         this.events.emit(GameEvents.UPDATE_SCORE, this.score);
+        console.log(chest);
         // Делаем сундук неактивным
         chest.makeInactive();
         
@@ -189,8 +192,8 @@ export class MainScene extends Scene {
     }
 
     update() {
-        // if (this.player) {
-        //     this.player.update(this.cursors);
-        // };
+        if (this.player) {
+            this.cursors && this.player.update(this.cursors);
+        };
     }
 }

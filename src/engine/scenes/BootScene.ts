@@ -1,5 +1,4 @@
 import {Scene} from 'phaser';
-import {Action, Store} from '@reduxjs/toolkit';
 
 import {
     FONT_FAMILY_STYLE,
@@ -10,11 +9,11 @@ import {
 import {AtlasesKeys, SceneNames} from '../enums';
 import {MAP_ATLASES} from '../assets/map';
 import {DPR} from '../constants/zoom';
-import {AllGameState} from '../../reducers/types';
 import {MONSTERS_ATLASES} from '../assets/monsters';
 import {PLAYER_ATLASES} from '../assets/player';
 import {OBJECTS_ATLASES} from '../assets/objects';
 import {GameStore} from '../types';
+import {WEAPON_ATLASES} from '../assets/weapon';
 
 export class BootScene extends Scene {
     store: GameStore;
@@ -67,6 +66,14 @@ export class BootScene extends Scene {
                 `${key}`,
                 MONSTERS_ATLASES[key].imgUrl,
                 MONSTERS_ATLASES[key].jsonUrl
+            );
+		});
+
+		Object.keys(WEAPON_ATLASES).forEach((key) => {
+            this.load.atlas(
+                `${key}`,
+                WEAPON_ATLASES[key].imgUrl,
+                WEAPON_ATLASES[key].jsonUrl
             );
 		});
 

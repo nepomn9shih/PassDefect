@@ -19,9 +19,17 @@ export enum SceneNames {
 }
 
 export enum WeaponVariations {
+    FLAME_GUN = 'flame-gun',
     SWORD = 'sword',
     GUN = 'gun',
     RIFLE = 'rifle'
+}
+
+export enum PlayerDirections {
+    RIGHT = 'right',
+    LEFT = 'left',
+    UP = 'up',
+    DOWN = 'down'
 }
 
 export enum PlayerSkinVariations {

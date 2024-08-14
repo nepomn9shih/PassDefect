@@ -5,8 +5,5 @@ export type WeaponState = {
 }
 export type WeaponData = {
     enabled: boolean;
-    isUnlimitedCharges: boolean;
     charges: number;
-    power: number,
-    speed: number
 };

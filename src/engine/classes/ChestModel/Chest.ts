@@ -17,7 +17,13 @@ export class Chest extends Phaser.Physics.Arcade.Sprite {
         this.scene.add.existing(this);
     }
 
+    makeActive() {
+        this.setActive(true);
+        this.setVisible(true);
+    }
+
     makeInactive() {
         this.setActive(false);
+        this.setVisible(false);
     }
 }
