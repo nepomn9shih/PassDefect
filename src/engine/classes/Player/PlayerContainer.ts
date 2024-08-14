@@ -1,8 +1,8 @@
 import {PlayerContainerProps} from './types';
 import {MainScene} from '../../scenes/MainScene';
-import {PlayerDirections, PlayerSkinVariations, WeaponVariations} from '../../enums';
+import {PlayerAnimation, PlayerDirections, PlayerSkinVariations, WeaponVariations} from '../../enums';
 import {Player} from './Player';
-import { Weapon } from './Weapon';
+import {Weapon} from './Weapon';
 
 export class PlayerContainer extends Phaser.GameObjects.Container {
 	scene: MainScene;
@@ -12,7 +12,9 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
 	velocity: number;
 	player: Player;
 	currentDirection: PlayerDirections;
+	viewDirection: PlayerDirections.LEFT | PlayerDirections.RIGHT;
 	playerAttacking: boolean;
+	playerMoving: boolean;
 	flipX: boolean;
 	isHit: boolean;
 	weapon: Weapon;
@@ -34,6 +36,7 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
 		// Скорость при движении игрока
 		this.velocity = 160;
 		this.currentDirection = PlayerDirections.RIGHT;
+		this.viewDirection = PlayerDirections.RIGHT;
 		this.weaponVariation = WeaponVariations.FLAME_GUN;
  		this.playerAttacking = false;
 		this.flipX = true;
@@ -78,27 +81,51 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
 		// @ts-ignore так как TS не понимает что это не StaticBody
 		this.body?.setVelocity(0);
 
+		if (
+			cursors.left.isUp
+			&& cursors.right.isUp
+			&& cursors.up.isUp
+			&& cursors.down.isUp
+		) {
+			this.playerMoving = false;
+		}
+
 		if (cursors.left.isDown) {
 			// @ts-ignore так как TS не понимает что это не StaticBody
 			this.body?.setVelocityX(-this.velocity);
 			this.currentDirection = PlayerDirections.LEFT;
+			this.viewDirection = PlayerDirections.LEFT;
 			this.weapon.setAngle(0);
+			this.playerMoving = true;
 		} else if (cursors.right.isDown) {
 			// @ts-ignore так как TS не понимает что это не StaticBody
 			this.body.setVelocityX(this.velocity);
 			this.currentDirection = PlayerDirections.RIGHT;
+			this.viewDirection = PlayerDirections.RIGHT;
 			this.weapon.setAngle(0);
+			this.playerMoving = true;
 		}
 		if (cursors.up.isDown) {
 			// @ts-ignore так как TS не понимает что это не StaticBody
 			this.body.setVelocityY(-this.velocity);
 			this.currentDirection = PlayerDirections.UP;
 			this.weapon.setAngle(270);
+			this.playerMoving = true;
 		} else if (cursors.down.isDown) {
 			// @ts-ignore так как TS не понимает что это не StaticBody
 			this.body.setVelocityY(this.velocity);
 			this.currentDirection = PlayerDirections.DOWN;
 			this.weapon.setAngle(90);
+			this.playerMoving = true;
+		}
+
+		if (this.playerMoving) {
+			if (this.viewDirection === PlayerDirections.LEFT) {
+				this.player.playAnimation(PlayerAnimation.MOVE_LEFT);
+			}
+			if (this.viewDirection === PlayerDirections.RIGHT) {
+				this.player.playAnimation(PlayerAnimation.MOVE_RIGHT);
+			}
 		}
 
 		// Разворачивает оружие когда игрок повернут влево

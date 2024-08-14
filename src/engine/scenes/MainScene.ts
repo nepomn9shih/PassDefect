@@ -91,7 +91,7 @@ export class MainScene extends Scene {
 
         this.events.on(GameEvents.SPAWN_MONSTER, (monster: MonsterModel) => {
             this.spawnMonster(monster);
-            });
+        });
 
 		this.gameManager = new GameManager({scene: this, mapData: this.map.map.objects});
 		this.gameManager.setup();
@@ -105,7 +105,7 @@ export class MainScene extends Scene {
 	}
 
     spawnChest(chestObject: ChestModel) {
-        let chest = this.chests.getFirstDead();
+        let chest: Chest = this.chests.getFirstDead();
 
         if (!chest) {
             chest = new Chest({
@@ -130,7 +130,7 @@ export class MainScene extends Scene {
     }
 
     spawnMonster(monsterObject: MonsterModel) {
-        let monster = this.monsters.getFirstDead();
+        let monster: Monster = this.monsters.getFirstDead();
     
         if (!monster) {
             const type = getRandomMonsterVariation();
@@ -162,7 +162,7 @@ export class MainScene extends Scene {
         this.score += chest.coins;
         // Обновляем счет в UI
         this.events.emit(GameEvents.UPDATE_SCORE, this.score);
-        console.log(chest);
+
         // Делаем сундук неактивным
         chest.makeInactive();
         
@@ -171,6 +171,7 @@ export class MainScene extends Scene {
 
     enemyOverlap(player: PlayerContainer, enemy: Monster) {
         enemy.makeInactive();
+
         this.events.emit(GameEvents.DESTROY_MONSTER, enemy.id);
     }
 

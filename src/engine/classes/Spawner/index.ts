@@ -44,7 +44,7 @@ export class Spawner {
             this.spawnChest();
         } else if (this.objectType === SpawnObjects.MONSTER) {
             this.spawnMonster();
-            }
+        }
     }
 
     spawnChest() {
@@ -75,6 +75,7 @@ export class Spawner {
             health,
             attack
         });
+
         this.objectsCreated.push(monster);
         this.addObject(monster.id, monster);
     }

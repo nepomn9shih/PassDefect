@@ -56,6 +56,10 @@ export enum GameEvents {
 
 export enum AtlasesKeys {
     PICK_UP_OBJECTS = 'pick-up',
-    SPACEMAN_PLAYER_SKIN = 'player-skin-spaceman',
     SWAMP_PLANET_LEVEL_MAP = 'swamp-planet'
+}
+
+export enum PlayerAnimation {
+    MOVE_LEFT = 'player-move-left',
+    MOVE_RIGHT = 'player-move-right'
 }

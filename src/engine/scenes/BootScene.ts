@@ -6,7 +6,7 @@ import {
     LOADING_BOX_WIDTH,
     TEXT_SCALE
 } from '../constants';
-import {AtlasesKeys, SceneNames} from '../enums';
+import {AtlasesKeys, PlayerSkinVariations, SceneNames} from '../enums';
 import {MAP_ATLASES} from '../assets/map';
 import {DPR} from '../constants/zoom';
 import {MONSTERS_ATLASES} from '../assets/monsters';
@@ -78,9 +78,9 @@ export class BootScene extends Scene {
 		});
 
 		this.load.atlas(
-			AtlasesKeys.SPACEMAN_PLAYER_SKIN,
-			PLAYER_ATLASES[AtlasesKeys.SPACEMAN_PLAYER_SKIN].imgUrl,
-			PLAYER_ATLASES[AtlasesKeys.SPACEMAN_PLAYER_SKIN].jsonUrl
+			PlayerSkinVariations.SPACEMAN,
+			PLAYER_ATLASES[PlayerSkinVariations.SPACEMAN].imgUrl,
+			PLAYER_ATLASES[PlayerSkinVariations.SPACEMAN].jsonUrl
 		);
 
 		this.load.atlas(
