@@ -16,3 +16,8 @@ export type JSONImageType = {
 };
 
 export type GameStore = Store<AllGameState, UnknownAction, unknown>
+
+export type SimpleCoordinates = {
+	x: number;
+	y: number;
+}

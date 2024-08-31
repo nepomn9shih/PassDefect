@@ -170,9 +170,13 @@ export class MainScene extends Scene {
     }
 
     enemyOverlap(player: PlayerContainer, enemy: Monster) {
-        enemy.makeInactive();
+        if (this.player.playerAttacking && !this.player.isHit) {
+            this.player.isHit = true;
 
-        this.events.emit(GameEvents.DESTROY_MONSTER, enemy.id);
+            enemy.makeInactive();
+
+            this.events.emit(GameEvents.DESTROY_MONSTER, enemy.id);
+        }
     }
 
     addCollisions() {
@@ -189,7 +193,7 @@ export class MainScene extends Scene {
         this.physics.add.overlap(this.player, this.chests, this.collectChest, null, this);
         // Проверка коллизий между игроком и монстрами
         // @ts-ignore не понимает что коллбек нужного формата
-        this.physics.add.overlap(this.player, this.monsters, this.enemyOverlap, null, this);
+        this.physics.add.overlap(this.player.weapon, this.monsters, this.enemyOverlap, null, this);
     }
 
     update() {

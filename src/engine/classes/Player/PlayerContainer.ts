@@ -3,6 +3,7 @@ import {MainScene} from '../../scenes/MainScene';
 import {PlayerAnimation, PlayerDirections, PlayerSkinVariations, WeaponVariations} from '../../enums';
 import {Player} from './Player';
 import {Weapon} from './Weapon';
+import { WEAPON_OFFSET } from './constants';
 
 export class PlayerContainer extends Phaser.GameObjects.Container {
 	scene: MainScene;
@@ -67,14 +68,32 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
 		// Создаем оружие
 		this.weapon = new Weapon({
 			scene: this.scene,
-			x: 0,
-			y: 0,
+			x: WEAPON_OFFSET[this.weaponVariation][this.currentDirection].x,
+			y: WEAPON_OFFSET[this.weaponVariation][this.currentDirection].y,
 			variation: this.weaponVariation,
 			frame,
 			direction: this.currentDirection
 		});
 		this.scene.add.existing(this.weapon);
 		this.add(this.weapon);
+	}
+
+	turnWeapon() {
+		this.weapon.setX(WEAPON_OFFSET[this.weaponVariation][this.currentDirection].x);
+		this.weapon.setY(WEAPON_OFFSET[this.weaponVariation][this.currentDirection].y);
+
+		if (
+			this.currentDirection === PlayerDirections.RIGHT
+			|| this.currentDirection === PlayerDirections.LEFT
+		) {
+			this.weapon.setAngle(0);
+		} 
+		if (this.currentDirection === PlayerDirections.UP) {
+			this.weapon.setAngle(270);
+		}
+		if (this.currentDirection === PlayerDirections.DOWN) {
+			this.weapon.setAngle(90);
+		}
 	}
 
 	update(cursors: Phaser.Types.Input.Keyboard.CursorKeys) {
@@ -95,36 +114,36 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
 			this.body?.setVelocityX(-this.velocity);
 			this.currentDirection = PlayerDirections.LEFT;
 			this.viewDirection = PlayerDirections.LEFT;
-			this.weapon.setAngle(0);
+			this.player.flipX = true; 
 			this.playerMoving = true;
 		} else if (cursors.right.isDown) {
 			// @ts-ignore так как TS не понимает что это не StaticBody
 			this.body.setVelocityX(this.velocity);
 			this.currentDirection = PlayerDirections.RIGHT;
 			this.viewDirection = PlayerDirections.RIGHT;
-			this.weapon.setAngle(0);
+			this.player.flipX = false; 
 			this.playerMoving = true;
 		}
 		if (cursors.up.isDown) {
 			// @ts-ignore так как TS не понимает что это не StaticBody
 			this.body.setVelocityY(-this.velocity);
 			this.currentDirection = PlayerDirections.UP;
-			this.weapon.setAngle(270);
 			this.playerMoving = true;
 		} else if (cursors.down.isDown) {
 			// @ts-ignore так как TS не понимает что это не StaticBody
 			this.body.setVelocityY(this.velocity);
 			this.currentDirection = PlayerDirections.DOWN;
-			this.weapon.setAngle(90);
 			this.playerMoving = true;
 		}
 
+		this.turnWeapon();
+
 		if (this.playerMoving) {
-			if (this.viewDirection === PlayerDirections.LEFT) {
-				this.player.playAnimation(PlayerAnimation.MOVE_LEFT);
-			}
-			if (this.viewDirection === PlayerDirections.RIGHT) {
-				this.player.playAnimation(PlayerAnimation.MOVE_RIGHT);
+			if (
+				this.viewDirection === PlayerDirections.LEFT
+				|| this.viewDirection === PlayerDirections.RIGHT
+			) {
+				this.player.playAnimation(PlayerAnimation.MOVE);
 			}
 		}
 

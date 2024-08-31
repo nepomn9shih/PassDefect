@@ -60,6 +60,5 @@ export enum AtlasesKeys {
 }
 
 export enum PlayerAnimation {
-    MOVE_LEFT = 'player-move-left',
-    MOVE_RIGHT = 'player-move-right'
+    MOVE = 'player-move'
 }
