@@ -25,7 +25,7 @@ export class BootScene extends Scene {
 
     preload() {
 		// По умолчанию одновременно загружается 32 файла, можно изменить
-		// this.load.maxParallelDownloads = 100;
+		// this.load.maxParallelDownloads = 16;
 
 		this.load.on('loaderror', (file: Phaser.Loader.File) => {
 			const message = `Error: Image not loaded. File url: ${file.url}`;

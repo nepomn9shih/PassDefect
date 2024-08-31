@@ -171,8 +171,8 @@ export class MainScene extends Scene {
     }
 
     enemyOverlap(weapon: Weapon, enemy: Monster) {
-        if (this.player.playerAttacking && !this.player.isHit) {
-            this.player.isHit = true;
+        if (this.player.playerAttacking && !this.player.weaponHit) {
+            this.player.weaponHit = true;
 
             enemy.loseHealth(weapon.damage);
 

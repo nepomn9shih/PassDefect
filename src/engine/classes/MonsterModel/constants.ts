@@ -7,3 +7,8 @@ export const MONSTERS_PARAMS: Record<MonstersVariations, MonsterParams> = {
         attack: 1
     }
 };
+
+export const HEALTH_BAR_CONFIG = {
+    width: 64,
+    height: 5
+};
