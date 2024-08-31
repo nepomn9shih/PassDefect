@@ -87,22 +87,20 @@ export class GameManager {
 		});
 	}
 
-	setupSpawners() {
-		const config = {
-			spawnInterval: 3000,
-			limit: 1,
-			spawnerType: SpawnObjects.CHEST,
-			id: '',
-		};
-			
+	setupSpawners() {	
 		let spawner: Spawner;
 
 		// Создаем спавнер сундука
 		Object.keys(this.chestLocations).forEach((key) => {
-			config.id = `chest-${key}`;
+			const config = {
+				spawnInterval: 3000,
+				limit: 1,
+				id: `chest-${key}`,
+				spawnerType: SpawnObjects.CHEST
+			};
 
 			spawner = new Spawner({
-				config, 
+				config,
 				spawnLocations: this.chestLocations[key], 
 				addObject: this.addChest.bind(this), 
 				deleteObject: this.deleteChest.bind(this)
@@ -113,7 +111,12 @@ export class GameManager {
 
 		// Создаем спавнер монстров
 		Object.keys(this.monsterLocations).forEach((key) => {
-			config.id = `monster-${key}`; 
+			const config = {
+				spawnInterval: 15000,
+				limit: 1,
+				id: `monster-${key}`,
+				spawnerType: SpawnObjects.MONSTER
+			};
 			
 			spawner = new Spawner({
 				config,

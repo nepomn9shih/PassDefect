@@ -20,6 +20,7 @@ import {Chest} from '../classes/ChestModel/Chest';
 import {MonsterModel} from '../classes/MonsterModel';
 import {Monster} from '../classes/MonsterModel/Monster';
 import {getRandomMonsterVariation} from '../utils/getRandomMonsterVariation';
+import { Weapon } from '../classes/Player/Weapon';
 
 export class MainScene extends Scene {
     store: Store<AllGameState, Action<string>>;
@@ -169,13 +170,13 @@ export class MainScene extends Scene {
         this.events.emit(GameEvents.PICK_UP_CHEST, chest.id);
     }
 
-    enemyOverlap(player: PlayerContainer, enemy: Monster) {
+    enemyOverlap(weapon: Weapon, enemy: Monster) {
         if (this.player.playerAttacking && !this.player.isHit) {
             this.player.isHit = true;
 
-            enemy.makeInactive();
+            enemy.loseHealth(weapon.damage);
 
-            this.events.emit(GameEvents.DESTROY_MONSTER, enemy.id);
+            this.events.emit(GameEvents.HIT_MONSTER, enemy.id);
         }
     }
 

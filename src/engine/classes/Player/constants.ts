@@ -5,6 +5,13 @@ export const PLAYER_INITIAL_SCALE = 0.5;
 
 export const WEAPON_INITIAL_SCALE = 0.8;
 
+export const WEAPONS_DAMAGE: Record<WeaponVariations, number> = {
+    [WeaponVariations.FLAME_GUN]: 2,
+    [WeaponVariations.GUN]: 1,
+    [WeaponVariations.RIFLE]: 2,
+    [WeaponVariations.SWORD]: 3
+}
+
 export const WEAPON_OFFSET: Record<
     WeaponVariations,
     Record<PlayerDirections, SimpleCoordinates>

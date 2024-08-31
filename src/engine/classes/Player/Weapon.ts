@@ -1,7 +1,7 @@
 import {WeaponProps} from './types';
 import {MainScene} from '../../scenes/MainScene';
 import {PlayerDirections, WeaponVariations} from '../../enums';
-import {WEAPON_INITIAL_SCALE} from './constants';
+import {WEAPON_INITIAL_SCALE, WEAPONS_DAMAGE} from './constants';
 
 export class Weapon extends Phaser.Physics.Arcade.Sprite {
 	scene: MainScene;
@@ -9,6 +9,7 @@ export class Weapon extends Phaser.Physics.Arcade.Sprite {
 	y: number;
 	variation: WeaponVariations;
 	direction: PlayerDirections;
+	damage: number;
 
 	constructor({
 		scene,
@@ -23,6 +24,8 @@ export class Weapon extends Phaser.Physics.Arcade.Sprite {
 		this.x = x;
 		this.y = y;
 		this.direction = direction;
+		this.variation = variation;
+		this.damage = WEAPONS_DAMAGE[this.variation];
 
 		// Подключаем оружие в физику
 		this.scene.physics.world.enable(this);

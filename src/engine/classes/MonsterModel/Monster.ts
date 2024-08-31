@@ -1,3 +1,4 @@
+import { GameEvents } from '../../enums';
 import {PLAYER_INITIAL_SCALE} from '../Player/constants';
 import {MonsterProps} from './types';
 
@@ -19,6 +20,15 @@ export class Monster extends Phaser.Physics.Arcade.Image {
         this.setScale(PLAYER_INITIAL_SCALE);
         this.setCollideWorldBounds(true);
         this.scene.add.existing(this);
+    }
+
+    loseHealth(damage: number) {
+        this.health -= damage;
+
+        if (this.health <= 0) {
+            this.makeInactive();
+            this.scene.events.emit(GameEvents.DESTROY_MONSTER, this.id);
+        }
     }
 
     makeActive() {
