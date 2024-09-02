@@ -28,7 +28,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "deploy": "gh-pages -d build"
   },
   "eslintConfig": {
     "extends": [
@@ -49,7 +50,12 @@
     ]
   },
   "devDependencies": {
+    "@eslint/js": "^9.9.1",
     "@reduxjs/toolkit": "^2.2.5",
-    "@types/uuid": "^9.0.8"
+    "@types/uuid": "^9.0.8",
+    "eslint": "^8.57.0",
+    "eslint-plugin-react": "^7.35.0",
+    "globals": "^15.9.0",
+    "typescript-eslint": "^8.4.0"
   }
 }
