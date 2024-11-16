@@ -97,6 +97,15 @@ export class MainScene extends Scene {
             this.spawnMonster(monster);
         });
 
+        this.events.on(GameEvents.REMOVE_CHEST, (chestId: string) => {
+            this.chests.getChildren().forEach((chest: Chest) => {
+                if (chest.id === chestId) {
+                    chest.makeInactive();
+                }
+            });
+        });
+   
+
 		this.gameManager = new GameManager({scene: this, mapData: this.map.map.objects});
 		this.gameManager.setup();
 	}
@@ -163,14 +172,8 @@ export class MainScene extends Scene {
 
     collectChest(player: PlayerContainer, chest: Chest) {
         // this.goldPickupAudio.play();
-        this.score += chest.coins;
-        // Обновляем счет в UI
-        this.events.emit(GameEvents.UPDATE_SCORE, this.score);
-
-        // Делаем сундук неактивным
-        chest.makeInactive();
         
-        this.events.emit(GameEvents.PICK_UP_CHEST, chest.id);
+        this.events.emit(GameEvents.PICK_UP_CHEST, chest.id, player.id);
     }
 
     enemyOverlap(weapon: Weapon, enemy: Monster) {
