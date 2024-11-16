@@ -1,14 +1,6 @@
 import {PlayerDirections, PlayerSkinVariations, WeaponVariations} from '../../enums';
 import {MainScene} from '../../scenes/MainScene';
 
-export type PlayerContainerProps = {
-	scene: MainScene;
-	x: number;
-	y: number;
-    skin: PlayerSkinVariations;
-	frame?: string;
-};
-
 export type WeaponProps = {
 	scene: MainScene;
 	x: number;
@@ -18,4 +10,16 @@ export type WeaponProps = {
 	direction: PlayerDirections;
 };
 
-export type PlayerProps = PlayerContainerProps;
+export type PlayerProps = {
+	scene: MainScene;
+	x: number;
+	y: number;
+    skin: PlayerSkinVariations;
+	frame?: string;
+};
+
+export type PlayerContainerProps = PlayerProps & {
+	health: number;
+    maxHealth: number;
+    id: string;
+};

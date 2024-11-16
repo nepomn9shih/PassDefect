@@ -5,6 +5,7 @@ import {SPAWNER_PROPERTY_NAME} from '../../constants';
 import {GameEvents, ObjectLayersNames, SpawnObjects} from '../../enums';
 import {MainScene} from '../../scenes';
 import {getTiledProperty} from '../../utils/getTiledProperty';
+import {PlayerModel} from './PlayerModel';
 import {GameManagerProps} from './types';
 
 export class GameManager {
@@ -13,8 +14,11 @@ export class GameManager {
 	spawners: Record<string, Spawner>;
 	chests: Record<string, ChestModel>;
 	monsters: Record<string, MonsterModel>;
-	playerLocations: (number | undefined)[][];
+	players: Record<string, PlayerModel>;
+	playerLocations: (number)[][];
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	chestLocations: Record<any, (number | undefined)[][]>;
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	monsterLocations: Record<any, (number | undefined)[][]>;
 
 	constructor({scene, mapData}: GameManagerProps) {
@@ -23,6 +27,7 @@ export class GameManager {
 		this.spawners = {};
 		this.chests = {};
 		this.monsters = {};
+		this.players = {};
 		this.playerLocations = [];
 		this.chestLocations = {};
 		this.monsterLocations = {};
@@ -130,9 +135,10 @@ export class GameManager {
 	}
 
 	spawnPlayer() {
-		const location = this.playerLocations[Math.floor(Math.random() * this.playerLocations.length)];
+		const player = new PlayerModel(this.playerLocations);
+		this.players[player.id] = player;
 		
-		this.scene.events.emit(GameEvents.SPAWN_PLAYER, location);	
+		this.scene.events.emit(GameEvents.SPAWN_PLAYER, player);	
 	}
 
 	addChest(chestId: string, chest: ChestModel) {

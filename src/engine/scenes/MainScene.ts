@@ -20,7 +20,8 @@ import {Chest} from '../classes/ChestModel/Chest';
 import {MonsterModel} from '../classes/MonsterModel';
 import {Monster} from '../classes/MonsterModel/Monster';
 import {getRandomMonsterVariation} from '../utils/getRandomMonsterVariation';
-import { Weapon } from '../classes/Player/Weapon';
+import {Weapon} from '../classes/Player/Weapon';
+import {PlayerModel} from '../managers/GameManager/PlayerModel';
 
 export class MainScene extends Scene {
     store: Store<AllGameState, Action<string>>;
@@ -65,15 +66,17 @@ export class MainScene extends Scene {
 		});
 	}
 
-    createPlayer(location: number[]) {
-		// Создаем игрока
-		this.player = new PlayerContainer({
-			scene: this,
-			skin: this.playerSkin,
-            x: location[0],
-            y: location[1]
-		});
-	}
+    createPlayer(playerObject: PlayerModel) {
+        this.player = new PlayerContainer({
+            scene: this,
+            x: playerObject.x,
+            y: playerObject.y,
+            skin: this.playerSkin,
+            health: playerObject.health,
+            maxHealth: playerObject.maxHealth,
+            id: playerObject.id,
+        });
+    }
 
     createCameraManager() {
 		this.cameraManager = new CameraManager({scene: this});
@@ -81,8 +84,8 @@ export class MainScene extends Scene {
 	}
 
     createGameManager() {
-        this.events.on(GameEvents.SPAWN_PLAYER, (location: number[]) => {
-            this.createPlayer(location);
+        this.events.on(GameEvents.SPAWN_PLAYER, (playerObject: PlayerModel) => {
+            this.createPlayer(playerObject);
             this.addCollisions();
         });
 
@@ -190,15 +193,16 @@ export class MainScene extends Scene {
         }
         
         // Проверка коллизий между игроком и сундуками
-        // @ts-ignore не понимает что коллбек нужного формата
+        // @ts-expect-error не понимает что коллбек нужного формата
         this.physics.add.overlap(this.player, this.chests, this.collectChest, null, this);
         // Проверка коллизий между игроком и монстрами
-        // @ts-ignore не понимает что коллбек нужного формата
+        // @ts-expect-error не понимает что коллбек нужного формата
         this.physics.add.overlap(this.player.weapon, this.monsters, this.enemyOverlap, null, this);
     }
 
     update() {
         if (this.player) {
+            // eslint-disable-next-line @typescript-eslint/no-unused-expressions
             this.cursors && this.player.update(this.cursors);
         };
     }

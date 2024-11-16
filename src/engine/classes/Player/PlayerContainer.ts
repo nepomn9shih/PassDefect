@@ -3,7 +3,7 @@ import {MainScene} from '../../scenes/MainScene';
 import {PlayerAnimation, PlayerDirections, PlayerSkinVariations, WeaponVariations} from '../../enums';
 import {Player} from './Player';
 import {Weapon} from './Weapon';
-import { WEAPON_OFFSET } from './constants';
+import {WEAPON_OFFSET} from './constants';
 
 export class PlayerContainer extends Phaser.GameObjects.Container {
 	scene: MainScene;
@@ -11,6 +11,9 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
 	y: number;
 	skin: PlayerSkinVariations
 	velocity: number;
+	health: number;
+    maxHealth: number;
+    id: string;
 	player: Player;
 	currentDirection: PlayerDirections;
 	viewDirection: PlayerDirections.LEFT | PlayerDirections.RIGHT;
@@ -27,13 +30,19 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
 		x,
 		y,
 		skin,
-		frame = '01'
+		frame = '01',
+		health,
+		maxHealth,
+		id
 	}: PlayerContainerProps) {
 		super(scene, x, y);
 		this.scene = scene;
 		this.x = x;
 		this.y = y;
 
+		this.health = health;
+ 		this.maxHealth = maxHealth;
+ 		this.id = id;
 		// Скорость при движении игрока
 		this.velocity = 160;
 		this.currentDirection = PlayerDirections.RIGHT;
@@ -48,7 +57,7 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
 		// Подключаем игрока в физику
 		this.scene.physics.world.enable(this);
 		// Игрок не сможет зайти за карту
-		// @ts-ignore так как TS не понимает что это не StaticBody
+		// @ts-expect-error так как TS не понимает что это не StaticBody
 		this.body?.setCollideWorldBounds(true);
 		// Добавляем игрока на сцену
 		this.scene.add.existing(this);
@@ -97,7 +106,7 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
 	}
 
 	update(cursors: Phaser.Types.Input.Keyboard.CursorKeys) {
-		// @ts-ignore так как TS не понимает что это не StaticBody
+		// @ts-expect-error так как TS не понимает что это не StaticBody
 		this.body?.setVelocity(0);
 
 		if (
@@ -110,14 +119,14 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
 		}
 
 		if (cursors.left.isDown) {
-			// @ts-ignore так как TS не понимает что это не StaticBody
+			// @ts-expect-error так как TS не понимает что это не StaticBody
 			this.body?.setVelocityX(-this.velocity);
 			this.currentDirection = PlayerDirections.LEFT;
 			this.viewDirection = PlayerDirections.LEFT;
 			this.player.flipX = true; 
 			this.playerMoving = true;
 		} else if (cursors.right.isDown) {
-			// @ts-ignore так как TS не понимает что это не StaticBody
+			// @ts-expect-error так как TS не понимает что это не StaticBody
 			this.body.setVelocityX(this.velocity);
 			this.currentDirection = PlayerDirections.RIGHT;
 			this.viewDirection = PlayerDirections.RIGHT;
@@ -125,12 +134,12 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
 			this.playerMoving = true;
 		}
 		if (cursors.up.isDown) {
-			// @ts-ignore так как TS не понимает что это не StaticBody
+			// @ts-expect-error так как TS не понимает что это не StaticBody
 			this.body.setVelocityY(-this.velocity);
 			this.currentDirection = PlayerDirections.UP;
 			this.playerMoving = true;
 		} else if (cursors.down.isDown) {
-			// @ts-ignore так как TS не понимает что это не StaticBody
+			// @ts-expect-error так как TS не понимает что это не StaticBody
 			this.body.setVelocityY(this.velocity);
 			this.currentDirection = PlayerDirections.DOWN;
 			this.playerMoving = true;
