@@ -117,6 +117,15 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
 		this.player.playAnimation(PlayerAnimation.MOVE);
 	}
 
+	respawn() {
+		// сделать рандом
+		this.x += 100;
+		this.health = this.maxHealth;
+		this.updateHealthBar(this.health);
+		this.player.stop();
+	}
+		
+
 	loseHealth(damage: number) {
 		this.damageCooldown = true;
 		this.scene.time.delayedCall(1000, () => {
@@ -132,9 +141,13 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
         this.updateHealthBar(this.health);
 
         if (!this.health) {
-            this.playDeathAnimation();
 			this.setActive(false);
+            this.playDeathAnimation();
             this.scene.events.emit(GameEvents.GAME_OVER, this.id);
+
+			this.scene.time.delayedCall(3000, () => {
+				this.respawn();
+			}, [], this);
         }
     }
 

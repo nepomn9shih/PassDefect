@@ -187,7 +187,7 @@ export class MainScene extends Scene {
     }
 
     enemyOverlap(player: PlayerContainer, enemy: Monster) {
-        if (!this.player.damageCooldown) {
+        if (!this.player.damageCooldown && this.player.health) {
             player.loseHealth(enemy.makeDamage());
 
             this.events.emit(GameEvents.HIT_PLAYER, enemy.id);
