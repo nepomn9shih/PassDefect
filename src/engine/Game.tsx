@@ -26,7 +26,6 @@ export const Game = () => {
             _game.destroy(true);
             setGame(undefined);
         }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return <div id={GAME_PASS_DEFECT_ID} />;

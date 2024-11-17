@@ -15,6 +15,7 @@ export class Spawner {
     spawnLocations: (number | undefined)[][];
     addObject: AddObject;
     deleteObject: (id: string) => void;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     objectsCreated: any[];
     interval?: NodeJS.Timeout;
 
@@ -63,15 +64,15 @@ export class Spawner {
 
     spawnMonster() {
         const location = this.pickRandomLocation();
-        const type = getRandomMonsterVariation();
-        const {health, attack} = MONSTERS_PARAMS[type];
+        const variation = getRandomMonsterVariation();
+        const {health, attack} = MONSTERS_PARAMS[variation];
 
         const monster = new MonsterModel({
             x: location[0] || DEFAULT_POSITION.x,
             y: location[1] || DEFAULT_POSITION.x,
             gold: getRandomNumber(10, 20),
             spawnerId: this.id,
-            type,
+            variation,
             health,
             attack
         });

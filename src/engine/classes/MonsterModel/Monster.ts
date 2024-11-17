@@ -1,6 +1,7 @@
-import { GameEvents } from '../../enums';
+import {getRandomNumber} from './../../utils/getRandomNumber';
+import {GameEvents, MonstersVariations} from '../../enums';
 import {PLAYER_INITIAL_SCALE} from '../Player/constants';
-import { HEALTH_BAR_CONFIG } from './constants';
+import {HEALTH_BAR_CONFIG, MONSTERS_PARAMS} from './constants';
 import {MonsterProps} from './types';
 
 export class Monster extends Phaser.Physics.Arcade.Image {
@@ -8,11 +9,13 @@ export class Monster extends Phaser.Physics.Arcade.Image {
     health: number;
     maxHealth: number;
     healthBar: Phaser.GameObjects.Graphics;
+    variation: MonstersVariations;
 
-    constructor({scene, x, y, type, id, health, maxHealth}: MonsterProps) {
-        super(scene, x, y, type);
+    constructor({scene, x, y, variation, id, health, maxHealth}: MonsterProps) {
+        super(scene, x, y, variation);
         this.scene = scene;
         this.id = id;
+        this.variation = variation;
         this.health = health;
         this.maxHealth = maxHealth;
         this.healthBar = this.scene.add.graphics();
@@ -49,7 +52,9 @@ export class Monster extends Phaser.Physics.Arcade.Image {
     updateHealthBar() {
         this.healthBar.clear();
         // При нулевом здоровье шкалу не показываем
-        this.health && this.createHealthBar();
+        if(this.health) {
+            this.createHealthBar();
+        }
     }
 
     loseHealth(damage: number) {
@@ -67,16 +72,28 @@ export class Monster extends Phaser.Physics.Arcade.Image {
         }
     }
 
+    makeDamage() {
+        const {min, max} = MONSTERS_PARAMS[this.variation].attack;
+
+        return getRandomNumber(min, max);
+    }
+
     makeActive() {
         this.setActive(true);
         this.setVisible(true);
         this.updateHealthBar();
-        this.body && (this.body.checkCollision.none = false);
+
+        if(this.body) {
+            this.body.checkCollision.none = false;
+        }
     }
 
     makeInactive() {
         this.setActive(false);
         this.setVisible(false);
-        this.body && (this.body.checkCollision.none = true);
+
+        if(this.body) {
+            this.body.checkCollision.none = true;
+        }
     }
 }

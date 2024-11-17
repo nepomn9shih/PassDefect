@@ -1,6 +1,6 @@
 
 import {DPR} from '../constants/zoom';
-
+import {BootScene} from '../scenes';
 import {MainScene} from '../scenes/MainScene';
 
 /**
@@ -11,7 +11,7 @@ import {MainScene} from '../scenes/MainScene';
  * в самом движке, тогда необходимость в этом ручном масштабировании отпадёт)
  * Решение было основано на обсуждении https://github.com/photonstorm/phaser/issues/4417
 */
-export const rescaleHandler = (scene: MainScene) => {
+export const rescaleHandler = (scene: MainScene | BootScene) => {
 	const widthDPR = Math.round(window.innerWidth * DPR);
 	const heightDPR = Math.round(window.innerHeight * DPR);
 

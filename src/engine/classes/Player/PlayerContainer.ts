@@ -1,9 +1,10 @@
 import {PlayerContainerProps} from './types';
 import {MainScene} from '../../scenes/MainScene';
-import {PlayerAnimation, PlayerDirections, PlayerSkinVariations, WeaponVariations} from '../../enums';
+import {GameEvents, PlayerAnimation, PlayerDirections, PlayerSkinVariations, WeaponVariations} from '../../enums';
 import {Player} from './Player';
 import {Weapon} from './Weapon';
 import {WEAPON_OFFSET} from './constants';
+import { setPlayerHealth } from '../../../reducers/slices';
 
 export class PlayerContainer extends Phaser.GameObjects.Container {
 	scene: MainScene;
@@ -24,6 +25,8 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
 	weapon: Weapon;
 	weaponVariation: WeaponVariations;
 	weaponHit: boolean;
+	// если true то игрока только что ударили и пока нельзя ударить снова
+	damageCooldown: boolean;
 
 	constructor({
 		scene,
@@ -49,6 +52,7 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
 		this.viewDirection = PlayerDirections.RIGHT;
 		this.weaponVariation = WeaponVariations.FLAME_GUN;
  		this.playerAttacking = false;
+		this.damageCooldown = false;
 		this.flipX = true;
 		// попало ли оружие по цели
 		this.isHit = false;
@@ -105,7 +109,39 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
 		}
 	}
 
+	updateHealthBar(actualHealth: number) {
+		this.scene.store.dispatch(setPlayerHealth(actualHealth));
+	}
+
+	playDeathAnimation(){
+		this.player.playAnimation(PlayerAnimation.MOVE);
+	}
+
+	loseHealth(damage: number) {
+		this.damageCooldown = true;
+		this.scene.time.delayedCall(1000, () => {
+			this.damageCooldown = false;
+		}, [], this);
+
+        this.health = this.health - damage;
+
+        if (this.health < 0) {
+            this.health = 0
+        }
+
+        this.updateHealthBar(this.health);
+
+        if (!this.health) {
+            this.playDeathAnimation();
+			this.setActive(false);
+            this.scene.events.emit(GameEvents.GAME_OVER, this.id);
+        }
+    }
+
 	update(cursors: Phaser.Types.Input.Keyboard.CursorKeys) {
+		if (!this.health) {
+			return;
+		}
 		// @ts-expect-error так как TS не понимает что это не StaticBody
 		this.body?.setVelocity(0);
 
@@ -115,7 +151,15 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
 			&& cursors.up.isUp
 			&& cursors.down.isUp
 		) {
-			this.playerMoving = false;
+			if (this.playerMoving) {
+				this.playerMoving = false;
+				this.player.stop();
+			}
+		} else {
+			if (!this.playerMoving) {
+				this.playerMoving = true;
+				this.player.playAnimation(PlayerAnimation.MOVE);
+			}
 		}
 
 		if (cursors.left.isDown) {
@@ -124,37 +168,24 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
 			this.currentDirection = PlayerDirections.LEFT;
 			this.viewDirection = PlayerDirections.LEFT;
 			this.player.flipX = true; 
-			this.playerMoving = true;
 		} else if (cursors.right.isDown) {
 			// @ts-expect-error так как TS не понимает что это не StaticBody
 			this.body.setVelocityX(this.velocity);
 			this.currentDirection = PlayerDirections.RIGHT;
 			this.viewDirection = PlayerDirections.RIGHT;
 			this.player.flipX = false; 
-			this.playerMoving = true;
 		}
 		if (cursors.up.isDown) {
 			// @ts-expect-error так как TS не понимает что это не StaticBody
 			this.body.setVelocityY(-this.velocity);
 			this.currentDirection = PlayerDirections.UP;
-			this.playerMoving = true;
 		} else if (cursors.down.isDown) {
 			// @ts-expect-error так как TS не понимает что это не StaticBody
 			this.body.setVelocityY(this.velocity);
 			this.currentDirection = PlayerDirections.DOWN;
-			this.playerMoving = true;
 		}
 
 		this.turnWeapon();
-
-		if (this.playerMoving) {
-			if (
-				this.viewDirection === PlayerDirections.LEFT
-				|| this.viewDirection === PlayerDirections.RIGHT
-			) {
-				this.player.playAnimation(PlayerAnimation.MOVE);
-			}
-		}
 
 		// Разворачивает оружие когда игрок повернут влево
 		this.weapon.flipX = false;

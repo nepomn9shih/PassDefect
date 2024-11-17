@@ -7,8 +7,7 @@ export const getPlayerAnimations = (player: Player): Record<PlayerAnimation, Pha
 
 	const commonProps = {
 		frameRate: 30,
-		skipMissedFrames: true,
-        yoyo: true
+		skipMissedFrames: true
 	};
 
 	return {
@@ -18,6 +17,29 @@ export const getPlayerAnimations = (player: Player): Record<PlayerAnimation, Pha
 				skin,
 				{
                     frames: [1, 2, 1, 3],
+					zeroPad: 2
+				}
+			),
+			repeat: -1,
+			...commonProps
+		},
+		[PlayerAnimation.GET_HIT]: {
+			key: PlayerAnimation.GET_HIT,
+			frames: player.anims.generateFrameNames(
+				skin,
+				{
+                    frames: [2, 3],
+					zeroPad: 2
+				}
+			),
+			...commonProps
+		},
+		[PlayerAnimation.DEATH]: {
+			key: PlayerAnimation.DEATH,
+			frames: player.anims.generateFrameNames(
+				skin,
+				{
+                    frames: [1],
 					zeroPad: 2
 				}
 			),

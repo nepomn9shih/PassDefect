@@ -146,13 +146,13 @@ export class MainScene extends Scene {
         let monster: Monster = this.monsters.getFirstDead();
     
         if (!monster) {
-            const type = getRandomMonsterVariation();
+            const variation = getRandomMonsterVariation();
 
             monster = new Monster({
                 scene: this,
                 x: monsterObject.x,
                 y: monsterObject.y,
-                type,
+                variation,
                 id: monsterObject.id,
                 health: monsterObject.health,
                 maxHealth: monsterObject.maxHealth
@@ -164,7 +164,7 @@ export class MainScene extends Scene {
             monster.id = monsterObject.id;
             monster.health = monsterObject.health;
             monster.maxHealth = monsterObject.maxHealth;
-            monster.setTexture(monsterObject.type);
+            monster.setTexture(monsterObject.variation);
             monster.setPosition(monsterObject.x, monsterObject.y);
             monster.makeActive();
         }
@@ -176,13 +176,21 @@ export class MainScene extends Scene {
         this.events.emit(GameEvents.PICK_UP_CHEST, chest.id, player.id);
     }
 
-    enemyOverlap(weapon: Weapon, enemy: Monster) {
+    weaponEnemyOverlap(weapon: Weapon, enemy: Monster) {
         if (this.player.playerAttacking && !this.player.weaponHit) {
             this.player.weaponHit = true;
 
             enemy.loseHealth(weapon.damage);
 
             this.events.emit(GameEvents.HIT_MONSTER, enemy.id);
+        }
+    }
+
+    enemyOverlap(player: PlayerContainer, enemy: Monster) {
+        if (!this.player.damageCooldown) {
+            player.loseHealth(enemy.makeDamage());
+
+            this.events.emit(GameEvents.HIT_PLAYER, enemy.id);
         }
     }
 
@@ -198,9 +206,12 @@ export class MainScene extends Scene {
         // Проверка коллизий между игроком и сундуками
         // @ts-expect-error не понимает что коллбек нужного формата
         this.physics.add.overlap(this.player, this.chests, this.collectChest, null, this);
+        // Проверка коллизий между оружием игрока и монстрами
+        // @ts-expect-error не понимает что коллбек нужного формата
+        this.physics.add.overlap(this.player.weapon, this.monsters, this.weaponEnemyOverlap, null, this);
         // Проверка коллизий между игроком и монстрами
         // @ts-expect-error не понимает что коллбек нужного формата
-        this.physics.add.overlap(this.player.weapon, this.monsters, this.enemyOverlap, null, this);
+        this.physics.add.overlap(this.player, this.monsters, this.enemyOverlap, null, this);
     }
 
     update() {

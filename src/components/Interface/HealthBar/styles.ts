@@ -1,10 +1,10 @@
 import styled from '@emotion/styled';
 
-export const StyledMoneyBar = styled.div`
+export const StyledHealthBar = styled.div`
     width: 100px;
     height: 40px;
     position: absolute;
-    top: 20px;
+    top: calc(100vh - 80px);
     left: 20px;
     color: #000;
     background-color: rgba(255, 255, 255, 0.4);
@@ -15,13 +15,13 @@ export const StyledMoneyBar = styled.div`
     gap: 10px;
 `;
 
-export const StyledMoneyIcon = styled.img`
+export const StyledHealthIcon = styled.img`
     height: 30px;
     width: 30px;
     object-fit: contain;
 `;
 
-export const StyledMoneyValue = styled.div`
+export const StyledHealthValue = styled.div`
     height: 30px;
     width: 30px;
     font-size: 18px;

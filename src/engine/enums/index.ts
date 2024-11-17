@@ -51,9 +51,11 @@ export enum GameEvents {
     REMOVE_CHEST = 'chest-removed',
     SPAWN_MONSTER = 'monster-spawned',
     HIT_MONSTER = 'hit-monster',
+    HIT_PLAYER = 'hit-player',
     DESTROY_MONSTER = 'destroy-monster',
     PICK_UP_CHEST = 'pick-up-chest',
-    UPDATE_SCORE = 'update-score'
+    UPDATE_SCORE = 'update-score',
+    GAME_OVER = 'game-over'
 }
 
 export enum AtlasesKeys {
@@ -62,5 +64,7 @@ export enum AtlasesKeys {
 }
 
 export enum PlayerAnimation {
-    MOVE = 'player-move'
+    MOVE = 'player-move',
+    GET_HIT = 'player-get-hit',
+    DEATH = 'player-death'
 }
