@@ -4,7 +4,8 @@ import {GameEvents, PlayerAnimation, PlayerDirections, PlayerSkinVariations, Wea
 import {Player} from './Player';
 import {Weapon} from './Weapon';
 import {WEAPON_OFFSET} from './constants';
-import { setPlayerHealth } from '../../../reducers/slices';
+import {setPlayerHealth} from '../../../reducers/slices';
+import {PlayerModel} from '../../managers/GameManager/PlayerModel';
 
 export class PlayerContainer extends Phaser.GameObjects.Container {
 	scene: MainScene;
@@ -117,10 +118,9 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
 		this.player.playAnimation(PlayerAnimation.MOVE);
 	}
 
-	respawn() {
-		// сделать рандом
-		this.x += 100;
-		this.health = this.maxHealth;
+	respawn(playerObject: PlayerModel) {
+		this.health = playerObject.health;
+		this.setPosition(playerObject.x, playerObject.y);
 		this.updateHealthBar(this.health);
 		this.player.stop();
 	}
@@ -143,11 +143,7 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
         if (!this.health) {
 			this.setActive(false);
             this.playDeathAnimation();
-            this.scene.events.emit(GameEvents.GAME_OVER, this.id);
-
-			this.scene.time.delayedCall(3000, () => {
-				this.respawn();
-			}, [], this);
+            this.scene.events.emit(GameEvents.RESPAWN_PLAYER, this.id);
         }
     }
 

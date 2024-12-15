@@ -93,10 +93,16 @@ export class GameManager {
 			}
 		});
 
+		// Когда монстр убит
 		this.scene.events.on(GameEvents.DESTROY_MONSTER, (monsterId: string) => {
 			if (this.monsters[monsterId]) {
 				this.spawners[this.monsters[monsterId].spawnerId].removeObject(monsterId);
 			}
+		});
+
+		this.scene.events.on(GameEvents.RESPAWN_PLAYER, (playerId: string) => {
+            this.players[playerId].respawn();
+			this.scene.player.respawn(this.players[playerId]);
 		});
 	}
 

@@ -104,7 +104,6 @@ export class MainScene extends Scene {
                 }
             });
         });
-   
 
 		this.gameManager = new GameManager({scene: this, mapData: this.map.map.objects});
 		this.gameManager.setup();
