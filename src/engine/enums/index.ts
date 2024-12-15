@@ -33,7 +33,7 @@ export enum PlayerDirections {
 }
 
 export enum PlayerSkinVariations {
-    SPACEMAN = 'player-skin-spaceman'
+    KNIGHT = 'player-skin-knight'
 }
 
 export enum MonstersVariations {
@@ -68,5 +68,6 @@ export enum AtlasesKeys {
 export enum PlayerAnimation {
     MOVE = 'player-move',
     GET_HIT = 'player-get-hit',
-    DEATH = 'player-death'
+    DEATH = 'player-death',
+    SPAWN = 'player-spawn'
 }

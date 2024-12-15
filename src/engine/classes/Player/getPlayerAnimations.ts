@@ -28,10 +28,11 @@ export const getPlayerAnimations = (player: Player): Record<PlayerAnimation, Pha
 			frames: player.anims.generateFrameNames(
 				skin,
 				{
-                    frames: [2, 3],
+                    frames: [4, 5, 1],
 					zeroPad: 2
 				}
 			),
+			repeat: 0,
 			...commonProps
 		},
 		[PlayerAnimation.DEATH]: {
@@ -39,11 +40,26 @@ export const getPlayerAnimations = (player: Player): Record<PlayerAnimation, Pha
 			frames: player.anims.generateFrameNames(
 				skin,
 				{
-                    frames: [1],
+                    frames: [6, 7],
 					zeroPad: 2
 				}
 			),
-			...commonProps
+			repeat: 0,
+			...commonProps,
+			frameRate: 5
+		},
+		[PlayerAnimation.SPAWN]: {
+			key: PlayerAnimation.SPAWN,
+			frames: player.anims.generateFrameNames(
+				skin,
+				{
+                    frames: [8, 9, 1],
+					zeroPad: 2
+				}
+			),
+			repeat: 0,
+			...commonProps,
+			frameRate: 5
 		}
 	};
 };

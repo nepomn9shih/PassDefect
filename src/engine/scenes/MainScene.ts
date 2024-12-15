@@ -42,7 +42,7 @@ export class MainScene extends Scene {
         this.store = store;
         this.state = store.getState();
         // потом брать из стейта
-        this.playerSkin = PlayerSkinVariations.SPACEMAN;
+        this.playerSkin = PlayerSkinVariations.KNIGHT;
         this.score = 0;
     }
 

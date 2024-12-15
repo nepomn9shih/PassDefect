@@ -90,6 +90,7 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
 		});
 		this.scene.add.existing(this.weapon);
 		this.add(this.weapon);
+		this.playSpawnAnimation();
 	}
 
 	turnWeapon() {
@@ -115,16 +116,23 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
 	}
 
 	playDeathAnimation(){
-		this.player.playAnimation(PlayerAnimation.MOVE);
+		this.player.playAnimation(PlayerAnimation.DEATH);
+	}
+
+	playGetHitAnimation(){
+		this.player.playAnimation(PlayerAnimation.GET_HIT);
+	}
+
+	playSpawnAnimation(){
+		this.player.playAnimation(PlayerAnimation.SPAWN);
 	}
 
 	respawn(playerObject: PlayerModel) {
 		this.health = playerObject.health;
 		this.setPosition(playerObject.x, playerObject.y);
+		this.playSpawnAnimation();
 		this.updateHealthBar(this.health);
-		this.player.stop();
 	}
-		
 
 	loseHealth(damage: number) {
 		this.damageCooldown = true;
@@ -133,6 +141,7 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
 		}, [], this);
 
         this.health = this.health - damage;
+		this.playGetHitAnimation();
 
         if (this.health < 0) {
             this.health = 0
@@ -143,7 +152,10 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
         if (!this.health) {
 			this.setActive(false);
             this.playDeathAnimation();
-            this.scene.events.emit(GameEvents.RESPAWN_PLAYER, this.id);
+			// Чтобы успела отыграть анимация смерти
+			this.scene.time.delayedCall(1000, () => {
+				this.scene.events.emit(GameEvents.RESPAWN_PLAYER, this.id);
+			}, [], this);  
         }
     }
 

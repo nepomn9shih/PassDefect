@@ -78,9 +78,9 @@ export class BootScene extends Scene {
 		});
 
 		this.load.atlas(
-			PlayerSkinVariations.SPACEMAN,
-			PLAYER_ATLASES[PlayerSkinVariations.SPACEMAN].imgUrl,
-			PLAYER_ATLASES[PlayerSkinVariations.SPACEMAN].jsonUrl
+			PlayerSkinVariations.KNIGHT,
+			PLAYER_ATLASES[PlayerSkinVariations.KNIGHT].imgUrl,
+			PLAYER_ATLASES[PlayerSkinVariations.KNIGHT].jsonUrl
 		);
 
 		this.load.atlas(
