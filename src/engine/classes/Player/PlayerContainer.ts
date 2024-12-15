@@ -5,7 +5,7 @@ import {Player} from './Player';
 import {Weapon} from './Weapon';
 import {WEAPON_OFFSET} from './constants';
 import {setPlayerHealth} from '../../../reducers/slices';
-import {PlayerModel} from '../../managers/GameManager/PlayerModel';
+import {PlayerModel} from './PlayerModel';
 
 export class PlayerContainer extends Phaser.GameObjects.Container {
 	scene: MainScene;

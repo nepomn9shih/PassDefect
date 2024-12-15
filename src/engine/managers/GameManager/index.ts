@@ -1,12 +1,12 @@
-import { addMoney } from '../../../reducers/slices';
+import {addMoney} from '../../../reducers/slices';
 import {ChestModel} from '../../classes/ChestModel';
 import {MonsterModel} from '../../classes/MonsterModel';
+import {PlayerModel} from '../../classes/Player/PlayerModel';
 import {Spawner} from '../../classes/Spawner';
 import {SPAWNER_PROPERTY_NAME} from '../../constants';
 import {GameEvents, ObjectLayersNames, SpawnObjects} from '../../enums';
 import {MainScene} from '../../scenes';
 import {getTiledProperty} from '../../utils/getTiledProperty';
-import {PlayerModel} from './PlayerModel';
 import {GameManagerProps} from './types';
 
 export class GameManager {
@@ -100,6 +100,7 @@ export class GameManager {
 			}
 		});
 
+		// Когда происходит респавн игрока
 		this.scene.events.on(GameEvents.RESPAWN_PLAYER, (playerId: string) => {
             this.players[playerId].respawn();
 			this.scene.player.respawn(this.players[playerId]);
@@ -122,7 +123,8 @@ export class GameManager {
 				config,
 				spawnLocations: this.chestLocations[key], 
 				addObject: this.addChest.bind(this), 
-				deleteObject: this.deleteChest.bind(this)
+				deleteObject: this.deleteChest.bind(this),
+				moveObjects: () => {}
 			});
 	
 			this.spawners[spawner.id] = spawner;
@@ -142,6 +144,7 @@ export class GameManager {
 				spawnLocations: this.monsterLocations[key],
 				addObject: this.addMonster.bind(this),
 				deleteObject: this.deleteMonster.bind(this),
+				moveObjects: this.moveMonsters.bind(this)
 			});
 
 			this.spawners[spawner.id] = spawner;
@@ -172,5 +175,9 @@ export class GameManager {
 	
 	deleteMonster(monsterId: string) {
 		delete this.monsters[monsterId];
+	}
+
+	moveMonsters() {
+		this.scene.events.emit(GameEvents.MOVE_MONSTER, this.monsters);
 	}
 }

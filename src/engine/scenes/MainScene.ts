@@ -21,7 +21,8 @@ import {MonsterModel} from '../classes/MonsterModel';
 import {Monster} from '../classes/MonsterModel/Monster';
 import {getRandomMonsterVariation} from '../utils/getRandomMonsterVariation';
 import {Weapon} from '../classes/Player/Weapon';
-import {PlayerModel} from '../managers/GameManager/PlayerModel';
+import {PlayerModel} from '../classes/Player/PlayerModel';
+import {MONSTER_SPEED} from '../classes/MonsterModel/constants';
 
 export class MainScene extends Scene {
     store: Store<AllGameState, Action<string>>;
@@ -105,6 +106,16 @@ export class MainScene extends Scene {
             });
         });
 
+        this.events.on(GameEvents.MOVE_MONSTER, (monsters: Record<string, MonsterModel>) => {
+            this.monsters.getChildren().forEach((monster: Monster) => {
+                Object.keys(monsters).forEach((monsterId) => {
+                    if (monster.id === monsterId) {
+                        this.physics.moveToObject(monster, monsters[monsterId], MONSTER_SPEED);
+                    }
+                });
+            });
+        });   
+
 		this.gameManager = new GameManager({scene: this, mapData: this.map.map.objects});
 		this.gameManager.setup();
 	}
@@ -114,6 +125,8 @@ export class MainScene extends Scene {
 		this.chests = this.physics.add.group();
         // Создаем группу для монстров
         this.monsters = this.physics.add.group();
+        // Включаем обновление дочерних элементов
+        this.monsters.runChildUpdate = true;
 	}
 
     spawnChest(chestObject: ChestModel) {

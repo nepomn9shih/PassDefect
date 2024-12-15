@@ -15,3 +15,7 @@ export const HEALTH_BAR_CONFIG = {
     width: 64,
     height: 5
 };
+
+export const MONSTER_STEP = 32;
+
+export const MONSTER_SPEED = 40;

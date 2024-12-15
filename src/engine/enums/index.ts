@@ -52,6 +52,7 @@ export enum GameEvents {
     SPAWN_CHEST = 'chest-spawned',
     REMOVE_CHEST = 'chest-removed',
     SPAWN_MONSTER = 'monster-spawned',
+    MOVE_MONSTER = 'move-monster',
     HIT_MONSTER = 'hit-monster',
     HIT_PLAYER = 'hit-player',
     DESTROY_MONSTER = 'destroy-monster',

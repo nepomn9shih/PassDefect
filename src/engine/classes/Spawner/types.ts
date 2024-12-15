@@ -12,6 +12,7 @@ export type SpawnerProps = {
 	spawnLocations: (number | undefined)[][];
 	addObject: AddObject;
     deleteObject: (id: string) => void;
+	moveObjects: () => void;
 };
 
 export type AddObject = (id: string, item: ChestModel | MonsterModel) => void;

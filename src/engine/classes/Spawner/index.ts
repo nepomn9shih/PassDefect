@@ -15,11 +15,12 @@ export class Spawner {
     spawnLocations: (number | undefined)[][];
     addObject: AddObject;
     deleteObject: (id: string) => void;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    objectsCreated: any[];
+    moveObjects: () => void;
+    objectsCreated: (ChestModel | MonsterModel)[];
     interval?: NodeJS.Timeout;
+    moveMonsterInterval: NodeJS.Timeout;
 
-    constructor({config, spawnLocations, addObject, deleteObject}: SpawnerProps) {
+    constructor({config, spawnLocations, addObject, deleteObject, moveObjects}: SpawnerProps) {
         this.id = config.id;
         this.spawnInterval = config.spawnInterval;
         this.limit = config.limit;
@@ -27,6 +28,7 @@ export class Spawner {
         this.spawnLocations = spawnLocations;
         this.addObject = addObject;
         this.deleteObject = deleteObject;
+        this.moveObjects = moveObjects;
         this.objectsCreated = [];
 
         this.start();
@@ -38,6 +40,10 @@ export class Spawner {
                 this.spawnObject();
             }
         }, this.spawnInterval);
+
+        if (this.objectType === SpawnObjects.MONSTER) {
+            this.moveMonsters();
+        }
     }
 
     spawnObject() {
@@ -79,6 +85,16 @@ export class Spawner {
 
         this.objectsCreated.push(monster);
         this.addObject(monster.id, monster);
+    }
+
+    moveMonsters() {
+        this.moveMonsterInterval = setInterval(() => {
+            this.objectsCreated.forEach((monster: MonsterModel) => {
+                monster.move();
+            });
+
+            this.moveObjects();
+        }, 1000);
     }
 
     pickRandomLocation(): (number | undefined)[] {

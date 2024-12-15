@@ -52,7 +52,7 @@ export class Monster extends Phaser.Physics.Arcade.Image {
     updateHealthBar() {
         this.healthBar.clear();
         // При нулевом здоровье шкалу не показываем
-        if(this.health) {
+        if (this.health) {
             this.createHealthBar();
         }
     }
@@ -95,5 +95,9 @@ export class Monster extends Phaser.Physics.Arcade.Image {
         if(this.body) {
             this.body.checkCollision.none = true;
         }
+    }
+
+    update() {
+        this.updateHealthBar();
     }
 }
