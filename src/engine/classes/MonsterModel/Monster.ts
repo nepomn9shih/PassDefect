@@ -1,10 +1,11 @@
 import {getRandomNumber} from './../../utils/getRandomNumber';
-import {GameEvents, MonstersVariations} from '../../enums';
+import {GameEvents, MonsterAnimation, MonstersVariations} from '../../enums';
 import {PLAYER_INITIAL_SCALE} from '../Player/constants';
 import {HEALTH_BAR_CONFIG, MONSTERS_PARAMS} from './constants';
 import {MonsterProps} from './types';
+import { getMonsterAnimations } from './getMonsterAnimations';
 
-export class Monster extends Phaser.Physics.Arcade.Image {
+export class Monster extends Phaser.Physics.Arcade.Sprite {
     id: string;
     health: number;
     maxHealth: number;
@@ -21,12 +22,44 @@ export class Monster extends Phaser.Physics.Arcade.Image {
         this.healthBar = this.scene.add.graphics();
 
         this.scene.physics.world.enable(this);
+        this.createAnimations();
         // Делает несдвигаемым
         this.setImmovable(false);
         this.setScale(PLAYER_INITIAL_SCALE);
         this.setCollideWorldBounds(true);
         this.scene.add.existing(this);
         this.createHealthBar();
+        this.playSpawnAnimation();
+
+        this.scene.time.delayedCall(1000, () => {
+            this.playMoveAnimation();
+        }, [], this);
+    }
+   
+    createAnimations() {
+        const animations = getMonsterAnimations(this);
+    
+        Object.keys(animations).forEach((animation: MonsterAnimation) => this.anims.create(animations[animation]));
+    }
+
+    playMoveAnimation(){
+        this.playAnimation(MonsterAnimation.MOVE);
+    }
+
+    playAnimation(animation: MonsterAnimation) {
+        this.anims.play(animation);
+    }
+
+    playDeathAnimation(){
+        this.playAnimation(MonsterAnimation.DEATH);
+    }
+    
+    playGetHitAnimation(){
+        this.playAnimation(MonsterAnimation.GET_HIT);
+    }
+    
+    playSpawnAnimation(){
+        this.playAnimation(MonsterAnimation.SPAWN);
     }
 
     createHealthBar() {
@@ -59,6 +92,7 @@ export class Monster extends Phaser.Physics.Arcade.Image {
 
     loseHealth(damage: number) {
         this.health = this.health - damage;
+        this.playGetHitAnimation();
 
         if (this.health < 0) {
             this.health = 0
@@ -68,7 +102,12 @@ export class Monster extends Phaser.Physics.Arcade.Image {
 
         if (!this.health) {
             this.makeInactive();
-            this.scene.events.emit(GameEvents.DESTROY_MONSTER, this.id);
+            this.playDeathAnimation();
+			// Чтобы успела отыграть анимация смерти
+			this.scene.time.delayedCall(1000, () => {
+                this.stop();
+				this.scene.events.emit(GameEvents.DESTROY_MONSTER, this.id);
+			}, [], this);
         }
     }
 

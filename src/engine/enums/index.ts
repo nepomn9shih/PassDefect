@@ -37,7 +37,7 @@ export enum PlayerSkinVariations {
 }
 
 export enum MonstersVariations {
-    INFECTED = 'monster-infected'
+    KNIGHT = 'monster-knight'
 }
 
 export enum SpawnObjects {
@@ -70,4 +70,11 @@ export enum PlayerAnimation {
     GET_HIT = 'player-get-hit',
     DEATH = 'player-death',
     SPAWN = 'player-spawn'
+}
+
+export enum MonsterAnimation {
+    MOVE = 'monster-move',
+    GET_HIT = 'monster-get-hit',
+    DEATH = 'monster-death',
+    SPAWN = 'monster-spawn'
 }

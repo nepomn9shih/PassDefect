@@ -180,6 +180,8 @@ export class MainScene extends Scene {
             monster.setPosition(monsterObject.x, monsterObject.y);
             monster.makeActive();
         }
+
+        monster.playSpawnAnimation();
     }
 
     collectChest(player: PlayerContainer, chest: Chest) {
