@@ -45,6 +45,13 @@ export enum SpawnObjects {
     MONSTER = 'monster'
 }
 
+export enum SpawnerImageVariations {
+    CHEST = 'chest-spawner',
+    MONSTER = 'monster-spawner',
+    PLAYER = 'player-spawner'
+
+}
+
 export enum GameEvents {
     SPAWN_PLAYER = 'spawn-player',
     RESPAWN_PLAYER = 'respawn-player',
@@ -62,7 +69,8 @@ export enum GameEvents {
 
 export enum AtlasesKeys {
     PICK_UP_OBJECTS = 'pick-up',
-    SWAMP_PLANET_LEVEL_MAP = 'swamp-planet'
+    SWAMP_PLANET_LEVEL_MAP = 'swamp-planet',
+    SPAWNERS = 'spawners'
 }
 
 export enum PlayerAnimation {

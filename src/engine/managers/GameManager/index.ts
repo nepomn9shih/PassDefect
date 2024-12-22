@@ -3,8 +3,9 @@ import {ChestModel} from '../../classes/ChestModel';
 import {MonsterModel} from '../../classes/MonsterModel';
 import {PlayerModel} from '../../classes/Player/PlayerModel';
 import {Spawner} from '../../classes/Spawner';
+import { SpawnerImage } from '../../classes/Spawner/SpawnerImage';
 import {SPAWNER_PROPERTY_NAME} from '../../constants';
-import {GameEvents, ObjectLayersNames, SpawnObjects} from '../../enums';
+import {GameEvents, ObjectLayersNames, SpawnerImageVariations, SpawnObjects} from '../../enums';
 import {MainScene} from '../../scenes';
 import {getTiledProperty} from '../../utils/getTiledProperty';
 import {GameManagerProps} from './types';
@@ -13,6 +14,7 @@ export class GameManager {
 	scene: MainScene;
 	mapData: Phaser.Tilemaps.ObjectLayer[];
 	spawners: Record<string, Spawner>;
+	spawnersImages: Record<string, SpawnerImage>;
 	chests: Record<string, ChestModel>;
 	monsters: Record<string, MonsterModel>;
 	players: Record<string, PlayerModel>;
@@ -26,6 +28,7 @@ export class GameManager {
 		this.scene = scene;
 		this.mapData = mapData;
 		this.spawners = {};
+		this.spawnersImages = {};
 		this.chests = {};
 		this.monsters = {};
 		this.players = {};
@@ -48,6 +51,8 @@ export class GameManager {
 					const x = obj.x! + (obj.width! / 2);
 					const y = obj.y! - (obj.height! / 2);
 					this.playerLocations.push([x, y]);
+
+					this.drawSpawner(x, y, SpawnerImageVariations.PLAYER);
 				});
 			} else if (layer.name === ObjectLayersNames.CHEST_LOCATIONS) {
 				layer.objects.forEach((obj) => {
@@ -60,6 +65,8 @@ export class GameManager {
 					} else {
 						this.chestLocations[spawner] = [[x, y]];
 					}
+
+					this.drawSpawner(x, y, SpawnerImageVariations.CHEST);
 				});
 			} else if (layer.name === ObjectLayersNames.MONSTER_LOCATIONS) {
 				layer.objects.forEach((obj) => {
@@ -72,6 +79,8 @@ export class GameManager {
 					} else {
 						this.monsterLocations[spawner] = [[x, y]];
 					}
+
+					this.drawSpawner(x, y, SpawnerImageVariations.MONSTER);
 				});
 			}
 		});
@@ -105,6 +114,17 @@ export class GameManager {
             this.players[playerId].respawn();
 			this.scene.player.respawn(this.players[playerId]);
 		});
+	}
+
+	drawSpawner(x: number, y: number, variation: SpawnerImageVariations) {
+		const spawner = new SpawnerImage({
+			scene: this.scene,
+			x,
+			y,
+			variation
+		});
+
+		this.spawnersImages[spawner.id] = spawner;
 	}
 
 	setupSpawners() {	

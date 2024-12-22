@@ -1,0 +1,43 @@
+{
+    "frames": [
+        {
+            "filename": "monster-spawner",
+            "frame": {
+                "w": 64,
+                "h": 64,
+                "x": 0,
+                "y": 0
+            },
+            "anchor": {
+                "x": 0.5,
+                "y": 0.5
+            }
+        },
+        {
+            "filename": "player-spawner",
+            "frame": {
+                "w": 64,
+                "h": 64,
+                "x": 64,
+                "y": 0
+            },
+            "anchor": {
+                "x": 0.5,
+                "y": 0.5
+            }
+        },
+        {
+            "filename": "chest-spawner",
+            "frame": {
+                "w": 64,
+                "h": 64,
+                "x": 0,
+                "y": 64
+            },
+            "anchor": {
+                "x": 0.5,
+                "y": 0.5
+            }
+        }
+    ]
+}

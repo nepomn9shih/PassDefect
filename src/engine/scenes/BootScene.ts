@@ -88,6 +88,12 @@ export class BootScene extends Scene {
 			OBJECTS_ATLASES[AtlasesKeys.PICK_UP_OBJECTS].imgUrl,
 			OBJECTS_ATLASES[AtlasesKeys.PICK_UP_OBJECTS].jsonUrl
 		);
+
+		this.load.atlas(
+			AtlasesKeys.SPAWNERS,
+			OBJECTS_ATLASES[AtlasesKeys.SPAWNERS].imgUrl,
+			OBJECTS_ATLASES[AtlasesKeys.SPAWNERS].jsonUrl
+		);
 	}
 
 	createLoadingBar() {
