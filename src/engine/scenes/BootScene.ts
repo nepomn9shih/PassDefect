@@ -84,6 +84,12 @@ export class BootScene extends Scene {
 		);
 
 		this.load.atlas(
+			AtlasesKeys.MAP_OBJECTS,
+			OBJECTS_ATLASES[AtlasesKeys.MAP_OBJECTS].imgUrl,
+			OBJECTS_ATLASES[AtlasesKeys.MAP_OBJECTS].jsonUrl
+		);
+
+		this.load.atlas(
 			AtlasesKeys.PICK_UP_OBJECTS,
 			OBJECTS_ATLASES[AtlasesKeys.PICK_UP_OBJECTS].imgUrl,
 			OBJECTS_ATLASES[AtlasesKeys.PICK_UP_OBJECTS].jsonUrl

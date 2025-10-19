@@ -1,6 +1,6 @@
 import {DEFAULT_POSITION} from "../../constants";
 import {SpawnObjects} from "../../enums";
-import { getRandomMonsterVariation } from "../../utils/getRandomMonsterVariation";
+import {getRandomMonsterVariation} from "../../utils/getRandomMonsterVariation";
 import {getRandomNumber} from "../../utils/getRandomNumber";
 import {ChestModel} from "../ChestModel";
 import {MonsterModel} from "../MonsterModel";
@@ -71,7 +71,7 @@ export class Spawner {
     spawnMonster() {
         const location = this.pickRandomLocation();
         const variation = getRandomMonsterVariation();
-        const {health, attack} = MONSTERS_PARAMS[variation];
+        const {health, attack, sight} = MONSTERS_PARAMS[variation];
 
         const monster = new MonsterModel({
             x: location[0] || DEFAULT_POSITION.x,
@@ -80,7 +80,8 @@ export class Spawner {
             spawnerId: this.id,
             variation,
             health,
-            attack
+            attack,
+            sight
         });
 
         this.objectsCreated.push(monster);

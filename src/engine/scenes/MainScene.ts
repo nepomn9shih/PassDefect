@@ -18,11 +18,13 @@ import {GameManager} from '../managers/GameManager';
 import {ChestModel} from '../classes/ChestModel';
 import {Chest} from '../classes/ChestModel/Chest';
 import {MonsterModel} from '../classes/MonsterModel';
-import {Monster} from '../classes/MonsterModel/Monster';
+import {MonsterContainer} from '../classes/MonsterModel/MonsterContainer';
 import {getRandomMonsterVariation} from '../utils/getRandomMonsterVariation';
 import {Weapon} from '../classes/Player/Weapon';
 import {PlayerModel} from '../classes/Player/PlayerModel';
 import {MONSTER_SPEED} from '../classes/MonsterModel/constants';
+import { SpawnerImage } from '../classes/Spawner/SpawnerImage';
+import { MapObject } from '../classes/MapObject';
 
 export class MainScene extends Scene {
     store: Store<AllGameState, Action<string>>;
@@ -34,6 +36,8 @@ export class MainScene extends Scene {
     gameManager!: GameManager;
     chests!: Phaser.Physics.Arcade.Group;
     monsters!: Phaser.Physics.Arcade.Group;
+    blockers!: Phaser.Physics.Arcade.Group;
+    spawners!: Phaser.Physics.Arcade.Group;
     score: number;
     cursors?: Phaser.Types.Input.Keyboard.CursorKeys;
 
@@ -107,7 +111,7 @@ export class MainScene extends Scene {
         });
 
         this.events.on(GameEvents.MOVE_MONSTER, (monsters: Record<string, MonsterModel>) => {
-            this.monsters.getChildren().forEach((monster: Monster) => {
+            this.monsters.getChildren().forEach((monster: MonsterContainer) => {
                 Object.keys(monsters).forEach((monsterId) => {
                     if (monster.id === monsterId) {
                         this.physics.moveToObject(monster, monsters[monsterId], MONSTER_SPEED);
@@ -125,6 +129,10 @@ export class MainScene extends Scene {
 		this.chests = this.physics.add.group();
         // Создаем группу для монстров
         this.monsters = this.physics.add.group();
+        // Создаем группу для монстров
+        this.blockers = this.physics.add.group();
+        // Создаем группу для спавнеров
+        this.spawners = this.physics.add.group();
         // Включаем обновление дочерних элементов
         this.monsters.runChildUpdate = true;
 	}
@@ -155,12 +163,12 @@ export class MainScene extends Scene {
     }
 
     spawnMonster(monsterObject: MonsterModel) {
-        let monster: Monster = this.monsters.getFirstDead();
+        let monster: MonsterContainer = this.monsters.getFirstDead();
     
         if (!monster) {
             const variation = getRandomMonsterVariation();
 
-            monster = new Monster({
+            monster = new MonsterContainer({
                 scene: this,
                 x: monsterObject.x,
                 y: monsterObject.y,
@@ -190,7 +198,7 @@ export class MainScene extends Scene {
         this.events.emit(GameEvents.PICK_UP_CHEST, chest.id, player.id);
     }
 
-    weaponEnemyOverlap(weapon: Weapon, enemy: Monster) {
+    weaponEnemyOverlap(weapon: Weapon, enemy: MonsterContainer) {
         if (this.player.playerAttacking && !this.player.weaponHit) {
             this.player.weaponHit = true;
 
@@ -200,12 +208,17 @@ export class MainScene extends Scene {
         }
     }
 
-    enemyOverlap(player: PlayerContainer, enemy: Monster) {
+    enemyOverlap(player: PlayerContainer, enemy: MonsterContainer) {
         if (!this.player.damageCooldown && this.player.health) {
             player.loseHealth(enemy.makeDamage());
 
             this.events.emit(GameEvents.HIT_PLAYER, enemy.id);
         }
+    }
+
+    // Удаляем блокеры которые накладываются на спавнеры
+    deleteBlocker(spawner: SpawnerImage, blocker: MapObject) {
+        blocker.destroy();
     }
 
     addCollisions() {
@@ -216,6 +229,13 @@ export class MainScene extends Scene {
              // Проверка коллизий между монстром и слоем заблоченных тайлов
             this.physics.add.collider(this.monsters, this.map.blockedLayer);
         }
+
+        // Проверка коллизий между игроком и слоем заблоченных объектов
+        this.physics.add.collider(this.player, this.blockers);
+        // Проверка коллизий между монстрами и слоем заблоченных объектов
+        this.physics.add.collider(this.monsters, this.blockers);
+        // Проверка коллизий между монстрами и слоем заблоченных объектов
+        this.physics.add.collider(this.spawners, this.blockers);
         
         // Проверка коллизий между игроком и сундуками
         // @ts-expect-error не понимает что коллбек нужного формата
@@ -226,6 +246,9 @@ export class MainScene extends Scene {
         // Проверка коллизий между игроком и монстрами
         // @ts-expect-error не понимает что коллбек нужного формата
         this.physics.add.overlap(this.player, this.monsters, this.enemyOverlap, null, this);
+        // Проверка коллизий между спавнером и блокерами
+        // @ts-expect-error не понимает что коллбек нужного формата
+        this.physics.add.overlap(this.spawners, this.blockers, this.deleteBlocker, null, this);
     }
 
     update() {

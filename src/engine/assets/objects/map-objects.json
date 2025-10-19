@@ -1,0 +1,186 @@
+{
+    "frames": [
+        {
+            "filename": "wall-right-left",
+            "frame": {
+                "w": 68,
+                "h": 68,
+                "x": 0,
+                "y": 0
+            },
+            "anchor": {
+                "x": 0.5,
+                "y": 0.5
+            }
+        },
+        {
+            "filename": "puddle-2",
+            "frame": {
+                "w": 68,
+                "h": 42,
+                "x": 68,
+                "y": 0
+            },
+            "anchor": {
+                "x": 0.5,
+                "y": 0.5
+            }
+        },
+        {
+            "filename": "wall-left-right",
+            "frame": {
+                "w": 67,
+                "h": 66,
+                "x": 0,
+                "y": 68
+            },
+            "anchor": {
+                "x": 0.5,
+                "y": 0.5
+            }
+        },
+        {
+            "filename": "puddle-3",
+            "frame": {
+                "w": 64,
+                "h": 46,
+                "x": 68,
+                "y": 42
+            },
+            "anchor": {
+                "x": 0.5,
+                "y": 0.5
+            }
+        },
+        {
+            "filename": "puddle-1",
+            "frame": {
+                "w": 63,
+                "h": 54,
+                "x": 0,
+                "y": 134
+            },
+            "anchor": {
+                "x": 0.5,
+                "y": 0.5
+            }
+        },
+        {
+            "filename": "rock-and-bush",
+            "frame": {
+                "w": 60,
+                "h": 43,
+                "x": 67,
+                "y": 88
+            },
+            "anchor": {
+                "x": 0.5,
+                "y": 0.5
+            }
+        },
+        {
+            "filename": "rock-big",
+            "frame": {
+                "w": 60,
+                "h": 54,
+                "x": 63,
+                "y": 134
+            },
+            "anchor": {
+                "x": 0.5,
+                "y": 0.5
+            }
+        },
+        {
+            "filename": "tree-big",
+            "frame": {
+                "w": 58,
+                "h": 53,
+                "x": 136,
+                "y": 0
+            },
+            "anchor": {
+                "x": 0.5,
+                "y": 0.5
+            }
+        },
+        {
+            "filename": "tree-little",
+            "frame": {
+                "w": 54,
+                "h": 58,
+                "x": 132,
+                "y": 53
+            },
+            "anchor": {
+                "x": 0.5,
+                "y": 0.5
+            }
+        },
+        {
+            "filename": "rock-medium",
+            "frame": {
+                "w": 51,
+                "h": 43,
+                "x": 123,
+                "y": 131
+            },
+            "anchor": {
+                "x": 0.5,
+                "y": 0.5
+            }
+        },
+        {
+            "filename": "tree-bushes",
+            "frame": {
+                "w": 49,
+                "h": 33,
+                "x": 0,
+                "y": 188
+            },
+            "anchor": {
+                "x": 0.5,
+                "y": 0.5
+            }
+        },
+        {
+            "filename": "puddle-mini",
+            "frame": {
+                "w": 46,
+                "h": 22,
+                "x": 49,
+                "y": 188
+            },
+            "anchor": {
+                "x": 0.5,
+                "y": 0.5
+            }
+        },
+        {
+            "filename": "bones",
+            "frame": {
+                "w": 36,
+                "h": 30,
+                "x": 95,
+                "y": 188
+            },
+            "anchor": {
+                "x": 0.5,
+                "y": 0.5
+            }
+        },
+        {
+            "filename": "rock-mini",
+            "frame": {
+                "w": 18,
+                "h": 18,
+                "x": 127,
+                "y": 111
+            },
+            "anchor": {
+                "x": 0.5,
+                "y": 0.5
+            }
+        }
+    ]
+}

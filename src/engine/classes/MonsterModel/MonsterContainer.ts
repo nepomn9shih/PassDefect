@@ -3,9 +3,9 @@ import {GameEvents, MonsterAnimation, MonstersVariations} from '../../enums';
 import {PLAYER_INITIAL_SCALE} from '../Player/constants';
 import {HEALTH_BAR_CONFIG, MONSTERS_PARAMS} from './constants';
 import {MonsterProps} from './types';
-import { getMonsterAnimations } from './getMonsterAnimations';
+import {getMonsterAnimations} from './getMonsterAnimations';
 
-export class Monster extends Phaser.Physics.Arcade.Sprite {
+export class MonsterContainer extends Phaser.Physics.Arcade.Sprite {
     id: string;
     health: number;
     maxHealth: number;

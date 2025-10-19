@@ -49,7 +49,6 @@ export enum SpawnerImageVariations {
     CHEST = 'chest-spawner',
     MONSTER = 'monster-spawner',
     PLAYER = 'player-spawner'
-
 }
 
 export enum GameEvents {
@@ -70,7 +69,8 @@ export enum GameEvents {
 export enum AtlasesKeys {
     PICK_UP_OBJECTS = 'pick-up',
     SWAMP_PLANET_LEVEL_MAP = 'swamp-planet',
-    SPAWNERS = 'spawners'
+    SPAWNERS = 'spawners',
+    MAP_OBJECTS = 'map-objects'
 }
 
 export enum PlayerAnimation {
@@ -85,4 +85,21 @@ export enum MonsterAnimation {
     GET_HIT = 'monster-get-hit',
     DEATH = 'monster-death',
     SPAWN = 'monster-spawn'
+}
+
+export enum MapObjectVariations {
+    ROCK_MINI = 'rock-mini',
+    ROCK_BIG = 'rock-big',
+    ROCK_MEDIUM = 'rock-medium',
+    ROCK_AND_BUSH = 'rock-and-bush',
+    TREE_BIG = 'tree-big',
+    TREE_LITTLE = 'tree-little',
+    TREE_BUSHES = 'tree-bushes',
+    PUDDLE_MINI = 'puddle-mini',
+    PUDDLE_1 = 'puddle-1',
+    PUDDLE_2 = 'puddle-2',
+    PUDDLE_3 = 'puddle-3',
+    BONES = 'bones',
+    WALL_LEFT_RIGHT = 'wall-left-right',
+    WALL_RIGHT_LEFT = 'wall-right-left'
 }

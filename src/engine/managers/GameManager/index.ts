@@ -1,14 +1,17 @@
+import {MapObject} from './../../classes/MapObject/index';
 import {addMoney} from '../../../reducers/slices';
 import {ChestModel} from '../../classes/ChestModel';
 import {MonsterModel} from '../../classes/MonsterModel';
 import {PlayerModel} from '../../classes/Player/PlayerModel';
 import {Spawner} from '../../classes/Spawner';
-import { SpawnerImage } from '../../classes/Spawner/SpawnerImage';
+import {SpawnerImage} from '../../classes/Spawner/SpawnerImage';
 import {SPAWNER_PROPERTY_NAME} from '../../constants';
-import {GameEvents, ObjectLayersNames, SpawnerImageVariations, SpawnObjects} from '../../enums';
+import {GameEvents, MapObjectVariations, ObjectLayersNames, SpawnerImageVariations, SpawnObjects} from '../../enums';
 import {MainScene} from '../../scenes';
 import {getTiledProperty} from '../../utils/getTiledProperty';
 import {GameManagerProps} from './types';
+import {MAP_OBJECTS_STUB} from '../../constants/map-objects';
+import { getRandomNumber } from '../../utils/getRandomNumber';
 
 export class GameManager {
 	scene: MainScene;
@@ -23,6 +26,7 @@ export class GameManager {
 	chestLocations: Record<any, (number | undefined)[][]>;
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	monsterLocations: Record<any, (number | undefined)[][]>;
+	mapObjects: Record<string, MapObject>;
 
 	constructor({scene, mapData}: GameManagerProps) {
 		this.scene = scene;
@@ -35,9 +39,11 @@ export class GameManager {
 		this.playerLocations = [];
 		this.chestLocations = {};
 		this.monsterLocations = {};
+		this.mapObjects = {}
 	}
 
 	setup() {
+		this.drawMapObjects();
 		this.parseMapData();
 		this.setupEventListener();
 		this.setupSpawners();
@@ -52,7 +58,8 @@ export class GameManager {
 					const y = obj.y! - (obj.height! / 2);
 					this.playerLocations.push([x, y]);
 
-					this.drawSpawner(x, y, SpawnerImageVariations.PLAYER);
+					// рисуем башню чуть выше положения игрока
+					this.drawSpawner(x, y - 15, SpawnerImageVariations.PLAYER);
 				});
 			} else if (layer.name === ObjectLayersNames.CHEST_LOCATIONS) {
 				layer.objects.forEach((obj) => {
@@ -116,6 +123,29 @@ export class GameManager {
 		});
 	}
 
+	// Отрисовать count одинаковых объектов типа variation
+	drawCountObjects(variation: MapObjectVariations, count: number) {
+		for (let i = 0; i < count; i++) {
+			const newObject = new MapObject({
+				scene: this.scene,
+				x: getRandomNumber(0, this.scene.physics.world.bounds.width),
+				y: getRandomNumber(0, this.scene.physics.world.bounds.height),
+				variation
+			})
+	
+			this.mapObjects[newObject.id] = newObject;
+		}
+	}
+
+	// Отрисовать объекты на карте
+	drawMapObjects() {
+		MAP_OBJECTS_STUB.forEach((object) => {
+			const {count, variation} = object;
+	
+			this.drawCountObjects(variation, count);
+		})
+	}
+
 	drawSpawner(x: number, y: number, variation: SpawnerImageVariations) {
 		const spawner = new SpawnerImage({
 			scene: this.scene,
@@ -124,6 +154,7 @@ export class GameManager {
 			variation
 		});
 
+		this.scene.spawners.add(spawner);
 		this.spawnersImages[spawner.id] = spawner;
 	}
 

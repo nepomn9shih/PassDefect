@@ -7,7 +7,8 @@ export const MONSTERS_PARAMS: Record<MonstersVariations, MonsterParams> = {
         attack: {
             min: 1,
             max: 2
-        }
+        },
+        sight: 50
     }
 };
 

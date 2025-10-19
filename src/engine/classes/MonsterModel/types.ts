@@ -12,10 +12,10 @@ export type MonsterModelProps = {
         min: number;
         max: number;
     },
-    
+    sight: number;
 }
 
-export type MonsterParams = Pick<MonsterModelProps, 'health' | 'attack'>
+export type MonsterParams = Pick<MonsterModelProps, 'health' | 'attack' | 'sight'>
 
 export type MonsterProps = Pick<MonsterModelProps, 'x' | 'y' | 'variation' | 'health'> & {
     scene: MainScene;
