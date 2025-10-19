@@ -17,8 +17,16 @@ export type MonsterModelProps = {
 
 export type MonsterParams = Pick<MonsterModelProps, 'health' | 'attack' | 'sight'>
 
-export type MonsterProps = Pick<MonsterModelProps, 'x' | 'y' | 'variation' | 'health'> & {
+export type MonsterContainerProps = Pick<MonsterModelProps, 'x' | 'y' | 'variation' | 'health'> & {
     scene: MainScene;
     id: string;
     maxHealth: number;
+};
+
+export type MonsterProps = {
+    scene: MainScene;
+    x: number;
+    y: number;
+    variation: MonstersVariations;
+    frame?: string;
 };

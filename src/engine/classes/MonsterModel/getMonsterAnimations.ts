@@ -1,8 +1,8 @@
 import {MonsterAnimation} from '../../enums';
-import {MonsterContainer} from './MonsterContainer';
+import {Monster} from './Monster';
 
 /** Возвращает конфиги для анимации монстров */
-export const getMonsterAnimations = (monster: MonsterContainer): Record<MonsterAnimation, Phaser.Types.Animations.Animation> => {
+export const getMonsterAnimations = (monster: Monster): Record<MonsterAnimation, Phaser.Types.Animations.Animation> => {
 	const {variation} = monster;
 
 	const commonProps = {

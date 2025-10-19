@@ -1,65 +1,71 @@
 import {getRandomNumber} from './../../utils/getRandomNumber';
 import {GameEvents, MonsterAnimation, MonstersVariations} from '../../enums';
-import {PLAYER_INITIAL_SCALE} from '../Player/constants';
-import {HEALTH_BAR_CONFIG, MONSTERS_PARAMS} from './constants';
-import {MonsterProps} from './types';
-import {getMonsterAnimations} from './getMonsterAnimations';
+import {HEALTH_BAR_CONFIG, MONSTER_INITIAL_SCALE, MONSTERS_PARAMS} from './constants';
+import {MonsterContainerProps} from './types';
+import {Monster} from './Monster';
+import {MainScene} from '../../scenes';
 
-export class MonsterContainer extends Phaser.Physics.Arcade.Sprite {
+export class MonsterContainer extends Phaser.GameObjects.Container {
+    scene: MainScene;
     id: string;
     health: number;
     maxHealth: number;
     healthBar: Phaser.GameObjects.Graphics;
     variation: MonstersVariations;
+    monster: Monster;
 
-    constructor({scene, x, y, variation, id, health, maxHealth}: MonsterProps) {
-        super(scene, x, y, variation);
+    constructor({
+        scene,
+        x,
+        y,
+        variation,
+        id,
+        health,
+        maxHealth
+    }: MonsterContainerProps) {
+        super(scene, x, y);
         this.scene = scene;
         this.id = id;
         this.variation = variation;
+         // Задаем размеры контейнера
+ 		this.setSize(36, 46);
         this.health = health;
         this.maxHealth = maxHealth;
         this.healthBar = this.scene.add.graphics();
 
         this.scene.physics.world.enable(this);
-        this.createAnimations();
-        // Делает несдвигаемым
-        this.setImmovable(false);
-        this.setScale(PLAYER_INITIAL_SCALE);
-        this.setCollideWorldBounds(true);
         this.scene.add.existing(this);
         this.createHealthBar();
+        // создаем спрайт монстра
+        this.monster = new Monster({
+            scene: this.scene,
+            x: 0,
+            y: 0,
+            variation,
+            frame: '01'
+        });
+        this.add(this.monster);
         this.playSpawnAnimation();
 
         this.scene.time.delayedCall(1000, () => {
             this.playMoveAnimation();
         }, [], this);
     }
-   
-    createAnimations() {
-        const animations = getMonsterAnimations(this);
-    
-        Object.keys(animations).forEach((animation: MonsterAnimation) => this.anims.create(animations[animation]));
-    }
 
     playMoveAnimation(){
-        this.playAnimation(MonsterAnimation.MOVE);
-    }
-
-    playAnimation(animation: MonsterAnimation) {
-        this.anims.play(animation);
+        this.monster.playAnimation(MonsterAnimation.MOVE);
     }
 
     playDeathAnimation(){
-        this.playAnimation(MonsterAnimation.DEATH);
+        this.monster.playAnimation(MonsterAnimation.DEATH);
     }
     
     playGetHitAnimation(){
-        this.playAnimation(MonsterAnimation.GET_HIT);
+        this.monster.playAnimation(MonsterAnimation.GET_HIT);
     }
     
     playSpawnAnimation(){
-        this.playAnimation(MonsterAnimation.SPAWN);
+        this.monster.playAnimation(MonsterAnimation.SPAWN);
     }
 
     createHealthBar() {
@@ -68,7 +74,7 @@ export class MonsterContainer extends Phaser.Physics.Arcade.Sprite {
         // Подложка шкалы здоровья
         this.healthBar.fillRect(
             this.x - width / 2,
-            this.y - this.width * PLAYER_INITIAL_SCALE / 2 - height,
+            this.y - this.height * MONSTER_INITIAL_SCALE - 2 * height,
             width,
             height
         );
@@ -76,7 +82,7 @@ export class MonsterContainer extends Phaser.Physics.Arcade.Sprite {
         this.healthBar.fillStyle(0x5f010a, 1);
         this.healthBar.fillRect(
             this.x - width / 2,
-            this.y - this.width * PLAYER_INITIAL_SCALE / 2 - height,
+            this.y - this.height * MONSTER_INITIAL_SCALE - 2 * height,
             width * (this.health / this.maxHealth), 
             height
         );
@@ -105,7 +111,7 @@ export class MonsterContainer extends Phaser.Physics.Arcade.Sprite {
             this.playDeathAnimation();
 			// Чтобы успела отыграть анимация смерти
 			this.scene.time.delayedCall(1000, () => {
-                this.stop();
+                this.monster.stop();
 				this.scene.events.emit(GameEvents.DESTROY_MONSTER, this.id);
 			}, [], this);
         }
@@ -122,8 +128,8 @@ export class MonsterContainer extends Phaser.Physics.Arcade.Sprite {
         this.setVisible(true);
         this.updateHealthBar();
 
-        if(this.body) {
-            this.body.checkCollision.none = false;
+        if(this.monster.body) {
+            this.monster.body.checkCollision.none = false;
         }
     }
 
@@ -131,8 +137,8 @@ export class MonsterContainer extends Phaser.Physics.Arcade.Sprite {
         this.setActive(false);
         this.setVisible(false);
 
-        if(this.body) {
-            this.body.checkCollision.none = true;
+        if(this.monster.body) {
+            this.monster.body.checkCollision.none = true;
         }
     }
 

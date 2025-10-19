@@ -13,10 +13,12 @@ export const MONSTERS_PARAMS: Record<MonstersVariations, MonsterParams> = {
 };
 
 export const HEALTH_BAR_CONFIG = {
-    width: 64,
+    width: 46,
     height: 5
 };
 
 export const MONSTER_STEP = 32;
 
 export const MONSTER_SPEED = 40;
+
+export const MONSTER_INITIAL_SCALE = 0.5;

@@ -179,12 +179,12 @@ export class MainScene extends Scene {
             });
 
             this.monsters.add(monster);
-            monster.setCollideWorldBounds(true);
+            monster.monster.setCollideWorldBounds(true);
         } else {
             monster.id = monsterObject.id;
             monster.health = monsterObject.health;
             monster.maxHealth = monsterObject.maxHealth;
-            monster.setTexture(monsterObject.variation);
+            monster.monster.setTexture(monsterObject.variation);
             monster.setPosition(monsterObject.x, monsterObject.y);
             monster.makeActive();
         }
@@ -234,7 +234,7 @@ export class MainScene extends Scene {
         this.physics.add.collider(this.player, this.blockers);
         // Проверка коллизий между монстрами и слоем заблоченных объектов
         this.physics.add.collider(this.monsters, this.blockers);
-        // Проверка коллизий между монстрами и слоем заблоченных объектов
+        // Проверка коллизий между спавнерами и слоем заблоченных объектов
         this.physics.add.collider(this.spawners, this.blockers);
         
         // Проверка коллизий между игроком и сундуками

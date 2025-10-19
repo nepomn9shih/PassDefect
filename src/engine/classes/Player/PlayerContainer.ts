@@ -58,7 +58,7 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
 		// попало ли оружие по цели
 		this.isHit = false;
 		 // Задаем размеры контейнера
- 		this.setSize(64, 64);
+ 		this.setSize(36, 46);
 		// Подключаем игрока в физику
 		this.scene.physics.world.enable(this);
 		// Игрок не сможет зайти за карту

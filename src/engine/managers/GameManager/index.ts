@@ -11,7 +11,8 @@ import {MainScene} from '../../scenes';
 import {getTiledProperty} from '../../utils/getTiledProperty';
 import {GameManagerProps} from './types';
 import {MAP_OBJECTS_STUB} from '../../constants/map-objects';
-import { getRandomNumber } from '../../utils/getRandomNumber';
+import {getRandomNumber} from '../../utils/getRandomNumber';
+import {CHEST_SPAWN_INTERVAL, MONSTER_SPAWN_INTERVAL} from './constants';
 
 export class GameManager {
 	scene: MainScene;
@@ -164,7 +165,7 @@ export class GameManager {
 		// Создаем спавнер сундука
 		Object.keys(this.chestLocations).forEach((key) => {
 			const config = {
-				spawnInterval: 3000,
+				spawnInterval: CHEST_SPAWN_INTERVAL,
 				limit: 1,
 				id: `chest-${key}`,
 				spawnerType: SpawnObjects.CHEST
@@ -184,7 +185,7 @@ export class GameManager {
 		// Создаем спавнер монстров
 		Object.keys(this.monsterLocations).forEach((key) => {
 			const config = {
-				spawnInterval: 15000,
+				spawnInterval: MONSTER_SPAWN_INTERVAL,
 				limit: 1,
 				id: `monster-${key}`,
 				spawnerType: SpawnObjects.MONSTER

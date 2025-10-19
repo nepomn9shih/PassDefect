@@ -1,0 +1,3 @@
+export const CHEST_SPAWN_INTERVAL = 10000;
+
+export const MONSTER_SPAWN_INTERVAL = 15000;
