@@ -179,7 +179,6 @@ export class MainScene extends Scene {
             });
 
             this.monsters.add(monster);
-            monster.monster.setCollideWorldBounds(true);
         } else {
             monster.id = monsterObject.id;
             monster.health = monsterObject.health;

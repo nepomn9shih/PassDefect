@@ -30,7 +30,6 @@ export class Monster extends Phaser.Physics.Arcade.Sprite {
         this.setImmovable(true);
         // Настраиваем размер игрока
         this.setScale(MONSTER_INITIAL_SCALE);
-        this.setCollideWorldBounds(true);
         // Добавляем игрока на сцену
         this.scene.add.existing(this);
 

@@ -128,8 +128,9 @@ export class MonsterContainer extends Phaser.GameObjects.Container {
         this.setVisible(true);
         this.updateHealthBar();
 
-        if(this.monster.body) {
-            this.monster.body.checkCollision.none = false;
+        if(this.body) {
+            //@ts-expect-error ts не определяет нужный body
+            this.body.checkCollision.none = false;
         }
     }
 
@@ -137,8 +138,9 @@ export class MonsterContainer extends Phaser.GameObjects.Container {
         this.setActive(false);
         this.setVisible(false);
 
-        if(this.monster.body) {
-            this.monster.body.checkCollision.none = true;
+        if(this.body) {
+            //@ts-expect-error ts не определяет нужный body
+            this.body.checkCollision.none = true;
         }
     }
 

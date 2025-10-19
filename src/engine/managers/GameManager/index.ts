@@ -172,6 +172,7 @@ export class GameManager {
 			};
 
 			spawner = new Spawner({
+				scene: this.scene,
 				config,
 				spawnLocations: this.chestLocations[key], 
 				addObject: this.addChest.bind(this), 
@@ -192,6 +193,7 @@ export class GameManager {
 			};
 			
 			spawner = new Spawner({
+				scene: this.scene,
 				config,
 				spawnLocations: this.monsterLocations[key],
 				addObject: this.addMonster.bind(this),

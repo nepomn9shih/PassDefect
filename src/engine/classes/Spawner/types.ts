@@ -4,6 +4,7 @@ import {ChestModel} from '../ChestModel';
 import {MonsterModel} from '../MonsterModel';
 
 export type SpawnerProps = {
+	scene: MainScene;
 	config: {
 		spawnInterval: number;
 		limit: number;

@@ -2,6 +2,8 @@ import {MonstersVariations} from '../../enums';
 import {MainScene} from '../../scenes';
 
 export type MonsterModelProps = {
+    boundX: number;
+    boundY: number;
     x: number;
     y: number;
     gold: number;

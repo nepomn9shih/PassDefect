@@ -17,8 +17,10 @@ export class MonsterModel {
         min: number;
         max: number;
     }
+    boundX: number;
+    boundY: number;
 
-    constructor({x, y, gold, spawnerId, variation, health, attack}: MonsterModelProps) {
+    constructor({x, y, gold, spawnerId, variation, health, attack, boundX, boundY}: MonsterModelProps) {
         this.id = `${spawnerId}-${generateUUIDv4()}`;
         this.x = x;
         this.y = y;
@@ -28,39 +30,74 @@ export class MonsterModel {
         this.health = health;
         this.maxHealth = health;
         this.attack = attack;
+        this.boundX = boundX;
+        this.boundY = boundY;
+    }
+
+    moveRight() {
+        const newX = this.x + MONSTER_STEP;
+        if (newX > 0 && newX < this.boundX) {
+            this.x = newX;
+        }
+    }
+
+    moveLeft() {
+        const newX = this.x - MONSTER_STEP;
+        if (newX > 0 && newX < this.boundX) {
+            this.x = newX;
+        }
+    }
+
+    moveDown() {
+        const newY = this.y + MONSTER_STEP;
+        if (newY > 0 && newY < this.boundY) {
+            this.y = newY;
+        }
+    }
+
+    moveTop() {
+        const newY = this.y - MONSTER_STEP;
+        if (newY > 0 && newY < this.boundY) {
+            this.y = newY;
+        }
     }
 
     move() {
         const randomPosition = getRandomNumber(1, 8);
 
         switch (randomPosition) {
-            case 1:
-                this.x += MONSTER_STEP;
+            case 1: {
+                this.moveRight();
                 break;
-            case 2:
-                this.x -= MONSTER_STEP;
+            }
+            case 2: {
+                this.moveLeft();
                 break;
-            case 3:
-                this.y += MONSTER_STEP;
+            }
+            case 3: {
+                this.moveDown();
                 break;
-            case 4:
-                this.y -= MONSTER_STEP;
+            }
+            case 4: {
+                this.moveTop();
                 break;
-            case 5:
-                this.x += MONSTER_STEP;
-                this.y += MONSTER_STEP;
+            }
+            case 5: {
+                this.moveRight();
+                this.moveDown();
                 break;
+            }
             case 6:
-                this.x += MONSTER_STEP;
-                this.y -= MONSTER_STEP;
+                this.moveRight();
+                this.moveTop();
                 break;
             case 7:
-                this.x -= MONSTER_STEP;
-                this.y += MONSTER_STEP;
+                this.moveLeft();
+                this.moveDown();
                 break;
             case 8:
-                this.x -= MONSTER_STEP;
-                this.y -= MONSTER_STEP;
+                this.moveLeft();
+                this.moveTop();
                 break;
             default:
                 break;

@@ -1,5 +1,6 @@
 import {DEFAULT_POSITION} from "../../constants";
 import {SpawnObjects} from "../../enums";
+import {MainScene} from "../../scenes";
 import {getRandomMonsterVariation} from "../../utils/getRandomMonsterVariation";
 import {getRandomNumber} from "../../utils/getRandomNumber";
 import {ChestModel} from "../ChestModel";
@@ -8,6 +9,7 @@ import {MONSTERS_PARAMS} from "../MonsterModel/constants";
 import {AddObject, SpawnerProps} from "./types";
 
 export class Spawner {
+    scene: MainScene;
     id: string;
     spawnInterval: number;
     limit: number;
@@ -20,8 +22,9 @@ export class Spawner {
     interval?: NodeJS.Timeout;
     moveMonsterInterval: NodeJS.Timeout;
 
-    constructor({config, spawnLocations, addObject, deleteObject, moveObjects}: SpawnerProps) {
+    constructor({scene, config, spawnLocations, addObject, deleteObject, moveObjects}: SpawnerProps) {
         this.id = config.id;
+        this.scene = scene;
         this.spawnInterval = config.spawnInterval;
         this.limit = config.limit;
         this.objectType = config.spawnerType;
@@ -74,6 +77,8 @@ export class Spawner {
         const {health, attack, sight} = MONSTERS_PARAMS[variation];
 
         const monster = new MonsterModel({
+            boundX: this.scene.physics.world.bounds.width,
+            boundY: this.scene.physics.world.bounds.height,
             x: location[0] || DEFAULT_POSITION.x,
             y: location[1] || DEFAULT_POSITION.x,
             gold: getRandomNumber(10, 20),
