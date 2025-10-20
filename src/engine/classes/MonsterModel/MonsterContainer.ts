@@ -107,11 +107,11 @@ export class MonsterContainer extends Phaser.GameObjects.Container {
         this.updateHealthBar();
 
         if (!this.health) {
-            this.makeInactive();
             this.playDeathAnimation();
 			// Чтобы успела отыграть анимация смерти
 			this.scene.time.delayedCall(1000, () => {
                 this.monster.stop();
+                this.makeInactive();
 				this.scene.events.emit(GameEvents.DESTROY_MONSTER, this.id);
 			}, [], this);
         }

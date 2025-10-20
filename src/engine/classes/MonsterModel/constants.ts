@@ -8,7 +8,7 @@ export const MONSTERS_PARAMS: Record<MonstersVariations, MonsterParams> = {
             min: 1,
             max: 2
         },
-        sight: 50
+        sight: 300
     }
 };
 

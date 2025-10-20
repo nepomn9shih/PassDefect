@@ -19,8 +19,20 @@ export class MonsterModel {
     }
     boundX: number;
     boundY: number;
+    sight: number;
 
-    constructor({x, y, gold, spawnerId, variation, health, attack, boundX, boundY}: MonsterModelProps) {
+    constructor({
+        x,
+        y,
+        gold,
+        spawnerId,
+        variation,
+        health,
+        attack,
+        boundX,
+        boundY,
+        sight
+    }: MonsterModelProps) {
         this.id = `${spawnerId}-${generateUUIDv4()}`;
         this.x = x;
         this.y = y;
@@ -32,6 +44,7 @@ export class MonsterModel {
         this.attack = attack;
         this.boundX = boundX;
         this.boundY = boundY;
+        this.sight = sight;
     }
 
     moveRight() {
@@ -87,20 +100,23 @@ export class MonsterModel {
                 this.moveDown();
                 break;
             }
-            case 6:
+            case 6: {
                 this.moveRight();
                 this.moveTop();
                 break;
-            case 7:
+            }
+            case 7: {
                 this.moveLeft();
                 this.moveDown();
                 break;
-            case 8:
+            }
+            case 8: {
                 this.moveLeft();
                 this.moveTop();
                 break;
+            }
             default:
                 break;
-        }
-    }       
-}
+        };
+    };      
+};

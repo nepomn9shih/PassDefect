@@ -114,7 +114,17 @@ export class MainScene extends Scene {
             this.monsters.getChildren().forEach((monster: MonsterContainer) => {
                 Object.keys(monsters).forEach((monsterId) => {
                     if (monster.id === monsterId) {
-                        this.physics.moveToObject(monster, monsters[monsterId], MONSTER_SPEED);
+                        const distance = Phaser.Math.Distance.Between(
+                            monster.x, monster.y,
+                            this.player.x, this.player.y
+                        );
+                        if (distance > monsters[monster.id].sight) {
+                            // если игрок не в поле зрения монстра, то монстр рандомно бродит
+                            this.physics.moveToObject(monster, monsters[monsterId], MONSTER_SPEED);
+                        } else {
+                            // если игрок в поле зрения монстра, то монстр преследует игрока
+                            this.physics.moveToObject(monster, this.player, MONSTER_SPEED);
+                        }
                     }
                 });
             });
