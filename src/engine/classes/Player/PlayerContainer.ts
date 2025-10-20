@@ -150,6 +150,7 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
         this.updateHealthBar(this.health);
 
         if (!this.health) {
+			this.scene.events.emit(GameEvents.DEATH_PLAYER, this.id);
 			this.setActive(false);
             this.playDeathAnimation();
 			// Чтобы успела отыграть анимация смерти

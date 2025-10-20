@@ -1,5 +1,5 @@
 import {MapObject} from './../../classes/MapObject/index';
-import {addMoney} from '../../../reducers/slices';
+import {addMoney, looseMoney} from '../../../reducers/slices';
 import {ChestModel} from '../../classes/ChestModel';
 import {MonsterModel} from '../../classes/MonsterModel';
 import {PlayerModel} from '../../classes/Player/PlayerModel';
@@ -115,6 +115,13 @@ export class GameManager {
 			if (this.monsters[monsterId]) {
 				this.spawners[this.monsters[monsterId].spawnerId].removeObject(monsterId);
 			}
+		});
+
+		// Когда происходит смерть игрока
+		this.scene.events.on(GameEvents.DEATH_PLAYER, (playerId: string) => {
+            this.players[playerId].looseGold();
+			// Обновляем деньги в интерфейсе
+			this.scene.store.dispatch(looseMoney());
 		});
 
 		// Когда происходит респавн игрока

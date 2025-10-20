@@ -24,6 +24,10 @@ export class PlayerModel {
         this.gold += gold;
     }
 
+    looseGold() {
+        this.gold = 0;
+    }
+
     respawn() {
         this.health = this.maxHealth;
         const location = this.spawnLocations[Math.floor(Math.random() * this.spawnLocations.length)];
