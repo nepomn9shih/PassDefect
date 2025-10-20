@@ -53,7 +53,6 @@ export class MonsterContainer extends Phaser.GameObjects.Container {
         this.playSpawnAnimation();
 
         this.scene.time.delayedCall(1000, () => {
-            this.playMoveAnimation();
             this.moveMonster();
         }, [], this);
     }
@@ -72,6 +71,9 @@ export class MonsterContainer extends Phaser.GameObjects.Container {
     
     playSpawnAnimation(){
         this.monster.playAnimation(MonsterAnimation.SPAWN);
+        this.scene.time.delayedCall(1000, () => {
+            this.playMoveAnimation();
+        }, [], this);
     }
 
     createHealthBar() {
@@ -113,6 +115,8 @@ export class MonsterContainer extends Phaser.GameObjects.Container {
         this.updateHealthBar();
 
         if (!this.health) {
+            //@ts-expect-error ts не определяет нужный body
+            this.body?.setVelocity(0);
             this.playDeathAnimation();
 			// Чтобы успела отыграть анимация смерти
 			this.scene.time.delayedCall(1000, () => {
