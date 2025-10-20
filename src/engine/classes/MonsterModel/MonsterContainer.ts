@@ -13,6 +13,9 @@ export class MonsterContainer extends Phaser.GameObjects.Container {
     healthBar: Phaser.GameObjects.Graphics;
     variation: MonstersVariations;
     monster: Monster;
+    velocity: number;
+    moveMonsterInterval: NodeJS.Timeout;
+    flipX: boolean;
 
     constructor({
         scene,
@@ -32,6 +35,8 @@ export class MonsterContainer extends Phaser.GameObjects.Container {
         this.health = health;
         this.maxHealth = maxHealth;
         this.healthBar = this.scene.add.graphics();
+        this.velocity = 10;
+        this.flipX = true;
 
         this.scene.physics.world.enable(this);
         this.scene.add.existing(this);
@@ -49,6 +54,7 @@ export class MonsterContainer extends Phaser.GameObjects.Container {
 
         this.scene.time.delayedCall(1000, () => {
             this.playMoveAnimation();
+            this.moveMonster();
         }, [], this);
     }
 
@@ -142,6 +148,93 @@ export class MonsterContainer extends Phaser.GameObjects.Container {
             //@ts-expect-error ts не определяет нужный body
             this.body.checkCollision.none = true;
         }
+    }
+
+    goRight() {
+        //@ts-expect-error ts не определяет нужный body
+        this.body?.setVelocityX(this.velocity);
+        this.monster.flipX = false;
+    }
+
+    goLeft() {
+        //@ts-expect-error ts не определяет нужный body
+        this.body?.setVelocityX(-this.velocity);
+        this.monster.flipX = true;
+    }
+
+    goDown() {
+       //@ts-expect-error ts не определяет нужный body
+        this.body?.setVelocityY(this.velocity);
+    }
+
+    goTop() {
+        //@ts-expect-error ts не определяет нужный body
+        this.body?.setVelocityY(-this.velocity);
+    }
+
+    randomlyMove() {
+        const randomPosition = getRandomNumber(1, 8);
+
+        switch (randomPosition) {
+            case 1: {
+                this.goRight();
+                break;
+            }
+            case 2: {
+                this.goLeft();
+                break;
+            }
+            case 3: {
+                this.goDown();
+                break;
+            }
+            case 4: {
+                this.goTop();
+                break;
+            }
+            case 5: {
+                this.goRight();
+                this.goDown();
+                break;
+            }
+            case 6: {
+                this.goRight();
+                this.goTop();
+                break;
+            }
+            case 7: {
+                this.goLeft();
+                this.goDown();
+                break;
+            }
+            case 8: {
+                this.goLeft();
+                this.goTop();
+                break;
+            }
+            default:
+                break;
+        };
+    };
+    
+    moveMonster() {
+        this.moveMonsterInterval = setInterval(() => {
+            if (this.health > 0) {
+                const distance = Phaser.Math.Distance.Between(
+                    this.x, this.y,
+                    this.scene.player.x, this.scene.player.y
+                );
+
+                if (distance > MONSTERS_PARAMS[this.variation].sight) {
+                    // если игрок не в поле зрения монстра, то монстр рандомно бродит
+                    this.randomlyMove();
+                } else {
+                    // если игрок в поле зрения монстра, то монстр преследует игрока
+                    this.scene.physics.moveToObject(this, this.scene.player, MONSTERS_PARAMS[this.variation].speed);
+                    this.monster.flipX = this.scene.player.x < this.x;
+                }    
+            }
+        }, 1000);
     }
 
     update() {

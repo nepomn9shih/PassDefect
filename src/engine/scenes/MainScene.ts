@@ -22,7 +22,6 @@ import {MonsterContainer} from '../classes/MonsterModel/MonsterContainer';
 import {getRandomMonsterVariation} from '../utils/getRandomMonsterVariation';
 import {Weapon} from '../classes/Player/Weapon';
 import {PlayerModel} from '../classes/Player/PlayerModel';
-import {MONSTER_SPEED} from '../classes/MonsterModel/constants';
 import { SpawnerImage } from '../classes/Spawner/SpawnerImage';
 import { MapObject } from '../classes/MapObject';
 
@@ -107,26 +106,6 @@ export class MainScene extends Scene {
                 if (chest.id === chestId) {
                     chest.makeInactive();
                 }
-            });
-        });
-
-        this.events.on(GameEvents.MOVE_MONSTER, (monsters: Record<string, MonsterModel>) => {
-            this.monsters.getChildren().forEach((monster: MonsterContainer) => {
-                Object.keys(monsters).forEach((monsterId) => {
-                    if (monster.id === monsterId) {
-                        const distance = Phaser.Math.Distance.Between(
-                            monster.x, monster.y,
-                            this.player.x, this.player.y
-                        );
-                        if (distance > monsters[monster.id].sight) {
-                            // если игрок не в поле зрения монстра, то монстр рандомно бродит
-                            this.physics.moveToObject(monster, monsters[monsterId], MONSTER_SPEED);
-                        } else {
-                            // если игрок в поле зрения монстра, то монстр преследует игрока
-                            this.physics.moveToObject(monster, this.player, MONSTER_SPEED);
-                        }
-                    }
-                });
             });
         });   
 

@@ -2,8 +2,6 @@ import {MonstersVariations} from '../../enums';
 import {MainScene} from '../../scenes';
 
 export type MonsterModelProps = {
-    boundX: number;
-    boundY: number;
     x: number;
     y: number;
     gold: number;
@@ -15,9 +13,10 @@ export type MonsterModelProps = {
         max: number;
     },
     sight: number;
+    speed: number;
 }
 
-export type MonsterParams = Pick<MonsterModelProps, 'health' | 'attack' | 'sight'>
+export type MonsterParams = Pick<MonsterModelProps, 'health' | 'attack' | 'sight' | 'speed'>
 
 export type MonsterContainerProps = Pick<MonsterModelProps, 'x' | 'y' | 'variation' | 'health'> & {
     scene: MainScene;

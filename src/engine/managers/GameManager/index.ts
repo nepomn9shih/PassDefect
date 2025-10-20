@@ -176,8 +176,7 @@ export class GameManager {
 				config,
 				spawnLocations: this.chestLocations[key], 
 				addObject: this.addChest.bind(this), 
-				deleteObject: this.deleteChest.bind(this),
-				moveObjects: () => {}
+				deleteObject: this.deleteChest.bind(this)
 			});
 	
 			this.spawners[spawner.id] = spawner;
@@ -197,8 +196,7 @@ export class GameManager {
 				config,
 				spawnLocations: this.monsterLocations[key],
 				addObject: this.addMonster.bind(this),
-				deleteObject: this.deleteMonster.bind(this),
-				moveObjects: this.moveMonsters.bind(this)
+				deleteObject: this.deleteMonster.bind(this)
 			});
 
 			this.spawners[spawner.id] = spawner;
@@ -229,9 +227,5 @@ export class GameManager {
 	
 	deleteMonster(monsterId: string) {
 		delete this.monsters[monsterId];
-	}
-
-	moveMonsters() {
-		this.scene.events.emit(GameEvents.MOVE_MONSTER, this.monsters);
 	}
 }

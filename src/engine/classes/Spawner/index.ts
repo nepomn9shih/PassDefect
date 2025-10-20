@@ -17,12 +17,10 @@ export class Spawner {
     spawnLocations: (number | undefined)[][];
     addObject: AddObject;
     deleteObject: (id: string) => void;
-    moveObjects: () => void;
     objectsCreated: (ChestModel | MonsterModel)[];
     interval?: NodeJS.Timeout;
-    moveMonsterInterval: NodeJS.Timeout;
 
-    constructor({scene, config, spawnLocations, addObject, deleteObject, moveObjects}: SpawnerProps) {
+    constructor({scene, config, spawnLocations, addObject, deleteObject}: SpawnerProps) {
         this.id = config.id;
         this.scene = scene;
         this.spawnInterval = config.spawnInterval;
@@ -31,7 +29,6 @@ export class Spawner {
         this.spawnLocations = spawnLocations;
         this.addObject = addObject;
         this.deleteObject = deleteObject;
-        this.moveObjects = moveObjects;
         this.objectsCreated = [];
 
         this.start();
@@ -43,10 +40,6 @@ export class Spawner {
                 this.spawnObject();
             }
         }, this.spawnInterval);
-
-        if (this.objectType === SpawnObjects.MONSTER) {
-            this.moveMonsters();
-        }
     }
 
     spawnObject() {
@@ -74,11 +67,9 @@ export class Spawner {
     spawnMonster() {
         const location = this.pickRandomLocation();
         const variation = getRandomMonsterVariation();
-        const {health, attack, sight} = MONSTERS_PARAMS[variation];
+        const {health, attack, sight, speed} = MONSTERS_PARAMS[variation];
 
         const monster = new MonsterModel({
-            boundX: this.scene.physics.world.bounds.width,
-            boundY: this.scene.physics.world.bounds.height,
             x: location[0] || DEFAULT_POSITION.x,
             y: location[1] || DEFAULT_POSITION.x,
             gold: getRandomNumber(10, 20),
@@ -86,21 +77,12 @@ export class Spawner {
             variation,
             health,
             attack,
-            sight
+            sight,
+            speed
         });
 
         this.objectsCreated.push(monster);
         this.addObject(monster.id, monster);
-    }
-
-    moveMonsters() {
-        this.moveMonsterInterval = setInterval(() => {
-            this.objectsCreated.forEach((monster: MonsterModel) => {
-                monster.move();
-            });
-
-            this.moveObjects();
-        }, 1000);
     }
 
     pickRandomLocation(): (number | undefined)[] {

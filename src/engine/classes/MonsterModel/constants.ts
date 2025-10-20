@@ -8,7 +8,8 @@ export const MONSTERS_PARAMS: Record<MonstersVariations, MonsterParams> = {
             min: 1,
             max: 2
         },
-        sight: 300
+        sight: 300,
+        speed: 40
     }
 };
 
@@ -18,7 +19,5 @@ export const HEALTH_BAR_CONFIG = {
 };
 
 export const MONSTER_STEP = 32;
-
-export const MONSTER_SPEED = 40;
 
 export const MONSTER_INITIAL_SCALE = 0.5;
