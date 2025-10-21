@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/PassDefect/static/css/main.e6c13ad2.css",
+    "main.js": "/PassDefect/static/js/main.cc80bd6f.js",
+    "static/media/player-skin-knight.png": "/PassDefect/static/media/player-skin-knight.d39a23f0b41b00d866f6.png",
+    "static/media/monster-knight.png": "/PassDefect/static/media/monster-knight.6dfc07c1ed48bd1549d9.png",
+    "index.html": "/PassDefect/index.html",
+    "main.e6c13ad2.css.map": "/PassDefect/static/css/main.e6c13ad2.css.map",
+    "main.cc80bd6f.js.map": "/PassDefect/static/js/main.cc80bd6f.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.e6c13ad2.css",
+    "static/js/main.cc80bd6f.js"
+  ]
+}
