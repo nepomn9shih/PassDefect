@@ -1,6 +1,7 @@
 import {DEFAULT_POSITION} from "../../constants";
 import {SpawnObjects} from "../../enums";
 import {MainScene} from "../../scenes";
+import { getChestProps } from "../../utils/getChestProps";
 import {getRandomMonsterVariation} from "../../utils/getRandomMonsterVariation";
 import {getRandomNumber} from "../../utils/getRandomNumber";
 import {ChestModel} from "../ChestModel";
@@ -53,11 +54,13 @@ export class Spawner {
     spawnChest() {
         const location = this.pickRandomLocation();
 
+        const props = getChestProps();
+
         const chest = new ChestModel({
             x: location[0] || DEFAULT_POSITION.x,
             y: location[1] || DEFAULT_POSITION.x,
-            gold: getRandomNumber(10, 20),
-            spawnerId: this.id
+            spawnerId: this.id,
+            ...props
         });
 
         this.objectsCreated.push(chest);

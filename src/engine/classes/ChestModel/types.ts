@@ -1,18 +1,26 @@
+import {ChestVariations} from "../../enums";
 import {MainScene} from "../../scenes";
 
 export type ChestModelProps = {
 	x: number;
 	y: number;
-	gold: number;
 	spawnerId: string;
+	variation: ChestVariations;
+	gold: number;
+	hearts: number;
+	bolts: number;
+	armor: number;
 };
 
 export type ChestProps = {
 	scene: MainScene;
+	id: string;
+	variation: ChestVariations;
 	x: number;
 	y: number;
 	key: string;
-	frame: string;
 	coins: number;
-	id: string;
+	hearts: number;
+	bolts: number;
+	armor: number;
 }

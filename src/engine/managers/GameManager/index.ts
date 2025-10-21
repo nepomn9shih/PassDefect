@@ -98,12 +98,32 @@ export class GameManager {
 		this.scene.events.on(GameEvents.PICK_UP_CHEST, (chestId: string, playerId: string) => {
 			// Обновляем спавнер
 			if (this.chests[chestId]) {
-				const {gold} = this.chests[chestId];
-				// Добавляем валюту игроку
-				this.players[playerId].updateGold(gold);
-				// Обновляем деньги в интерфейсе
-				this.scene.store.dispatch(addMoney(gold))
-				this.scene.events.emit(GameEvents.UPDATE_SCORE, this.players[playerId].gold);
+				const {gold, hearts, bolts, armor} = this.chests[chestId];
+				console.log(hearts)
+
+				if (gold) {
+					// Добавляем валюту игроку
+					this.players[playerId].updateGold(gold);
+					// Обновляем деньги в интерфейсе
+					this.scene.store.dispatch(addMoney(gold))
+					this.scene.events.emit(GameEvents.UPDATE_SCORE, this.players[playerId].gold);
+				}
+
+				if (hearts) {
+					// Обновляем жизни в интерфейсе
+					this.scene.player.healHealth(hearts);
+				}
+
+				if (bolts) {
+					// Обновляем снаряды в интерфейсе
+					this.scene.player.getBolts(bolts);
+				}
+
+				if (armor) {
+					// Обновляем броню в интерфейсе
+					this.scene.player.getArmor(armor);
+				}
+				
 				// Удаляем сундук
 				this.spawners[this.chests[chestId].spawnerId].removeObject(chestId);
 				this.scene.events.emit(GameEvents.REMOVE_CHEST, chestId);

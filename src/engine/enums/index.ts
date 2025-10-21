@@ -103,3 +103,10 @@ export enum MapObjectVariations {
     WALL_LEFT_RIGHT = 'wall-left-right',
     WALL_RIGHT_LEFT = 'wall-right-left'
 }
+
+export enum ChestVariations {
+    COIN = 'coin-chest',
+    BOLTS = 'bolts-chest',
+    HEART = 'heart-chest',
+    ARMOR = 'armor-chest'
+}

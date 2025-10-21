@@ -21,5 +21,9 @@ export type PlayerProps = {
 export type PlayerContainerProps = PlayerProps & {
 	health: number;
     maxHealth: number;
+	bolts: number;
+	maxBolts: number;
+	armor: number;
+	maxArmor: number;
     id: string;
 };

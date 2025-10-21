@@ -8,8 +8,7 @@ import {
     LevelMaps,
     MapLayersNames,
     PlayerSkinVariations,
-    SceneNames,
-    SpawnObjects
+    SceneNames
 } from '../enums';
 import {AllGameState} from '../../reducers/types';
 import {CameraManager} from '../managers/CameraManager';
@@ -22,8 +21,8 @@ import {MonsterContainer} from '../classes/MonsterModel/MonsterContainer';
 import {getRandomMonsterVariation} from '../utils/getRandomMonsterVariation';
 import {Weapon} from '../classes/Player/Weapon';
 import {PlayerModel} from '../classes/Player/PlayerModel';
-import { SpawnerImage } from '../classes/Spawner/SpawnerImage';
-import { MapObject } from '../classes/MapObject';
+import {SpawnerImage} from '../classes/Spawner/SpawnerImage';
+import {MapObject} from '../classes/MapObject';
 
 export class MainScene extends Scene {
     store: Store<AllGameState, Action<string>>;
@@ -78,6 +77,10 @@ export class MainScene extends Scene {
             skin: this.playerSkin,
             health: playerObject.health,
             maxHealth: playerObject.maxHealth,
+            bolts: playerObject.bolts,
+            maxBolts: playerObject.maxBolts,
+            armor: playerObject.armor,
+            maxArmor: playerObject.maxArmor,
             id: playerObject.id,
         });
     }
@@ -135,8 +138,11 @@ export class MainScene extends Scene {
                 x: chestObject.x,
                 y: chestObject.y,
                 key: AtlasesKeys.PICK_UP_OBJECTS,
-                frame: SpawnObjects.CHEST,
+                variation: chestObject.variation,
                 coins: chestObject.gold,
+                hearts: chestObject.hearts,
+                bolts: chestObject.bolts,
+                armor: chestObject.armor,
                 id: chestObject.id
             });
 
@@ -145,7 +151,13 @@ export class MainScene extends Scene {
             chest.setCollideWorldBounds(true);
         } else {
             chest.coins = chestObject.gold;
+            chest.hearts = chestObject.hearts;
+            chest.bolts = chestObject.bolts;
+            chest.armor = chestObject.armor;
+            chest.variation = chestObject.variation;
             chest.id = chestObject.id;
+            // Обновляет картинку так как вариация могла измениться
+            chest.updateChest();
             chest.setPosition(chestObject.x, chestObject.y);
             chest.makeActive();
         }

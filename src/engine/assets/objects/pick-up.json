@@ -1,12 +1,51 @@
 {
     "frames": [
         {
-            "filename": "chest",
+            "filename": "coin-chest",
             "frame": {
-                "w": 32,
-                "h": 32,
+                "w": 64,
+                "h": 64,
                 "x": 0,
                 "y": 0
+            },
+            "anchor": {
+                "x": 0.5,
+                "y": 0.5
+            }
+        },
+         {
+            "filename": "bolts-chest",
+            "frame": {
+                "w": 64,
+                "h": 64,
+                "x": 64,
+                "y": 0
+            },
+            "anchor": {
+                "x": 0.5,
+                "y": 0.5
+            }
+        },
+         {
+            "filename": "heart-chest",
+            "frame": {
+                "w": 64,
+                "h": 64,
+                "x": 0,
+                "y": 64
+            },
+            "anchor": {
+                "x": 0.5,
+                "y": 0.5
+            }
+        },
+         {
+            "filename": "armor-chest",
+            "frame": {
+                "w": 64,
+                "h": 64,
+                "x": 64,
+                "y": 64
             },
             "anchor": {
                 "x": 0.5,

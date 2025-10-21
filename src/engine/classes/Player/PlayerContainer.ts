@@ -4,7 +4,7 @@ import {GameEvents, PlayerAnimation, PlayerDirections, PlayerSkinVariations, Wea
 import {Player} from './Player';
 import {Weapon} from './Weapon';
 import {WEAPON_OFFSET} from './constants';
-import {setPlayerHealth} from '../../../reducers/slices';
+import {setArmor, setBolts, setPlayerHealth} from '../../../reducers/slices';
 import {PlayerModel} from './PlayerModel';
 
 export class PlayerContainer extends Phaser.GameObjects.Container {
@@ -26,6 +26,10 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
 	weapon: Weapon;
 	weaponVariation: WeaponVariations;
 	weaponHit: boolean;
+	bolts: number;
+	maxBolts: number;
+	armor: number;
+	maxArmor: number;
 	// если true то игрока только что ударили и пока нельзя ударить снова
 	damageCooldown: boolean;
 
@@ -37,7 +41,11 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
 		frame = '01',
 		health,
 		maxHealth,
-		id
+		id,
+		bolts,
+		maxBolts,
+		armor,
+		maxArmor
 	}: PlayerContainerProps) {
 		super(scene, x, y);
 		this.scene = scene;
@@ -47,6 +55,10 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
 		this.health = health;
  		this.maxHealth = maxHealth;
  		this.id = id;
+		this.bolts = bolts;
+		this.maxBolts = maxBolts;
+		this.armor = armor;
+		this.maxArmor = maxArmor;
 		// Скорость при движении игрока
 		this.velocity = 160;
 		this.currentDirection = PlayerDirections.RIGHT;
@@ -134,6 +146,16 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
 		this.updateHealthBar(this.health);
 	}
 
+	healHealth(hearts: number) {
+		const newHealth = this.health + hearts;
+
+    	this.health = newHealth > this.maxHealth
+			? this.maxHealth
+			: newHealth;
+
+        this.updateHealthBar(this.health);
+	}
+
 	loseHealth(damage: number) {
 		this.damageCooldown = true;
 		this.scene.time.delayedCall(1000, () => {
@@ -159,6 +181,26 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
 			}, [], this);  
         }
     }
+
+	getBolts(bolts: number) {
+		const newBolts = this.bolts + bolts;
+
+    	this.bolts = newBolts > this.maxBolts
+			? this.maxBolts
+			: newBolts;
+
+        this.scene.store.dispatch(setBolts(this.bolts));
+	}
+
+	getArmor(armor: number) {
+		const newArmor = this.armor + armor;
+
+    	this.armor = newArmor > this.maxArmor
+			? this.maxArmor
+			: newArmor;
+
+        this.scene.store.dispatch(setArmor(this.bolts));
+	}
 
 	update(cursors: Phaser.Types.Input.Keyboard.CursorKeys) {
 		if (!this.health) {
