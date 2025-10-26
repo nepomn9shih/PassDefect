@@ -17,12 +17,12 @@ export const getChestProps = () => {
         }
         case 1: {
             variation = ChestVariations.BOLTS;
-            bolts = getRandomNumber(5, 15);
+            bolts = 5;
             break;
         }
         case 2: {
             variation = ChestVariations.ARMOR;
-            armor = getRandomNumber(1, 2);
+            armor = 1;
             break;
         }
         default: {

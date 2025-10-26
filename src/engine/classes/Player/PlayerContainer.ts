@@ -127,6 +127,10 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
 		this.scene.store.dispatch(setPlayerHealth(actualHealth));
 	}
 
+	updateArmorBar(actualArmor: number) {
+		this.scene.store.dispatch(setArmor(actualArmor));
+	}
+
 	playDeathAnimation(){
 		this.player.playAnimation(PlayerAnimation.DEATH);
 	}
@@ -156,30 +160,40 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
         this.updateHealthBar(this.health);
 	}
 
+	loseArmor() {
+		this.playSpawnAnimation();
+		this.armor -= 1;
+		this.updateArmorBar(this.armor);
+	}
+
 	loseHealth(damage: number) {
 		this.damageCooldown = true;
 		this.scene.time.delayedCall(1000, () => {
 			this.damageCooldown = false;
 		}, [], this);
 
-        this.health = this.health - damage;
-		this.playGetHitAnimation();
+		if (!this.armor) {
+			this.health = this.health - damage;
+			this.playGetHitAnimation();
 
-        if (this.health < 0) {
-            this.health = 0
-        }
+			if (this.health < 0) {
+				this.health = 0
+			}
 
-        this.updateHealthBar(this.health);
+			this.updateHealthBar(this.health);
 
-        if (!this.health) {
-			this.scene.events.emit(GameEvents.DEATH_PLAYER, this.id);
-			this.setActive(false);
-            this.playDeathAnimation();
-			// Чтобы успела отыграть анимация смерти
-			this.scene.time.delayedCall(1000, () => {
-				this.scene.events.emit(GameEvents.RESPAWN_PLAYER, this.id);
-			}, [], this);  
-        }
+			if (!this.health) {
+				this.scene.events.emit(GameEvents.DEATH_PLAYER, this.id);
+				this.setActive(false);
+				this.playDeathAnimation();
+				// Чтобы успела отыграть анимация смерти
+				this.scene.time.delayedCall(1000, () => {
+					this.scene.events.emit(GameEvents.RESPAWN_PLAYER, this.id);
+				}, [], this);  
+			}
+		} else {
+			this.loseArmor();
+		}
     }
 
 	getBolts(bolts: number) {
@@ -199,7 +213,7 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
 			? this.maxArmor
 			: newArmor;
 
-        this.scene.store.dispatch(setArmor(this.armor));
+        this.updateArmorBar(this.armor);
 	}
 
 	update(cursors: Phaser.Types.Input.Keyboard.CursorKeys) {
