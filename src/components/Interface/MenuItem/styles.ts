@@ -1,27 +1,19 @@
 import styled from '@emotion/styled';
 
-export const StyledMoneyBar = styled.div`
-    width: 100px;
-    height: 40px;
-    position: absolute;
-    top: 20px;
-    left: 20px;
-    color: #000;
-    background-color: rgba(255, 255, 255, 0.4);
-    border-radius: 10px;
+export const StyledMenuItem = styled.div`
     padding: 10px;
     display: flex;
     align-items: center;
     gap: 10px;
 `;
 
-export const StyledMoneyIcon = styled.img`
+export const StyledMenuIcon = styled.img`
     height: 30px;
     width: 30px;
     object-fit: contain;
 `;
 
-export const StyledMoneyValue = styled.div`
+export const StyledMenuValue = styled.div`
     height: 30px;
     width: 30px;
     font-size: 18px;

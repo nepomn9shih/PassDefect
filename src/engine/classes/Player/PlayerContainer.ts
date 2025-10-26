@@ -199,7 +199,7 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
 			? this.maxArmor
 			: newArmor;
 
-        this.scene.store.dispatch(setArmor(this.bolts));
+        this.scene.store.dispatch(setArmor(this.armor));
 	}
 
 	update(cursors: Phaser.Types.Input.Keyboard.CursorKeys) {

@@ -1,13 +1,13 @@
 import React from 'react';
 import {StyledLayout} from './styles'
-import {MoneyBar} from './MoneyBar';
-import {HealthBar} from './HealthBar';
+import {TopBar} from './TopBar';
+import {BottomBar} from './BottomBar';
 
 export const Interface = () => {
     return (
         <StyledLayout>
-            <MoneyBar />
-            <HealthBar />
+            <TopBar />
+            <BottomBar />
         </StyledLayout>
     )
 }

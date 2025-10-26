@@ -1,7 +1,6 @@
 import styled from '@emotion/styled';
 
 export const StyledHealthBar = styled.div`
-    width: 100px;
     height: 40px;
     position: absolute;
     top: calc(100vh - 80px);
@@ -12,20 +11,5 @@ export const StyledHealthBar = styled.div`
     padding: 10px;
     display: flex;
     align-items: center;
-    gap: 10px;
-`;
-
-export const StyledHealthIcon = styled.img`
-    height: 30px;
-    width: 30px;
-    object-fit: contain;
-`;
-
-export const StyledHealthValue = styled.div`
-    height: 30px;
-    width: 30px;
-    font-size: 18px;
-    font-weight: bold;
-    display: flex;
-    align-items: center;
+    gap: 16px;
 `;
