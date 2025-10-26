@@ -4,7 +4,7 @@ import {GameEvents, PlayerAnimation, PlayerDirections, PlayerSkinVariations, Wea
 import {Player} from './Player';
 import {Weapon} from './Weapon';
 import {WEAPON_OFFSET} from './constants';
-import {setArmor, setBolts, setPlayerHealth} from '../../../reducers/slices';
+import {setArmor, setBolts, setMoney, setPlayerHealth} from '../../../reducers/slices';
 import {PlayerModel} from './PlayerModel';
 
 export class PlayerContainer extends Phaser.GameObjects.Container {
@@ -15,6 +15,7 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
 	velocity: number;
 	health: number;
     maxHealth: number;
+	gold: number;
     id: string;
 	player: Player;
 	currentDirection: PlayerDirections;
@@ -41,6 +42,7 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
 		frame = '01',
 		health,
 		maxHealth,
+		gold,
 		id,
 		bolts,
 		maxBolts,
@@ -53,15 +55,14 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
 		this.y = y;
 
 		this.health = health;
-		this.updateHealthBar(this.health);
  		this.maxHealth = maxHealth;
+		this.gold = gold;
  		this.id = id;
 		this.bolts = bolts;
-		this.updateBoltsBar(this.bolts);
 		this.maxBolts = maxBolts;
 		this.armor = armor;
-		this.updateArmorBar(this.armor);
 		this.maxArmor = maxArmor;
+		this.updateAllBars();
 		// Скорость при движении игрока
 		this.velocity = 160;
 		this.currentDirection = PlayerDirections.RIGHT;
@@ -126,16 +127,28 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
 		}
 	}
 
-	updateHealthBar(actualHealth: number) {
-		this.scene.store.dispatch(setPlayerHealth(actualHealth));
+	updateHealthBar() {
+		this.scene.store.dispatch(setPlayerHealth(this.health));
 	}
 
-	updateArmorBar(actualArmor: number) {
-		this.scene.store.dispatch(setArmor(actualArmor));
+	updateGoldBar() {
+		this.scene.store.dispatch(setMoney(this.gold));
 	}
 
-	updateBoltsBar(actualBolts: number) {
-		this.scene.store.dispatch(setBolts(actualBolts));
+	updateArmorBar() {
+		this.scene.store.dispatch(setArmor(this.armor));
+	}
+
+	updateBoltsBar() {
+		this.scene.store.dispatch(setBolts(this.bolts));
+	}
+
+	// Обновляем все меню
+	updateAllBars () {
+		this.updateHealthBar();
+		this.updateGoldBar();
+		this.updateArmorBar();
+		this.updateBoltsBar();
 	}
 
 	playDeathAnimation(){
@@ -152,13 +165,12 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
 
 	respawn(playerObject: PlayerModel) {
 		this.health = playerObject.health;
+		this.gold = playerObject.gold;
 		this.bolts = playerObject.bolts;
 		this.armor = playerObject.armor;
 		this.setPosition(playerObject.x, playerObject.y);
 		this.playSpawnAnimation();
-		this.updateHealthBar(this.health);
-		this.updateBoltsBar(this.bolts);
-		this.updateArmorBar(this.armor);
+		this.updateAllBars();
 	}
 
 	healHealth(hearts: number) {
@@ -168,18 +180,18 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
 			? this.maxHealth
 			: newHealth;
 
-        this.updateHealthBar(this.health);
+        this.updateHealthBar();
 	}
 
 	loseBolts(count: number) {
 		this.bolts -= count;
-		this.updateBoltsBar(this.bolts);
+		this.updateBoltsBar();
 	}
 
 	loseArmor() {
 		this.playSpawnAnimation();
 		this.armor -= 1;
-		this.updateArmorBar(this.armor);
+		this.updateArmorBar();
 	}
 
 	loseHealth(damage: number) {
@@ -196,7 +208,7 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
 				this.health = 0
 			}
 
-			this.updateHealthBar(this.health);
+			this.updateHealthBar();
 
 			if (!this.health) {
 				this.scene.events.emit(GameEvents.DEATH_PLAYER, this.id);
@@ -212,6 +224,11 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
 		}
     }
 
+	getGold(gold: number) {
+        this.gold += gold;
+		this.updateGoldBar();
+    }
+
 	getBolts(bolts: number) {
 		const newBolts = this.bolts + bolts;
 
@@ -219,7 +236,7 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
 			? this.maxBolts
 			: newBolts;
 
-        this.updateBoltsBar(this.bolts);
+        this.updateBoltsBar();
 	}
 
 	getArmor(armor: number) {
@@ -229,7 +246,7 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
 			? this.maxArmor
 			: newArmor;
 
-        this.updateArmorBar(this.armor);
+        this.updateArmorBar();
 	}
 
 	update(cursors: Phaser.Types.Input.Keyboard.CursorKeys) {

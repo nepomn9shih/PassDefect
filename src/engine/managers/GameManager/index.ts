@@ -1,5 +1,4 @@
 import {MapObject} from './../../classes/MapObject/index';
-import {addMoney, loseMoney} from '../../../reducers/slices';
 import {ChestModel} from '../../classes/ChestModel';
 import {MonsterModel} from '../../classes/MonsterModel';
 import {PlayerModel} from '../../classes/Player/PlayerModel';
@@ -95,7 +94,7 @@ export class GameManager {
 	}
 
 	setupEventListener() {
-		this.scene.events.on(GameEvents.PICK_UP_CHEST, (chestId: string, playerId: string) => {
+		this.scene.events.on(GameEvents.PICK_UP_CHEST, (chestId: string) => {
 			// Обновляем спавнер
 			if (this.chests[chestId]) {
 				const {gold, hearts, bolts, armor} = this.chests[chestId];
@@ -103,10 +102,7 @@ export class GameManager {
 
 				if (gold) {
 					// Добавляем валюту игроку
-					this.players[playerId].updateGold(gold);
-					// Обновляем деньги в интерфейсе
-					this.scene.store.dispatch(addMoney(gold))
-					this.scene.events.emit(GameEvents.UPDATE_SCORE, this.players[playerId].gold);
+					this.scene.player.getGold(gold);
 				}
 
 				if (hearts) {
@@ -135,13 +131,6 @@ export class GameManager {
 			if (this.monsters[monsterId]) {
 				this.spawners[this.monsters[monsterId].spawnerId].removeObject(monsterId);
 			}
-		});
-
-		// Когда происходит смерть игрока
-		this.scene.events.on(GameEvents.DEATH_PLAYER, (playerId: string) => {
-            this.players[playerId].loseGold();
-			// Обновляем деньги в интерфейсе
-			this.scene.store.dispatch(loseMoney());
 		});
 
 		// Когда происходит респавн игрока

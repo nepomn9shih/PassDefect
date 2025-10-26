@@ -11,14 +11,8 @@ const playerSlice = createSlice({
 		bolts: 0
 	} as PlayerState,
 	reducers: {
-		addMoney(state, {payload}: PayloadAction<number>) {
-            state.money += payload;
-		},
-		reduceMoney(state, {payload}: PayloadAction<number>) {
-            state.money -= payload;
-		},
-		loseMoney(state) {
-            state.money = 0;
+		setMoney(state, {payload}: PayloadAction<number>) {
+            state.money = payload;
 		},
 		setPlayerHealth(state, {payload}: PayloadAction<number>) {
 			state.health = payload > 0 ? payload : 0;
@@ -33,9 +27,7 @@ const playerSlice = createSlice({
 });
 
 export const {
-	addMoney,
-	reduceMoney,
-	loseMoney,
+	setMoney,
 	setPlayerHealth,
 	setBolts,
 	setArmor

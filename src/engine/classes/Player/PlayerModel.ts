@@ -28,18 +28,7 @@ export class PlayerModel {
         [this.x, this.y] = location;
     };
 
-    updateGold(gold: number) {
-        this.gold += gold;
-    }
-
-    loseGold() {
-        this.gold = 0;
-    }
-
     respawn() {
-        this.health = this.maxHealth;
-        this.bolts = this.maxBolts;
-        this.armor = 0;
         const location = this.spawnLocations[Math.floor(Math.random() * this.spawnLocations.length)];
         [this.x, this.y] = location;
     }
