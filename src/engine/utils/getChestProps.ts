@@ -15,12 +15,13 @@ export const getChestProps = () => {
             hearts = getRandomNumber(1, 3);
             break;
         }
-        case 1: {
+        case 1:
+        case 2: {
             variation = ChestVariations.BOLTS;
             bolts = 5;
             break;
         }
-        case 2: {
+        case 3: {
             variation = ChestVariations.ARMOR;
             armor = 1;
             break;

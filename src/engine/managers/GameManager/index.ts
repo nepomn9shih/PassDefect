@@ -1,5 +1,5 @@
 import {MapObject} from './../../classes/MapObject/index';
-import {addMoney, looseMoney} from '../../../reducers/slices';
+import {addMoney, loseMoney} from '../../../reducers/slices';
 import {ChestModel} from '../../classes/ChestModel';
 import {MonsterModel} from '../../classes/MonsterModel';
 import {PlayerModel} from '../../classes/Player/PlayerModel';
@@ -139,9 +139,9 @@ export class GameManager {
 
 		// Когда происходит смерть игрока
 		this.scene.events.on(GameEvents.DEATH_PLAYER, (playerId: string) => {
-            this.players[playerId].looseGold();
+            this.players[playerId].loseGold();
 			// Обновляем деньги в интерфейсе
-			this.scene.store.dispatch(looseMoney());
+			this.scene.store.dispatch(loseMoney());
 		});
 
 		// Когда происходит респавн игрока

@@ -27,3 +27,8 @@ export type PlayerContainerProps = PlayerProps & {
 	maxArmor: number;
     id: string;
 };
+
+export type WeaponData = {
+	damage: number,
+    shotCost: number
+}

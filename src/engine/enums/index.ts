@@ -20,9 +20,7 @@ export enum SceneNames {
 
 export enum WeaponVariations {
     FLAME_GUN = 'flame-gun',
-    SWORD = 'sword',
-    GUN = 'gun',
-    RIFLE = 'rifle'
+    SWORD = 'sword'
 }
 
 export enum PlayerDirections {

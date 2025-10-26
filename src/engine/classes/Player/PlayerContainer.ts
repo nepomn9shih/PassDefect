@@ -53,11 +53,14 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
 		this.y = y;
 
 		this.health = health;
+		this.updateHealthBar(this.health);
  		this.maxHealth = maxHealth;
  		this.id = id;
 		this.bolts = bolts;
+		this.updateBoltsBar(this.bolts);
 		this.maxBolts = maxBolts;
 		this.armor = armor;
+		this.updateArmorBar(this.armor);
 		this.maxArmor = maxArmor;
 		// Скорость при движении игрока
 		this.velocity = 160;
@@ -131,6 +134,10 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
 		this.scene.store.dispatch(setArmor(actualArmor));
 	}
 
+	updateBoltsBar(actualBolts: number) {
+		this.scene.store.dispatch(setBolts(actualBolts));
+	}
+
 	playDeathAnimation(){
 		this.player.playAnimation(PlayerAnimation.DEATH);
 	}
@@ -145,9 +152,13 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
 
 	respawn(playerObject: PlayerModel) {
 		this.health = playerObject.health;
+		this.bolts = playerObject.bolts;
+		this.armor = playerObject.armor;
 		this.setPosition(playerObject.x, playerObject.y);
 		this.playSpawnAnimation();
 		this.updateHealthBar(this.health);
+		this.updateBoltsBar(this.bolts);
+		this.updateArmorBar(this.armor);
 	}
 
 	healHealth(hearts: number) {
@@ -158,6 +169,11 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
 			: newHealth;
 
         this.updateHealthBar(this.health);
+	}
+
+	loseBolts(count: number) {
+		this.bolts -= count;
+		this.updateBoltsBar(this.bolts);
 	}
 
 	loseArmor() {
@@ -203,7 +219,7 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
 			? this.maxBolts
 			: newBolts;
 
-        this.scene.store.dispatch(setBolts(this.bolts));
+        this.updateBoltsBar(this.bolts);
 	}
 
 	getArmor(armor: number) {
@@ -277,6 +293,16 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
 
 		// Разрешает игроку атаковать
  		if (Phaser.Input.Keyboard.JustDown(cursors.space) && !this.playerAttacking) {
+			// Если недостаточно патронов для выстрела, то не атакуем
+			if (this.bolts < this.weapon.shotCost) {
+				return;
+			}
+
+			// Тратим нужное для выстрела количество патронов
+			if (this.weapon.shotCost) {
+				this.loseBolts(this.weapon.shotCost);
+			}
+
 			this.weapon.alpha = 1;
 			this.playerAttacking = true;
 			this.scene.time.delayedCall(150, () => {
