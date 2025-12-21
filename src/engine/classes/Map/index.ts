@@ -1,6 +1,6 @@
 import {Scene, Tilemaps} from 'phaser';
 
-import {MapProps} from './types';
+import type {MapProps} from './types';
 
 export class GameMap {
 	scene: Scene;
@@ -8,10 +8,10 @@ export class GameMap {
 	tileSetName: string;
 	mapLayerName: string;
 	blockedLayerName: string;
-	map: Tilemaps.Tilemap;
-	tiles: Tilemaps.Tileset | null;
-	mapLayer: Tilemaps.TilemapLayer | null;
-	blockedLayer: Tilemaps.TilemapLayer | null;
+	map: Tilemaps.Tilemap | null = null;
+	tiles: Tilemaps.Tileset | null = null;
+	mapLayer: Tilemaps.TilemapLayer | null = null;
+	blockedLayer: Tilemaps.TilemapLayer | null = null;
 
 	constructor({
 		scene,

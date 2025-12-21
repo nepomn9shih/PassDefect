@@ -1,11 +1,11 @@
-import React, {useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 import Phaser from 'phaser';
 import {useStore} from 'react-redux';
 
 import {GAME_PASS_DEFECT_ID} from './constants';
 import {getGameConfig} from './utils/getGameConfig';
 import {BootScene, MainScene} from './scenes';
-import {AllGameState} from '../reducers/types';
+import type {AllGameState} from '../reducers/types';
 
 export const Game = () => {
     const [, setGame] = useState<Phaser.Game>();
@@ -20,6 +20,7 @@ export const Game = () => {
         const config = getGameConfig(scenes);
         const _game = new Phaser.Game(config);
 
+        // eslint-disable-next-line
         setGame(_game);
 
         return (): void => {

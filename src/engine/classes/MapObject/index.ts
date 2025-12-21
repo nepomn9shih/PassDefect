@@ -1,7 +1,7 @@
 import {AtlasesKeys} from "../../enums";
 import {MainScene} from "../../scenes";
 import {MAP_OBJECTS_BLOCKERS} from "./constants";
-import {MapObjectProps} from "./types";
+import type {MapObjectProps} from "./types";
 import {v4 as generateUUIDv4} from "uuid";
 
 export class MapObject extends Phaser.Physics.Arcade.Sprite {

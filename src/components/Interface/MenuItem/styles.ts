@@ -1,4 +1,4 @@
-import styled from '@emotion/styled';
+import styled from 'styled-components';
 
 export const StyledMenuItem = styled.div`
     padding: 10px;

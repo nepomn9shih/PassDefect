@@ -1,4 +1,4 @@
-import {PlayerContainerProps} from './types';
+import type {PlayerContainerProps} from './types';
 import {MainScene} from '../../scenes/MainScene';
 import {GameEvents, PlayerAnimation, PlayerDirections, PlayerSkinVariations, WeaponVariations} from '../../enums';
 import {Player} from './Player';
@@ -11,7 +11,7 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
 	scene: MainScene;
 	x: number;
 	y: number;
-	skin: PlayerSkinVariations
+	skin: PlayerSkinVariations = PlayerSkinVariations.KNIGHT;
 	velocity: number;
 	health: number;
     maxHealth: number;
@@ -21,12 +21,12 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
 	currentDirection: PlayerDirections;
 	viewDirection: PlayerDirections.LEFT | PlayerDirections.RIGHT;
 	playerAttacking: boolean;
-	playerMoving: boolean;
+	playerMoving: boolean = false;
 	flipX: boolean;
 	isHit: boolean;
 	weapon: Weapon;
 	weaponVariation: WeaponVariations;
-	weaponHit: boolean;
+	weaponHit: boolean = false;
 	bolts: number;
 	maxBolts: number;
 	armor: number;

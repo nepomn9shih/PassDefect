@@ -1,12 +1,12 @@
 import {combineReducers} from 'redux';
-import {Reducer} from '@reduxjs/toolkit';
+import type {Reducer} from '@reduxjs/toolkit';
 
 import {
 	gameReducer,
 	playerReducer,
 	weaponReducer
 } from './slices';
-import {AllGameState} from './types';
+import type {AllGameState} from './types';
 
 export const rootReducer: Reducer<AllGameState> = combineReducers({
 	game: gameReducer,

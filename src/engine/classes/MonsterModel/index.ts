@@ -1,5 +1,5 @@
 import {MonstersVariations} from '../../enums';
-import {MonsterModelProps} from './types';
+import type {MonsterModelProps} from './types';
 import {v4 as generateUUIDv4} from 'uuid';
 
 export class MonsterModel {
@@ -15,8 +15,6 @@ export class MonsterModel {
         min: number;
         max: number;
     }
-    boundX: number;
-    boundY: number;
     sight: number;
 
     constructor({

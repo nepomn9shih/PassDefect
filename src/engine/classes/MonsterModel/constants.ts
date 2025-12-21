@@ -1,5 +1,5 @@
 import {MonstersVariations} from '../../enums';
-import {MonsterParams} from './types';
+import type {MonsterParams} from './types';
 
 export const MONSTERS_PARAMS: Record<MonstersVariations, MonsterParams> = {
     [MonstersVariations.KNIGHT]: {

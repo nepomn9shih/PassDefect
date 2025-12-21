@@ -3,4 +3,4 @@
 import {importFilesSourcesAsObject} from '../../utils/importFilesSourcesAsObject';
 
 export const MONSTERS_ATLASES =
-	importFilesSourcesAsObject(require.context('./', false, /\.(png|jpe?g|svg|json)$/));
+	importFilesSourcesAsObject(import.meta.glob('./*.{png,jpg,jpeg,webp,json}', {eager: true, query: '?url', import: 'default'}));

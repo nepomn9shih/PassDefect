@@ -1,13 +1,13 @@
 import {DEFAULT_POSITION} from "../../constants";
 import {SpawnObjects} from "../../enums";
 import {MainScene} from "../../scenes";
-import { getChestProps } from "../../utils/getChestProps";
+import {getChestProps} from "../../utils/getChestProps";
 import {getRandomMonsterVariation} from "../../utils/getRandomMonsterVariation";
 import {getRandomNumber} from "../../utils/getRandomNumber";
 import {ChestModel} from "../ChestModel";
 import {MonsterModel} from "../MonsterModel";
 import {MONSTERS_PARAMS} from "../MonsterModel/constants";
-import {AddObject, SpawnerProps} from "./types";
+import type {AddObject, SpawnerProps} from "./types";
 
 export class Spawner {
     scene: MainScene;

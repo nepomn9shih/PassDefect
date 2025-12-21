@@ -1,4 +1,4 @@
-import {WeaponProps} from './types';
+import type {WeaponProps} from './types';
 import {MainScene} from '../../scenes/MainScene';
 import {PlayerDirections, WeaponVariations} from '../../enums';
 import {WEAPON_INITIAL_SCALE, WEAPONS_CONFIG} from './constants';

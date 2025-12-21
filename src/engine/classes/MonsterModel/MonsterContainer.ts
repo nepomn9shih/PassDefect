@@ -1,7 +1,7 @@
 import {getRandomNumber} from './../../utils/getRandomNumber';
 import {GameEvents, MonsterAnimation, MonstersVariations} from '../../enums';
 import {HEALTH_BAR_CONFIG, MONSTER_INITIAL_SCALE, MONSTERS_PARAMS} from './constants';
-import {MonsterContainerProps} from './types';
+import type {MonsterContainerProps} from './types';
 import {Monster} from './Monster';
 import {MainScene} from '../../scenes';
 
@@ -14,7 +14,7 @@ export class MonsterContainer extends Phaser.GameObjects.Container {
     variation: MonstersVariations;
     monster: Monster;
     velocity: number;
-    moveMonsterInterval: NodeJS.Timeout;
+    moveMonsterInterval: NodeJS.Timeout | null = null;
     flipX: boolean;
 
     constructor({

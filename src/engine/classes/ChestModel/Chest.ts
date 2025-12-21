@@ -1,7 +1,7 @@
 import {ChestVariations} from "../../enums";
 import {MainScene} from "../../scenes";
 import {CHEST_INITIAL_SCALE} from "./constants";
-import {ChestProps} from "./types";
+import type {ChestProps} from "./types";
 
 export class Chest extends Phaser.Physics.Arcade.Sprite {
     scene: MainScene;

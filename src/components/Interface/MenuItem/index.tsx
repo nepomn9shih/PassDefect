@@ -1,4 +1,3 @@
-import React from 'react';
 import {StyledMenuItem} from './styles';
 import {StyledMenuIcon, StyledMenuValue} from './styles';
 

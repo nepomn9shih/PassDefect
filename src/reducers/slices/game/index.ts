@@ -1,5 +1,6 @@
-import {createSlice, PayloadAction} from '@reduxjs/toolkit';
-import { INITIAL_ZOOM } from '../../../engine/constants/zoom';
+import {createSlice} from '@reduxjs/toolkit';
+import type {PayloadAction} from '@reduxjs/toolkit';
+import {INITIAL_ZOOM} from '../../../engine/constants/zoom';
 
 import type {GameState} from './types';
 

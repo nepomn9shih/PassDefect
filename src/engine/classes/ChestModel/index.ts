@@ -1,5 +1,5 @@
 import {ChestVariations} from "../../enums";
-import {ChestModelProps} from "./types";
+import type {ChestModelProps} from "./types";
 import {v4 as generateUUIDv4} from "uuid";
 
 export class ChestModel {

@@ -8,10 +8,11 @@ import {SPAWNER_PROPERTY_NAME} from '../../constants';
 import {GameEvents, MapObjectVariations, ObjectLayersNames, SpawnerImageVariations, SpawnObjects} from '../../enums';
 import {MainScene} from '../../scenes';
 import {getTiledProperty} from '../../utils/getTiledProperty';
-import {GameManagerProps} from './types';
+import type {GameManagerProps} from './types';
 import {MAP_OBJECTS_STUB} from '../../constants/map-objects';
 import {getRandomNumber} from '../../utils/getRandomNumber';
 import {CHEST_SPAWN_INTERVAL, MONSTER_SPAWN_INTERVAL} from './constants';
+import type {AddObject} from '../../classes/Spawner/types';
 
 export class GameManager {
 	scene: MainScene;
@@ -98,7 +99,6 @@ export class GameManager {
 			// Обновляем спавнер
 			if (this.chests[chestId]) {
 				const {gold, hearts, bolts, armor} = this.chests[chestId];
-				console.log(hearts)
 
 				if (gold) {
 					// Добавляем валюту игроку
@@ -191,7 +191,7 @@ export class GameManager {
 				scene: this.scene,
 				config,
 				spawnLocations: this.chestLocations[key], 
-				addObject: this.addChest.bind(this), 
+				addObject: this.addChest.bind(this) as AddObject, 
 				deleteObject: this.deleteChest.bind(this)
 			});
 	
@@ -211,7 +211,7 @@ export class GameManager {
 				scene: this.scene,
 				config,
 				spawnLocations: this.monsterLocations[key],
-				addObject: this.addMonster.bind(this),
+				addObject: this.addMonster.bind(this) as AddObject,
 				deleteObject: this.deleteMonster.bind(this)
 			});
 

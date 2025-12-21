@@ -1,6 +1,6 @@
 import {PlayerDirections, WeaponVariations} from "../../enums";
-import {SimpleCoordinates} from "../../types";
-import {WeaponData} from "./types";
+import type {SimpleCoordinates} from "../../types";
+import type {WeaponData} from "./types";
 
 export const PLAYER_INITIAL_SCALE = 0.5;
 

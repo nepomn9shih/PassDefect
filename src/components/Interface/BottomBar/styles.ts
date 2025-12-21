@@ -1,4 +1,4 @@
-import styled from '@emotion/styled';
+import styled from 'styled-components';
 
 export const StyledHealthBar = styled.div`
     height: 40px;

@@ -1,6 +1,6 @@
 import {AtlasesKeys} from "../../enums";
 import {MainScene} from "../../scenes";
-import {SpawnerImageProps} from "./types";
+import type {SpawnerImageProps} from "./types";
 import {v4 as generateUUIDv4} from "uuid";
 
 export class SpawnerImage extends Phaser.Physics.Arcade.Sprite {

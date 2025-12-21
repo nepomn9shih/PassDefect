@@ -1,8 +1,9 @@
-import {Scene, Types} from 'phaser';
+import {Scene} from 'phaser';
 // import GesturesPlugin from 'phaser3-rex-plugins/plugins/gestures-plugin.js';
+import type {Types} from 'phaser';
 
 import {GAME_PASS_DEFECT_ID} from '../constants';
-import { screenHeight, screenWidth } from '../constants/zoom';
+import {screenHeight, screenWidth} from '../constants/zoom';
 
 export const getGameConfig = (scenes: Scene[]): Types.Core.GameConfig => ({
     // Автовыбор WebGl или Canvas

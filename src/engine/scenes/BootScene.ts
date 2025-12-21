@@ -12,7 +12,7 @@ import {DPR} from '../constants/zoom';
 import {MONSTERS_ATLASES} from '../assets/monsters';
 import {PLAYER_ATLASES} from '../assets/player';
 import {OBJECTS_ATLASES} from '../assets/objects';
-import {GameStore} from '../types';
+import type {GameStore} from '../types';
 import {WEAPON_ATLASES} from '../assets/weapon';
 
 export class BootScene extends Scene {

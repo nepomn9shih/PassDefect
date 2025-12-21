@@ -1,4 +1,4 @@
-import {MonsterProps} from './types';
+import type {MonsterProps} from './types';
 import {MainScene} from '../../scenes/MainScene';
 import {MonsterAnimation, MonstersVariations} from '../../enums';
 import {MONSTER_INITIAL_SCALE} from './constants';
@@ -9,7 +9,7 @@ export class Monster extends Phaser.Physics.Arcade.Sprite {
     x: number;
     y: number;
     variation: MonstersVariations
-    velocity: number;
+    velocity: number = 0;
 
     constructor({
         scene,
@@ -38,8 +38,10 @@ export class Monster extends Phaser.Physics.Arcade.Sprite {
 
     createAnimations() {
         const animations = getMonsterAnimations(this);
-    
-        Object.keys(animations).forEach((animation: MonsterAnimation) => this.anims.create(animations[animation]));
+        const animationNames = Object.keys(animations) as MonsterAnimation[];
+        animationNames.forEach((animation) => {
+            this.anims.create(animations[animation])
+        });
     }
 
     playAnimation(animation: MonsterAnimation) {

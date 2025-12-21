@@ -1,5 +1,6 @@
-import {createSlice, PayloadAction} from '@reduxjs/toolkit';
-import {WeaponState} from './types';
+import {createSlice} from '@reduxjs/toolkit';
+import type {PayloadAction} from '@reduxjs/toolkit';
+import type {WeaponState} from './types';
 import {WeaponVariations} from '../../../engine/enums';
 
 const weaponSlice = createSlice({

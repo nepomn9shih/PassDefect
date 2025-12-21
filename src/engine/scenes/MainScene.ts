@@ -1,4 +1,4 @@
-import {Action, Store} from '@reduxjs/toolkit';
+import type {Action, Store} from '@reduxjs/toolkit';
 import {Scene} from 'phaser';
 
 import {GameMap} from '../classes/Map';
@@ -10,7 +10,7 @@ import {
     PlayerSkinVariations,
     SceneNames
 } from '../enums';
-import {AllGameState} from '../../reducers/types';
+import type {AllGameState} from '../../reducers/types';
 import {CameraManager} from '../managers/CameraManager';
 import {PlayerContainer} from '../classes/Player/PlayerContainer';
 import {GameManager} from '../managers/GameManager';
@@ -106,14 +106,15 @@ export class MainScene extends Scene {
         });
 
         this.events.on(GameEvents.REMOVE_CHEST, (chestId: string) => {
-            this.chests.getChildren().forEach((chest: Chest) => {
+            const chests = this.chests.getChildren() as Chest[];
+            chests.forEach((chest) => {
                 if (chest.id === chestId) {
                     chest.makeInactive();
                 }
             });
         });   
 
-		this.gameManager = new GameManager({scene: this, mapData: this.map.map.objects});
+		this.gameManager = new GameManager({scene: this, mapData: this.map.map!.objects});
 		this.gameManager.setup();
 	}
 
@@ -218,7 +219,7 @@ export class MainScene extends Scene {
     }
 
     // Удаляем блокеры которые накладываются на спавнеры
-    deleteBlocker(spawner: SpawnerImage, blocker: MapObject) {
+    deleteBlocker(_spawner: SpawnerImage, blocker: MapObject) {
         blocker.destroy();
     }
 

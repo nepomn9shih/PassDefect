@@ -8,7 +8,7 @@ import {
 } from '../../constants/zoom';
 import {MainScene} from '../../scenes/MainScene';
 import {rescaleHandler} from '../../utils/rescaleHandler';
-import {CameraManagerProps} from './types';
+import type {CameraManagerProps} from './types';
 import {RESCALE_EVENT_NAME, ZOOM_EVENT_NAME} from '../../constants/events';
 import {setZoom} from '../../../reducers/slices';
 
@@ -24,7 +24,7 @@ export class CameraManager {
 		const cam = this.scene.cameras.main;
 		const scene = this.scene;
 		// Ограничиваем скролл по карте размерами карты
-		cam.setBounds(0, 0, this.scene.map.map.widthInPixels, this.scene.map.map.heightInPixels);
+		cam.setBounds(0, 0, this.scene.map.map!.widthInPixels, this.scene.map.map!.heightInPixels);
 		// Настраиваем зум (по умолчанию 1)
 		cam.setZoom(INITIAL_ZOOM);
 

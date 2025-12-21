@@ -1,4 +1,4 @@
-import {PlayerProps} from './types';
+import type {PlayerProps} from './types';
 import {MainScene} from '../../scenes/MainScene';
 import {PlayerAnimation, PlayerSkinVariations} from '../../enums';
 import {PLAYER_INITIAL_SCALE} from './constants';
@@ -9,7 +9,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
 	x: number;
 	y: number;
 	skin: PlayerSkinVariations
-	velocity: number;
+	velocity: number = 0;
 
 	constructor({
 		scene,
@@ -38,8 +38,10 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
 
 	createAnimations() {
 		const animations = getPlayerAnimations(this);
-	
-		Object.keys(animations).forEach((animation: PlayerAnimation) => this.anims.create(animations[animation]));
+		const animationsNames = Object.keys(animations) as PlayerAnimation[];
+		animationsNames.forEach((animation: PlayerAnimation) => {
+			this.anims.create(animations[animation])
+		});
 	}
 
 	playAnimation(animation: PlayerAnimation) {

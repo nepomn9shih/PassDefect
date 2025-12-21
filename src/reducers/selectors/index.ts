@@ -1,14 +1,10 @@
-import {createSelector} from '@reduxjs/toolkit';
 import {useSelector} from 'react-redux';
 
-import {AllGameState} from '../types';
-import {PlayerState} from '../slices/player/types';
+import type {AllGameState} from '../types';
+import type {PlayerState} from '../slices/player/types';
 
 export const usePlayer = (): PlayerState => {
-	const selector = createSelector(
-		({player}: AllGameState) => player,
-		(value: PlayerState) => value
-	);
+	const selector = ({player}: AllGameState) => player;
 
 	return useSelector(selector);
 };
