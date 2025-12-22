@@ -1,7 +1,8 @@
 import {defineConfig} from 'vite'
 import react from '@vitejs/plugin-react'
 
-export default defineConfig({
+export default defineConfig(({command}) =>({
+    base: command === 'build' ? '/PassDefect/' : '/',
 	plugins: [
 		react()
 	],
@@ -18,4 +19,4 @@ export default defineConfig({
         // It loads without sending a request
         assetsInlineLimit: 0, // 0kb, set as your minimum file size
 	}
-});
+}));
