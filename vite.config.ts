@@ -10,6 +10,12 @@ export default defineConfig({
 		open: true
 	},
 	build: {
-		manifest: true
+        outDir: 'build', // Changes the output directory from 'dist' to 'build'
+        emptyOutDir: true, // Clears the directory before each build (recommended)
+		manifest: true,
+        // If an asset file like (images) whose size is less than 4kb(Default size for vite)
+        // is marked as an inline element and convert it into base64 format so that
+        // It loads without sending a request
+        assetsInlineLimit: 0, // 0kb, set as your minimum file size
 	}
-})
+});

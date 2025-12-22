@@ -1,5 +1,3 @@
-// @ts-nocheck
-
 import {importFilesSourcesAsObject} from '../../utils/importFilesSourcesAsObject';
 
 export const PLAYER_ATLASES =
