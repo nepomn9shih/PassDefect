@@ -1,0 +1,102 @@
+{
+  "index.html": {
+    "file": "assets/index-CK3OP-GD.js",
+    "name": "index",
+    "src": "index.html",
+    "isEntry": true,
+    "css": [
+      "assets/index-CIfVvUo9.css"
+    ],
+    "assets": [
+      "assets/swamp-planet-BJyxoPiv.json",
+      "assets/swamp-planet-Dd4jQsgS.png",
+      "assets/monster-knight-YN37SPn9.json",
+      "assets/monster-knight-rsUsjGGH.png",
+      "assets/player-skin-knight-D7kx11Qo.png",
+      "assets/map-objects-2IwgqJ2K.json",
+      "assets/map-objects-CtBOBVuS.png",
+      "assets/pick-up-DpnCjx8V.json",
+      "assets/pick-up-Drq06Sxh.png",
+      "assets/spawners-DkwCgpYT.json",
+      "assets/spawners-CEcdqBI2.png",
+      "assets/flame-gun-uIoMm0Oh.json",
+      "assets/flame-gun-CjiJ9lZL.png",
+      "assets/coin-logo-mE2QOq1k.png",
+      "assets/bolts-logo-B0Z9itvT.png",
+      "assets/heart-logo-CDSsTatb.png",
+      "assets/armor-logo-C_qiw7O1.png"
+    ]
+  },
+  "src/assets/armor-logo.png": {
+    "file": "assets/armor-logo-C_qiw7O1.png",
+    "src": "src/assets/armor-logo.png"
+  },
+  "src/assets/bolts-logo.png": {
+    "file": "assets/bolts-logo-B0Z9itvT.png",
+    "src": "src/assets/bolts-logo.png"
+  },
+  "src/assets/coin-logo.png": {
+    "file": "assets/coin-logo-mE2QOq1k.png",
+    "src": "src/assets/coin-logo.png"
+  },
+  "src/assets/heart-logo.png": {
+    "file": "assets/heart-logo-CDSsTatb.png",
+    "src": "src/assets/heart-logo.png"
+  },
+  "src/engine/assets/map/swamp-planet.json": {
+    "file": "assets/swamp-planet-BJyxoPiv.json",
+    "src": "src/engine/assets/map/swamp-planet.json"
+  },
+  "src/engine/assets/map/swamp-planet.png": {
+    "file": "assets/swamp-planet-Dd4jQsgS.png",
+    "src": "src/engine/assets/map/swamp-planet.png"
+  },
+  "src/engine/assets/monsters/monster-knight.json": {
+    "file": "assets/monster-knight-YN37SPn9.json",
+    "src": "src/engine/assets/monsters/monster-knight.json"
+  },
+  "src/engine/assets/monsters/monster-knight.png": {
+    "file": "assets/monster-knight-rsUsjGGH.png",
+    "src": "src/engine/assets/monsters/monster-knight.png"
+  },
+  "src/engine/assets/objects/map-objects.json": {
+    "file": "assets/map-objects-2IwgqJ2K.json",
+    "src": "src/engine/assets/objects/map-objects.json"
+  },
+  "src/engine/assets/objects/map-objects.png": {
+    "file": "assets/map-objects-CtBOBVuS.png",
+    "src": "src/engine/assets/objects/map-objects.png"
+  },
+  "src/engine/assets/objects/pick-up.json": {
+    "file": "assets/pick-up-DpnCjx8V.json",
+    "src": "src/engine/assets/objects/pick-up.json"
+  },
+  "src/engine/assets/objects/pick-up.png": {
+    "file": "assets/pick-up-Drq06Sxh.png",
+    "src": "src/engine/assets/objects/pick-up.png"
+  },
+  "src/engine/assets/objects/spawners.json": {
+    "file": "assets/spawners-DkwCgpYT.json",
+    "src": "src/engine/assets/objects/spawners.json"
+  },
+  "src/engine/assets/objects/spawners.png": {
+    "file": "assets/spawners-CEcdqBI2.png",
+    "src": "src/engine/assets/objects/spawners.png"
+  },
+  "src/engine/assets/player/player-skin-knight.json": {
+    "file": "assets/monster-knight-YN37SPn9.json",
+    "src": "src/engine/assets/monsters/monster-knight.json"
+  },
+  "src/engine/assets/player/player-skin-knight.png": {
+    "file": "assets/player-skin-knight-D7kx11Qo.png",
+    "src": "src/engine/assets/player/player-skin-knight.png"
+  },
+  "src/engine/assets/weapon/flame-gun.json": {
+    "file": "assets/flame-gun-uIoMm0Oh.json",
+    "src": "src/engine/assets/weapon/flame-gun.json"
+  },
+  "src/engine/assets/weapon/flame-gun.png": {
+    "file": "assets/flame-gun-CjiJ9lZL.png",
+    "src": "src/engine/assets/weapon/flame-gun.png"
+  }
+}
