@@ -2,13 +2,15 @@
 	"name": "pass-defect",
 	"version": "1.0.0",
 	"type": "module",
+	"author": "Nepomniashchikh Aleksandr",
 	"homepage": "https://nepomn9shih.github.io/PassDefect",
 	"private": true,
 	"scripts": {
 		"dev": "vite",
 		"build": "tsc -b && vite build",
 		"lint": "eslint .",
-		"preview": "vite preview"
+		"preview": "vite preview",
+		"deploy": "gh-pages -d build"
 	},
 	"dependencies": {
 		"phaser": "^3.87.0",
@@ -20,6 +22,7 @@
 		"uuid": "^10.0.0"
 	},
 	"devDependencies": {
+		"gh-pages": "^6.3.0",
 		"@eslint/js": "^9.39.1",
 		"@reduxjs/toolkit": "^2.11.2",
 		"@types/node": "^24.10.1",
