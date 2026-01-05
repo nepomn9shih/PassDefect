@@ -19,10 +19,10 @@ import {Chest} from '../classes/ChestModel/Chest';
 import {MonsterModel} from '../classes/MonsterModel';
 import {MonsterContainer} from '../classes/MonsterModel/MonsterContainer';
 import {getRandomMonsterVariation} from '../utils/getRandomMonsterVariation';
-import {Weapon} from '../classes/Player/Weapon';
 import {PlayerModel} from '../classes/Player/PlayerModel';
 import {SpawnerImage} from '../classes/Spawner/SpawnerImage';
 import {MapObject} from '../classes/MapObject';
+import type { WeaponBolt } from '../classes/Weapon/WeaponBolt';
 
 export class MainScene extends Scene {
     store: Store<AllGameState, Action<string>>;
@@ -200,7 +200,7 @@ export class MainScene extends Scene {
         this.events.emit(GameEvents.PICK_UP_CHEST, chest.id, player.id);
     }
 
-    weaponEnemyOverlap(weapon: Weapon, enemy: MonsterContainer) {
+    weaponEnemyOverlap(weapon: WeaponBolt, enemy: MonsterContainer) {
         if (this.player.playerAttacking && !this.player.weaponHit) {
             this.player.weaponHit = true;
 
@@ -244,7 +244,7 @@ export class MainScene extends Scene {
         this.physics.add.overlap(this.player, this.chests, this.collectChest, null, this);
         // Проверка коллизий между оружием игрока и монстрами
         // @ts-expect-error не понимает что коллбек нужного формата
-        this.physics.add.overlap(this.player.weapon, this.monsters, this.weaponEnemyOverlap, null, this);
+        this.physics.add.overlap(this.player.weapon.weaponBolt, this.monsters, this.weaponEnemyOverlap, null, this);
         // Проверка коллизий между игроком и монстрами
         // @ts-expect-error не понимает что коллбек нужного формата
         this.physics.add.overlap(this.player, this.monsters, this.enemyOverlap, null, this);

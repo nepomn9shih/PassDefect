@@ -2,10 +2,9 @@ import type {PlayerContainerProps} from './types';
 import {MainScene} from '../../scenes/MainScene';
 import {GameEvents, PlayerAnimation, PlayerDirections, PlayerSkinVariations, WeaponVariations} from '../../enums';
 import {Player} from './Player';
-import {Weapon} from './Weapon';
-import {WEAPON_OFFSET} from './constants';
 import {setArmor, setBolts, setMoney, setPlayerHealth} from '../../../reducers/slices';
 import {PlayerModel} from './PlayerModel';
+import {WeaponContainer} from '../Weapon/WeaponContainer';
 
 export class PlayerContainer extends Phaser.GameObjects.Container {
 	scene: MainScene;
@@ -24,7 +23,7 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
 	playerMoving: boolean = false;
 	flipX: boolean;
 	isHit: boolean;
-	weapon: Weapon;
+	weapon: WeaponContainer;
 	weaponVariation: WeaponVariations;
 	weaponHit: boolean = false;
 	bolts: number;
@@ -96,13 +95,12 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
 		this.add(this.player);
 
 		// Создаем оружие
-		this.weapon = new Weapon({
+		this.weapon = new WeaponContainer({
 			scene: this.scene,
-			x: WEAPON_OFFSET[this.weaponVariation][this.currentDirection].x,
-			y: WEAPON_OFFSET[this.weaponVariation][this.currentDirection].y,
-			variation: this.weaponVariation,
-			frame,
-			direction: this.currentDirection
+			x: 0,
+			y: 0,
+			weaponVariation: this.weaponVariation,
+			owner: this
 		});
 		this.scene.add.existing(this.weapon);
 		this.add(this.weapon);
@@ -110,21 +108,7 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
 	}
 
 	turnWeapon() {
-		this.weapon.setX(WEAPON_OFFSET[this.weaponVariation][this.currentDirection].x);
-		this.weapon.setY(WEAPON_OFFSET[this.weaponVariation][this.currentDirection].y);
-
-		if (
-			this.currentDirection === PlayerDirections.RIGHT
-			|| this.currentDirection === PlayerDirections.LEFT
-		) {
-			this.weapon.setAngle(0);
-		} 
-		if (this.currentDirection === PlayerDirections.UP) {
-			this.weapon.setAngle(270);
-		}
-		if (this.currentDirection === PlayerDirections.DOWN) {
-			this.weapon.setAngle(90);
-		}
+		this.weapon.turnWeapon();
 	}
 
 	updateHealthBar() {
@@ -278,13 +262,13 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
 			this.body?.setVelocityX(-this.velocity);
 			this.currentDirection = PlayerDirections.LEFT;
 			this.viewDirection = PlayerDirections.LEFT;
-			this.player.flipX = true; 
+			this.player.flipX = true;
 		} else if (cursors.right.isDown) {
 			// @ts-expect-error так как TS не понимает что это не StaticBody
 			this.body.setVelocityX(this.velocity);
 			this.currentDirection = PlayerDirections.RIGHT;
 			this.viewDirection = PlayerDirections.RIGHT;
-			this.player.flipX = false; 
+			this.player.flipX = false;
 		}
 		if (cursors.up.isDown) {
 			// @ts-expect-error так как TS не понимает что это не StaticBody
@@ -297,12 +281,6 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
 		}
 
 		this.turnWeapon();
-
-		// Разворачивает оружие когда игрок повернут влево
-		this.weapon.flipX = false;
-		if (this.currentDirection === PlayerDirections.LEFT) {
-			this.weapon.flipX = true;
- 		}
 
 		if (this.playerAttacking) {
 			// что-то делаем во время атаки
@@ -320,10 +298,10 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
 				this.loseBolts(this.weapon.shotCost);
 			}
 
-			this.weapon.alpha = 1;
+			this.weapon.setAttackMode();
 			this.playerAttacking = true;
-			this.scene.time.delayedCall(150, () => {
-				this.weapon.alpha = 0;
+			this.scene.time.delayedCall(this.weapon.attackTime, () => {
+				this.weapon.setDefaultMode();
 				this.playerAttacking = false;
 				this.weaponHit = false;
 			}, [], this);

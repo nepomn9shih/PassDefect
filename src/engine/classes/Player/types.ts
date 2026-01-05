@@ -1,14 +1,5 @@
-import {PlayerDirections, PlayerSkinVariations, WeaponVariations} from '../../enums';
+import {PlayerSkinVariations} from '../../enums';
 import {MainScene} from '../../scenes/MainScene';
-
-export type WeaponProps = {
-	scene: MainScene;
-	x: number;
-	y: number;
-    variation: WeaponVariations;
-	frame?: string;
-	direction: PlayerDirections;
-};
 
 export type PlayerProps = {
 	scene: MainScene;
@@ -28,8 +19,3 @@ export type PlayerContainerProps = PlayerProps & {
 	maxArmor: number;
     id: string;
 };
-
-export type WeaponData = {
-	damage: number,
-    shotCost: number
-}

@@ -23,6 +23,11 @@ export enum WeaponVariations {
     SWORD = 'sword'
 }
 
+export enum WeaponBoltsVariations {
+    FLAME_BOLT = 'flame-bolt',
+    SWORD_BOLT = 'sword-bolt'
+}
+
 export enum PlayerDirections {
     RIGHT = 'right',
     LEFT = 'left',
