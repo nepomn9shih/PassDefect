@@ -273,11 +273,15 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
 		if (cursors.up.isDown) {
 			// @ts-expect-error так как TS не понимает что это не StaticBody
 			this.body.setVelocityY(-this.velocity);
-			this.currentDirection = PlayerDirections.UP;
+			this.currentDirection = this.viewDirection === PlayerDirections.RIGHT
+				? PlayerDirections.RIGHT_UP
+				: PlayerDirections.LEFT_UP;
 		} else if (cursors.down.isDown) {
 			// @ts-expect-error так как TS не понимает что это не StaticBody
 			this.body.setVelocityY(this.velocity);
-			this.currentDirection = PlayerDirections.DOWN;
+			this.currentDirection = this.viewDirection === PlayerDirections.RIGHT
+				? PlayerDirections.RIGHT_DOWN
+				: PlayerDirections.LEFT_DOWN;
 		}
 
 		this.turnWeapon();

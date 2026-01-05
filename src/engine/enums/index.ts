@@ -31,8 +31,10 @@ export enum WeaponBoltsVariations {
 export enum PlayerDirections {
     RIGHT = 'right',
     LEFT = 'left',
-    UP = 'up',
-    DOWN = 'down'
+    RIGHT_UP = 'right-up',
+    LEFT_UP = 'left-up',
+    RIGHT_DOWN = 'right-down',
+    LEFT_DOWN = 'left-down'
 }
 
 export enum PlayerSkinVariations {

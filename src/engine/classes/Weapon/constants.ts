@@ -29,14 +29,18 @@ export const WEAPON_OFFSET: Record<
     [WeaponVariations.FLAME_GUN]: {
        [PlayerDirections.RIGHT]: {x: 4, y: 2},
        [PlayerDirections.LEFT]: {x: -4, y: 2},
-       [PlayerDirections.UP]: {x: -12, y: 0},
-       [PlayerDirections.DOWN]: {x: 12, y: 0}
+       [PlayerDirections.RIGHT_UP]: {x: 16, y: 0},
+       [PlayerDirections.LEFT_UP]: {x: -16, y: 0},
+       [PlayerDirections.RIGHT_DOWN]: {x: 14, y: 0},
+       [PlayerDirections.LEFT_DOWN]: {x: -14, y: 0}
     },
     [WeaponVariations.SWORD]: {
         [PlayerDirections.RIGHT]: {x: 0, y: 0},
         [PlayerDirections.LEFT]: {x: 0, y: 0},
-        [PlayerDirections.UP]: {x: 0, y: 0},
-        [PlayerDirections.DOWN]: {x: 0, y: 0}
+        [PlayerDirections.RIGHT_UP]: {x: 0, y: 0},
+        [PlayerDirections.LEFT_UP]: {x: 0, y: 0},
+        [PlayerDirections.RIGHT_DOWN]: {x: 0, y: 0},
+        [PlayerDirections.LEFT_DOWN]: {x: 0, y: 0}
      },
 }
 
@@ -47,14 +51,18 @@ export const WEAPON_BOLTS_OFFSET: Record<
     [WeaponBoltsVariations.FLAME_BOLT]: {
        [PlayerDirections.RIGHT]: {x: 45, y: 0},
        [PlayerDirections.LEFT]: {x: -45, y: 0},
-       [PlayerDirections.UP]: {x: -12, y: -40},
-       [PlayerDirections.DOWN]: {x: 12, y: 40}
+       [PlayerDirections.RIGHT_UP]: {x: 14, y: -40},
+       [PlayerDirections.LEFT_UP]: {x: -14, y: -40},
+       [PlayerDirections.RIGHT_DOWN]: {x: 16, y: 40},
+       [PlayerDirections.LEFT_DOWN]: {x: -16, y: 40}
     },
      [WeaponBoltsVariations.SWORD_BOLT]: {
-       [PlayerDirections.RIGHT]: {x: 30, y: 0},
-       [PlayerDirections.LEFT]: {x: -30, y: 0},
-       [PlayerDirections.UP]: {x: 0, y: -30},
-       [PlayerDirections.DOWN]: {x: 0, y: 30}
+       [PlayerDirections.RIGHT]: {x: 0, y: 0},
+       [PlayerDirections.LEFT]: {x: 0, y: 0},
+       [PlayerDirections.RIGHT_UP]: {x: 0, y: 0},
+       [PlayerDirections.LEFT_UP]: {x: 0, y: 0},
+       [PlayerDirections.RIGHT_DOWN]: {x: 0, y: 0},
+       [PlayerDirections.LEFT_DOWN]: {x: 0, y: 0}
     }
 };
 

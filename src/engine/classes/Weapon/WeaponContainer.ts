@@ -87,25 +87,21 @@ export class WeaponContainer extends Phaser.GameObjects.Container {
 			this.weaponBolt.setAngle(0).setFlipX(true);
 			this.weapon.setAngle(0).setFlipX(true).setFlipY(false);
 		} 
-		if (this.owner.currentDirection === PlayerDirections.UP) {
+		if (this.owner.currentDirection === PlayerDirections.RIGHT_UP) {
 			this.weaponBolt.setAngle(270).setFlipX(false);
-			this.weapon.setAngle(270).setFlipX(false);
-
-			if (this.owner.viewDirection === PlayerDirections.RIGHT) {
-				this.weapon.setFlipY(false);
-			} else {
-				this.weapon.setFlipY(true);
-			}
+			this.weapon.setAngle(270).setFlipX(false).setFlipY(false);
 		}
-		if (this.owner.currentDirection === PlayerDirections.DOWN) {
+		if (this.owner.currentDirection === PlayerDirections.LEFT_UP) {
+			this.weaponBolt.setAngle(270).setFlipX(false);
+			this.weapon.setAngle(270).setFlipX(false).setFlipY(true);
+		}
+		if (this.owner.currentDirection === PlayerDirections.RIGHT_DOWN) {
 			this.weaponBolt.setAngle(90).setFlipX(false);
-			this.weapon.setAngle(90).setFlipX(false);
-
-			if (this.owner.viewDirection === PlayerDirections.RIGHT) {
-				this.weapon.setFlipY(false);
-			} else {
-				this.weapon.setFlipY(true);
-			}
+			this.weapon.setAngle(90).setFlipX(false).setFlipY(false);
+		}
+		if (this.owner.currentDirection === PlayerDirections.LEFT_DOWN) {
+			this.weaponBolt.setAngle(90).setFlipX(false);
+			this.weapon.setAngle(90).setFlipX(false).setFlipY(true);
 		}
 	}
 
