@@ -6,7 +6,7 @@ import {
     LOADING_BOX_WIDTH,
     TEXT_SCALE
 } from '../constants';
-import {AtlasesKeys, PlayerSkinVariations, SceneNames} from '../enums';
+import {AtlasesKeys, SceneNames} from '../enums';
 import {MAP_ATLASES} from '../assets/map';
 import {DPR} from '../constants/zoom';
 import {MONSTERS_ATLASES} from '../assets/monsters';
@@ -77,11 +77,13 @@ export class BootScene extends Scene {
             );
 		});
 
-		this.load.atlas(
-			PlayerSkinVariations.KNIGHT,
-			PLAYER_ATLASES[PlayerSkinVariations.KNIGHT].imgUrl,
-			PLAYER_ATLASES[PlayerSkinVariations.KNIGHT].jsonUrl
-		);
+		Object.keys(PLAYER_ATLASES).forEach((key) => {
+            this.load.atlas(
+                `${key}`,
+                PLAYER_ATLASES[key].imgUrl,
+                PLAYER_ATLASES[key].jsonUrl
+            );
+		});
 
 		this.load.atlas(
 			AtlasesKeys.MAP_OBJECTS,

@@ -41,6 +41,10 @@ export enum PlayerSkinVariations {
     KNIGHT = 'player-skin-knight'
 }
 
+export enum HelmetsVariations {
+    PLAYER_KNIGHT = 'player-helmets-knight'
+}
+
 export enum MonstersVariations {
     KNIGHT = 'monster-knight'
 }

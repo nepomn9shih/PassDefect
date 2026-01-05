@@ -5,6 +5,8 @@ import {Player} from './Player';
 import {setArmor, setBolts, setMoney, setPlayerHealth} from '../../../reducers/slices';
 import {PlayerModel} from './PlayerModel';
 import {WeaponContainer} from '../Weapon/WeaponContainer';
+import {Helmet} from '../Helmet/Helmet';
+import {HELMETS_FOR_SKIN} from '../Helmet/constants';
 
 export class PlayerContainer extends Phaser.GameObjects.Container {
 	scene: MainScene;
@@ -24,6 +26,7 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
 	flipX: boolean;
 	isHit: boolean;
 	weapon: WeaponContainer;
+	helmet: Helmet;
 	weaponVariation: WeaponVariations;
 	weaponHit: boolean = false;
 	bolts: number;
@@ -93,6 +96,17 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
 			frame
 		});
 		this.add(this.player);
+
+		// создаем спрайт шлема игрока
+		this.helmet = new Helmet({
+			scene: this.scene,
+			x: 0,
+			y: 0,
+			variation: HELMETS_FOR_SKIN[skin],
+			frame: '1',
+			owner: this
+		});
+		this.add(this.helmet);
 
 		// Создаем оружие
 		this.weapon = new WeaponContainer({
@@ -176,6 +190,7 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
 		this.playSpawnAnimation();
 		this.armor -= 1;
 		this.updateArmorBar();
+		this.helmet.updateHelmet();
 	}
 
 	loseHealth(damage: number) {
@@ -231,6 +246,7 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
 			: newArmor;
 
         this.updateArmorBar();
+		this.helmet.updateHelmet();
 	}
 
 	update(cursors: Phaser.Types.Input.Keyboard.CursorKeys) {
@@ -263,12 +279,14 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
 			this.currentDirection = PlayerDirections.LEFT;
 			this.viewDirection = PlayerDirections.LEFT;
 			this.player.flipX = true;
+			this.helmet.flipX = true;
 		} else if (cursors.right.isDown) {
 			// @ts-expect-error так как TS не понимает что это не StaticBody
 			this.body.setVelocityX(this.velocity);
 			this.currentDirection = PlayerDirections.RIGHT;
 			this.viewDirection = PlayerDirections.RIGHT;
 			this.player.flipX = false;
+			this.helmet.flipX = false;
 		}
 		if (cursors.up.isDown) {
 			// @ts-expect-error так как TS не понимает что это не StaticBody
