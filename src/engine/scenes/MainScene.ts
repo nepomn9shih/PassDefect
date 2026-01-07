@@ -4,6 +4,7 @@ import {Scene} from 'phaser';
 import {GameMap} from '../classes/Map';
 import {
     AtlasesKeys,
+    ChestVariations,
     GameEvents,
     LevelMaps,
     MapLayersNames,
@@ -24,6 +25,7 @@ import {SpawnerImage} from '../classes/Spawner/SpawnerImage';
 import {MapObject} from '../classes/MapObject';
 import type {WeaponBolt} from '../classes/Weapon/WeaponBolt';
 import {StateManager} from '../managers/StateManager';
+import { Z_INDEXES } from '../constants/zindexes';
 
 export class MainScene extends Scene {
     store: Store<AllGameState, Action<string>>;
@@ -130,13 +132,13 @@ export class MainScene extends Scene {
 
     createGroups() {
 		// Создаем группу для сундуков
-		this.chests = this.physics.add.group();
+		this.chests = this.physics.add.group().setDepth(Z_INDEXES.chests);
         // Создаем группу для монстров
-        this.monsters = this.physics.add.group();
-        // Создаем группу для монстров
-        this.blockers = this.physics.add.group();
+        this.monsters = this.physics.add.group().setDepth(Z_INDEXES.monsters);
+        // Создаем группу для блокеров
+        this.blockers = this.physics.add.group().setDepth(Z_INDEXES.blockers);
         // Создаем группу для спавнеров
-        this.spawners = this.physics.add.group();
+        this.spawners = this.physics.add.group().setDepth(Z_INDEXES.spawners);
         // Включаем обновление дочерних элементов
         this.monsters.runChildUpdate = true;
 	}
@@ -210,7 +212,31 @@ export class MainScene extends Scene {
 
     collectChest(player: PlayerContainer, chest: Chest) {
         // this.goldPickupAudio.play();
-        
+
+        // Если у игрока полная броня то не подбираем сундук
+        if (
+            chest.variation === ChestVariations.ARMOR 
+                && player.armor === player.maxArmor
+        ) {
+            return;
+        }
+
+        // Если у игрока полная обойма потронов то не подбираем сундук
+        if (
+            chest.variation === ChestVariations.BOLTS
+                && player.bolts === player.maxBolts
+        ) {
+            return;
+        }
+
+        // Если у игрока полное здоровье то не подбираем сундук
+        if (
+            chest.variation === ChestVariations.HEART
+                && player.health === player.maxHealth
+        ) {
+            return;
+        }
+
         this.events.emit(GameEvents.PICK_UP_CHEST, chest.id, player.id);
     }
 

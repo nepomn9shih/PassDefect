@@ -8,6 +8,7 @@ import {Helmet} from '../Helmet/Helmet';
 import {HELMETS_FOR_SKIN} from '../Helmet/constants';
 import { getPlayerLevel } from '../../utils/getPlayerLevel';
 import { PLAYER_LEVEL_PARAMS } from '../../constants/player';
+import { Z_INDEXES } from '../../constants/zindexes';
 
 export class PlayerContainer extends Phaser.GameObjects.Container {
 	scene: MainScene;
@@ -89,6 +90,8 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
 		// Игрок не сможет зайти за карту
 		// @ts-expect-error так как TS не понимает что это не StaticBody
 		this.body?.setCollideWorldBounds(true);
+		// Задаем слой для игрока
+		this.setDepth(Z_INDEXES.player);
 		// Добавляем игрока на сцену
 		this.scene.add.existing(this);
 		// Настраиваем что камера следует за игроком
