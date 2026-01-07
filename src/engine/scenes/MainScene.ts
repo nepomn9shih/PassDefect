@@ -79,6 +79,7 @@ export class MainScene extends Scene {
             x: playerObject.x,
             y: playerObject.y,
             skin: this.playerSkin,
+            level: playerObject.level,
             health: playerObject.health,
             maxHealth: playerObject.maxHealth,
             gold: playerObject.gold,

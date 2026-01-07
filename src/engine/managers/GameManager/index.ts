@@ -151,6 +151,11 @@ export class GameManager {
             this.players[playerId].respawn();
 			this.scene.player.respawn(this.players[playerId]);
 		});
+
+		// Когда повышается уровень игрока
+		this.scene.events.on(GameEvents.LEVEL_UP_PLAYER, (newLevel: number) => {
+            this.scene.stateManager.setLevel(newLevel);
+		});
 	}
 
 	// Отрисовать count одинаковых объектов типа variation

@@ -1,4 +1,4 @@
-import {setArmor, setBolts, setMoney, setPlayerHealth, setSculls, setZoom} from '../../../reducers/slices';
+import {setArmor, setBolts, setLevel, setMoney, setPlayerHealth, setSculls, setZoom} from '../../../reducers/slices';
 import {MainScene} from '../../scenes/MainScene';
 import type {StateManagerProps} from './types';
 
@@ -17,6 +17,10 @@ export class StateManager {
 	// Управление параметрами игрока
 	setSculls(sculls: number) {
 		this.scene.store.dispatch(setSculls(sculls));
+	}
+
+	setLevel(level: number) {
+		this.scene.store.dispatch(setLevel(level));
 	}
 
 	setGold(gold: number) {

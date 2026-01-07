@@ -6,6 +6,7 @@ import type {PlayerState} from './types';
 const playerSlice = createSlice({
 	name: 'game',
 	initialState: {
+		level: 1,
 		money: 0,
 		health: 0,
 		armor: 0,
@@ -13,6 +14,9 @@ const playerSlice = createSlice({
 		sculls: 0
 	} as PlayerState,
 	reducers: {
+		setLevel(state, {payload}: PayloadAction<number>) {
+            state.level = payload;
+		},
 		setMoney(state, {payload}: PayloadAction<number>) {
             state.money = payload;
 		},
@@ -36,6 +40,7 @@ export const {
 	setPlayerHealth,
 	setBolts,
 	setArmor,
-	setSculls
+	setSculls,
+	setLevel
 } = playerSlice.actions;
 export const playerReducer = playerSlice.reducer;

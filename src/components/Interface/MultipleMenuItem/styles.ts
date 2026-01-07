@@ -4,19 +4,12 @@ export const StyledMenuItem = styled.div`
     padding: 10px;
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 2px;
 `;
 
-export const StyledMenuIcon = styled.img`
+export const StyledMenuIcon = styled.img<{$isEmpty: boolean}>`
     height: 30px;
     width: 30px;
     object-fit: contain;
-`;
-
-export const StyledMenuValue = styled.div`
-    height: 30px;
-    font-size: 18px;
-    font-weight: bold;
-    display: flex;
-    align-items: center;
+    filter: grayscale(${({$isEmpty}) => $isEmpty ? 1 : 0})
 `;

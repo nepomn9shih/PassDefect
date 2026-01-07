@@ -10,6 +10,7 @@ export type PlayerProps = {
 };
 
 export type PlayerContainerProps = PlayerProps & {
+	level: number;
 	health: number;
 	gold: number;
     maxHealth: number;

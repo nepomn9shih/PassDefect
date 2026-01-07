@@ -6,12 +6,16 @@ import {PlayerModel} from './PlayerModel';
 import {WeaponContainer} from '../Weapon/WeaponContainer';
 import {Helmet} from '../Helmet/Helmet';
 import {HELMETS_FOR_SKIN} from '../Helmet/constants';
+import { getPlayerLevel } from '../../utils/getPlayerLevel';
+import { PLAYER_LEVEL_PARAMS } from '../../constants/player';
 
 export class PlayerContainer extends Phaser.GameObjects.Container {
 	scene: MainScene;
 	x: number;
 	y: number;
 	skin: PlayerSkinVariations = PlayerSkinVariations.KNIGHT;
+	sculls: number;
+	level: number;
 	velocity: number;
 	health: number;
     maxHealth: number;
@@ -32,7 +36,6 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
 	maxBolts: number;
 	armor: number;
 	maxArmor: number;
-	sculls: number;
 	// если true то игрока только что ударили и пока нельзя ударить снова
 	damageCooldown: boolean;
 
@@ -50,13 +53,15 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
 		maxBolts,
 		armor,
 		maxArmor,
-		sculls
+		sculls,
+		level
 	}: PlayerContainerProps) {
 		super(scene, x, y);
 		this.scene = scene;
 		this.x = x;
 		this.y = y;
 
+		this.level = level;
 		this.health = health;
  		this.maxHealth = maxHealth;
 		this.gold = gold;
@@ -123,10 +128,6 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
 		this.playSpawnAnimation();
 	}
 
-	turnWeapon() {
-		this.weapon.turnWeapon();
-	}
-
 	updateHealthBar() {
 		this.scene.stateManager.setHealth(this.health);
 	}
@@ -147,13 +148,38 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
 		this.scene.stateManager.setSculls(this.sculls);
 	}
 
-	// Обновляем все меню
-	updateAllBars () {
+	/** Обновляем все меню */
+	updateAllBars() {
 		this.updateHealthBar();
 		this.updateGoldBar();
 		this.updateArmorBar();
 		this.updateBoltsBar();
 		this.updateScullsBar();
+	}
+
+	/** Проверяем нужно ли поднять уровень */
+	checkLevelUp() {
+		const currentLevel = this.level;
+		const newLevel = getPlayerLevel(this.sculls);
+		
+		if (currentLevel === newLevel) {
+			return;
+		}
+
+		this.level = newLevel;
+		this.scene.events.emit(GameEvents.LEVEL_UP_PLAYER, newLevel);
+		const {maxHealth, maxBolts, maxArmor} = PLAYER_LEVEL_PARAMS[newLevel];
+		this.maxHealth = maxHealth;
+		this.health = maxHealth;
+		this.maxBolts = maxBolts;
+		this.bolts = maxBolts;
+		this.maxArmor = maxArmor;
+
+		this.updateAllBars();
+	}
+
+	turnWeapon() {
+		this.weapon.turnWeapon();
 	}
 
 	playDeathAnimation(){
@@ -262,6 +288,7 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
     	this.sculls = newSculls;
 
         this.updateScullsBar();
+		this.checkLevelUp();
 	}
 
 	update(cursors: Phaser.Types.Input.Keyboard.CursorKeys) {
