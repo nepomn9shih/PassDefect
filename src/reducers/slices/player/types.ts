@@ -3,4 +3,5 @@ export type PlayerState = {
     health: number;
     armor: number;
     bolts: number;
+    sculls: number;
 }

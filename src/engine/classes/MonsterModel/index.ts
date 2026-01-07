@@ -7,6 +7,7 @@ export class MonsterModel {
     x: number;
     y: number;
     gold: number;
+    sculls: number;
     spawnerId: string;
     variation: MonstersVariations;
     health: number;
@@ -25,7 +26,8 @@ export class MonsterModel {
         variation,
         health,
         attack,
-        sight
+        sight,
+        sculls
     }: MonsterModelProps) {
         this.id = `${spawnerId}-${generateUUIDv4()}`;
         this.x = x;
@@ -37,5 +39,6 @@ export class MonsterModel {
         this.maxHealth = health;
         this.attack = attack;
         this.sight = sight;
+        this.sculls = sculls;
     }
 };

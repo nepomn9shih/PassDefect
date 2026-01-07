@@ -83,6 +83,7 @@ export class MainScene extends Scene {
             armor: playerObject.armor,
             maxArmor: playerObject.maxArmor,
             id: playerObject.id,
+            sculls: playerObject.sculls
         });
     }
 
@@ -178,7 +179,9 @@ export class MainScene extends Scene {
                 variation,
                 id: monsterObject.id,
                 health: monsterObject.health,
-                maxHealth: monsterObject.maxHealth
+                maxHealth: monsterObject.maxHealth,
+                sculls: monsterObject.sculls,
+                gold: monsterObject.gold
             });
 
             this.monsters.add(monster);
@@ -186,6 +189,8 @@ export class MainScene extends Scene {
             monster.id = monsterObject.id;
             monster.health = monsterObject.health;
             monster.maxHealth = monsterObject.maxHealth;
+            monster.sculls = monsterObject.sculls;
+            monster.gold = monsterObject.gold;
             monster.monster.setTexture(monsterObject.variation);
             monster.setPosition(monsterObject.x, monsterObject.y);
             monster.makeActive();

@@ -5,7 +5,13 @@ import {PlayerModel} from '../../classes/Player/PlayerModel';
 import {Spawner} from '../../classes/Spawner';
 import {SpawnerImage} from '../../classes/Spawner/SpawnerImage';
 import {SPAWNER_PROPERTY_NAME} from '../../constants';
-import {GameEvents, MapObjectVariations, ObjectLayersNames, SpawnerImageVariations, SpawnObjects} from '../../enums';
+import {
+	GameEvents,
+	MapObjectVariations,
+	ObjectLayersNames,
+	SpawnerImageVariations,
+	SpawnObjects
+} from '../../enums';
 import {MainScene} from '../../scenes';
 import {getTiledProperty} from '../../utils/getTiledProperty';
 import type {GameManagerProps} from './types';
@@ -13,6 +19,7 @@ import {MAP_OBJECTS_STUB} from '../../constants/map-objects';
 import {getRandomNumber} from '../../utils/getRandomNumber';
 import {CHEST_SPAWN_INTERVAL, MONSTER_SPAWN_INTERVAL} from './constants';
 import type {AddObject} from '../../classes/Spawner/types';
+import {setMoney, setSculls} from '../../../reducers/slices';
 
 export class GameManager {
 	scene: MainScene;
@@ -129,6 +136,13 @@ export class GameManager {
 		// Когда монстр убит
 		this.scene.events.on(GameEvents.DESTROY_MONSTER, (monsterId: string) => {
 			if (this.monsters[monsterId]) {
+				// Добавляем награды за убийство врага
+				const {sculls, gold} = this.monsters[monsterId];
+				this.scene.store.dispatch(setSculls(sculls));
+				this.scene.store.dispatch(setMoney(gold));
+				this.scene.player.getSculls(sculls);
+				this.scene.player.getGold(gold);
+
 				this.spawners[this.monsters[monsterId].spawnerId].removeObject(monsterId);
 			}
 		});

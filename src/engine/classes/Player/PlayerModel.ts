@@ -9,6 +9,7 @@ export class PlayerModel {
 	maxBolts: number;
 	armor: number;
 	maxArmor: number;
+    sculls: number;
     spawnLocations: (number)[][];
     x: number;
     y: number;
@@ -21,6 +22,7 @@ export class PlayerModel {
         this.maxBolts = 10;
         this.armor = 0;
         this.maxArmor = 3;
+        this.sculls = 0;
         this.id = `player-${generateUUIDv4()}`;
         this.spawnLocations = spawnLocations;
 

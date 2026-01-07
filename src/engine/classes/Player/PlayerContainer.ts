@@ -2,7 +2,7 @@ import type {PlayerContainerProps} from './types';
 import {MainScene} from '../../scenes/MainScene';
 import {GameEvents, PlayerAnimation, PlayerDirections, PlayerSkinVariations, WeaponVariations} from '../../enums';
 import {Player} from './Player';
-import {setArmor, setBolts, setMoney, setPlayerHealth} from '../../../reducers/slices';
+import {setArmor, setBolts, setMoney, setPlayerHealth, setSculls} from '../../../reducers/slices';
 import {PlayerModel} from './PlayerModel';
 import {WeaponContainer} from '../Weapon/WeaponContainer';
 import {Helmet} from '../Helmet/Helmet';
@@ -33,6 +33,7 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
 	maxBolts: number;
 	armor: number;
 	maxArmor: number;
+	sculls: number;
 	// если true то игрока только что ударили и пока нельзя ударить снова
 	damageCooldown: boolean;
 
@@ -49,7 +50,8 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
 		bolts,
 		maxBolts,
 		armor,
-		maxArmor
+		maxArmor,
+		sculls
 	}: PlayerContainerProps) {
 		super(scene, x, y);
 		this.scene = scene;
@@ -64,6 +66,7 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
 		this.maxBolts = maxBolts;
 		this.armor = armor;
 		this.maxArmor = maxArmor;
+		this.sculls = sculls;
 		this.updateAllBars();
 		// Скорость при движении игрока
 		this.velocity = 160;
@@ -141,12 +144,17 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
 		this.scene.store.dispatch(setBolts(this.bolts));
 	}
 
+	updateScullsBar() {
+		this.scene.store.dispatch(setSculls(this.sculls));
+	}
+
 	// Обновляем все меню
 	updateAllBars () {
 		this.updateHealthBar();
 		this.updateGoldBar();
 		this.updateArmorBar();
 		this.updateBoltsBar();
+		this.updateScullsBar();
 	}
 
 	playDeathAnimation(){
@@ -166,6 +174,7 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
 		this.gold = playerObject.gold;
 		this.bolts = playerObject.bolts;
 		this.armor = playerObject.armor;
+		this.sculls = playerObject.sculls;
 		this.setPosition(playerObject.x, playerObject.y);
 		this.playSpawnAnimation();
 		this.updateAllBars();
@@ -247,6 +256,13 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
 
         this.updateArmorBar();
 		this.helmet.updateHelmet();
+	}
+
+	getSculls(sculls: number) {
+		const newSculls = this.sculls + sculls;
+    	this.sculls = newSculls;
+
+        this.updateScullsBar();
 	}
 
 	update(cursors: Phaser.Types.Input.Keyboard.CursorKeys) {

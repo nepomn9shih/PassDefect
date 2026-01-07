@@ -10,6 +10,8 @@ export class MonsterContainer extends Phaser.GameObjects.Container {
     id: string;
     health: number;
     maxHealth: number;
+    sculls: number;
+    gold: number;
     healthBar: Phaser.GameObjects.Graphics;
     variation: MonstersVariations;
     monster: Monster;
@@ -24,7 +26,9 @@ export class MonsterContainer extends Phaser.GameObjects.Container {
         variation,
         id,
         health,
-        maxHealth
+        maxHealth,
+        sculls,
+        gold
     }: MonsterContainerProps) {
         super(scene, x, y);
         this.scene = scene;
@@ -34,6 +38,8 @@ export class MonsterContainer extends Phaser.GameObjects.Container {
  		this.setSize(36, 46);
         this.health = health;
         this.maxHealth = maxHealth;
+        this.sculls = sculls;
+        this.gold = gold;
         this.healthBar = this.scene.add.graphics();
         this.velocity = 10;
         this.flipX = true;

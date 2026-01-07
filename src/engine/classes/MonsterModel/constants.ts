@@ -9,7 +9,10 @@ export const MONSTERS_PARAMS: Record<MonstersVariations, MonsterParams> = {
             max: 2
         },
         sight: 300,
-        speed: 40
+        speed: 40,
+        sculls: 1,
+        minGold: 10,
+        maxGold: 20
     }
 };
 

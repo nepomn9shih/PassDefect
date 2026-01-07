@@ -70,18 +70,27 @@ export class Spawner {
     spawnMonster() {
         const location = this.pickRandomLocation();
         const variation = getRandomMonsterVariation();
-        const {health, attack, sight, speed} = MONSTERS_PARAMS[variation];
+        const {
+            health,
+            attack,
+            sight,
+            speed,
+            sculls,
+            minGold,
+            maxGold
+        } = MONSTERS_PARAMS[variation];
 
         const monster = new MonsterModel({
             x: location[0] || DEFAULT_POSITION.x,
             y: location[1] || DEFAULT_POSITION.x,
-            gold: getRandomNumber(10, 20),
+            gold: getRandomNumber(minGold, maxGold),
             spawnerId: this.id,
             variation,
             health,
             attack,
             sight,
-            speed
+            speed,
+            sculls
         });
 
         this.objectsCreated.push(monster);

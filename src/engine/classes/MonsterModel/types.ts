@@ -5,6 +5,7 @@ export type MonsterModelProps = {
     x: number;
     y: number;
     gold: number;
+    sculls: number;
     spawnerId: string;
     variation: MonstersVariations;
     health: number;
@@ -16,9 +17,12 @@ export type MonsterModelProps = {
     speed: number;
 }
 
-export type MonsterParams = Pick<MonsterModelProps, 'health' | 'attack' | 'sight' | 'speed'>
+export type MonsterParams = Pick<MonsterModelProps, 'health' | 'attack' | 'sight' | 'speed' | 'sculls'> & {
+    minGold: number;
+    maxGold: number;
+}
 
-export type MonsterContainerProps = Pick<MonsterModelProps, 'x' | 'y' | 'variation' | 'health'> & {
+export type MonsterContainerProps = Pick<MonsterModelProps, 'x' | 'y' | 'variation' | 'health' | 'sculls' | 'gold'> & {
     scene: MainScene;
     id: string;
     maxHealth: number;
