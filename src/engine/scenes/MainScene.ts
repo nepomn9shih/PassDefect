@@ -22,7 +22,8 @@ import {getRandomMonsterVariation} from '../utils/getRandomMonsterVariation';
 import {PlayerModel} from '../classes/Player/PlayerModel';
 import {SpawnerImage} from '../classes/Spawner/SpawnerImage';
 import {MapObject} from '../classes/MapObject';
-import type { WeaponBolt } from '../classes/Weapon/WeaponBolt';
+import type {WeaponBolt} from '../classes/Weapon/WeaponBolt';
+import {StateManager} from '../managers/StateManager';
 
 export class MainScene extends Scene {
     store: Store<AllGameState, Action<string>>;
@@ -32,6 +33,7 @@ export class MainScene extends Scene {
     playerSkin: PlayerSkinVariations;
     cameraManager!: CameraManager;
     gameManager!: GameManager;
+    stateManager!: StateManager;
     chests!: Phaser.Physics.Arcade.Group;
     monsters!: Phaser.Physics.Arcade.Group;
     blockers!: Phaser.Physics.Arcade.Group;
@@ -49,6 +51,8 @@ export class MainScene extends Scene {
     }
 
     create() {
+        // StateManager всегда создается первым
+        this.createStateManager();
         this.createMap();
         // createGroups должно отработать раньше createGameManager
         this.createGroups();
@@ -117,6 +121,10 @@ export class MainScene extends Scene {
 
 		this.gameManager = new GameManager({scene: this, mapData: this.map.map!.objects});
 		this.gameManager.setup();
+	}
+
+    createStateManager() {
+		this.stateManager = new StateManager({scene: this});
 	}
 
     createGroups() {

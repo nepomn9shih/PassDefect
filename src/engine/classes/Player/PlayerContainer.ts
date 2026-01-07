@@ -2,7 +2,6 @@ import type {PlayerContainerProps} from './types';
 import {MainScene} from '../../scenes/MainScene';
 import {GameEvents, PlayerAnimation, PlayerDirections, PlayerSkinVariations, WeaponVariations} from '../../enums';
 import {Player} from './Player';
-import {setArmor, setBolts, setMoney, setPlayerHealth, setSculls} from '../../../reducers/slices';
 import {PlayerModel} from './PlayerModel';
 import {WeaponContainer} from '../Weapon/WeaponContainer';
 import {Helmet} from '../Helmet/Helmet';
@@ -129,23 +128,23 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
 	}
 
 	updateHealthBar() {
-		this.scene.store.dispatch(setPlayerHealth(this.health));
+		this.scene.stateManager.setHealth(this.health);
 	}
 
 	updateGoldBar() {
-		this.scene.store.dispatch(setMoney(this.gold));
+		this.scene.stateManager.setGold(this.gold);
 	}
 
 	updateArmorBar() {
-		this.scene.store.dispatch(setArmor(this.armor));
+		this.scene.stateManager.setArmor(this.armor);
 	}
 
 	updateBoltsBar() {
-		this.scene.store.dispatch(setBolts(this.bolts));
+		this.scene.stateManager.setBolts(this.bolts);
 	}
 
 	updateScullsBar() {
-		this.scene.store.dispatch(setSculls(this.sculls));
+		this.scene.stateManager.setSculls(this.sculls);
 	}
 
 	// Обновляем все меню

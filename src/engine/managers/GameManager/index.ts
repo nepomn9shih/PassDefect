@@ -19,7 +19,6 @@ import {MAP_OBJECTS_STUB} from '../../constants/map-objects';
 import {getRandomNumber} from '../../utils/getRandomNumber';
 import {CHEST_SPAWN_INTERVAL, MONSTER_SPAWN_INTERVAL} from './constants';
 import type {AddObject} from '../../classes/Spawner/types';
-import {setMoney, setSculls} from '../../../reducers/slices';
 
 export class GameManager {
 	scene: MainScene;
@@ -102,8 +101,8 @@ export class GameManager {
 	}
 
 	setupEventListener() {
+		// Когда поднимаем сундук
 		this.scene.events.on(GameEvents.PICK_UP_CHEST, (chestId: string) => {
-			// Обновляем спавнер
 			if (this.chests[chestId]) {
 				const {gold, hearts, bolts, armor} = this.chests[chestId];
 
@@ -138,8 +137,8 @@ export class GameManager {
 			if (this.monsters[monsterId]) {
 				// Добавляем награды за убийство врага
 				const {sculls, gold} = this.monsters[monsterId];
-				this.scene.store.dispatch(setSculls(sculls));
-				this.scene.store.dispatch(setMoney(gold));
+				this.scene.stateManager.setSculls(sculls);
+				this.scene.stateManager.setGold(gold);
 				this.scene.player.getSculls(sculls);
 				this.scene.player.getGold(gold);
 

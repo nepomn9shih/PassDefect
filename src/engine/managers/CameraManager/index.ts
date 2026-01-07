@@ -10,7 +10,6 @@ import {MainScene} from '../../scenes/MainScene';
 import {rescaleHandler} from '../../utils/rescaleHandler';
 import type {CameraManagerProps} from './types';
 import {RESCALE_EVENT_NAME, ZOOM_EVENT_NAME} from '../../constants/events';
-import {setZoom} from '../../../reducers/slices';
 
 export class CameraManager {
 	scene: MainScene;
@@ -78,7 +77,7 @@ export class CameraManager {
 	setupEventListener() {	
 		this.scene.events.on(ZOOM_EVENT_NAME, () => {
 			// отправляем в стейт новое значение зума
-			this.scene.store.dispatch(setZoom(this.scene.cameras.main.zoom));
+			this.scene.stateManager.setZoom(this.scene.cameras.main.zoom);
 
 			rescaleHandler(this.scene);
 		});

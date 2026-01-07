@@ -25,7 +25,6 @@ export class Helmet extends Phaser.Physics.Arcade.Sprite {
 		this.scene = scene;
 		this.x = x;
 		this.y = y;
-		console.log(variation);
 		this.variation = variation;
 		this.owner = owner;
 		this.helmetType = '1';
