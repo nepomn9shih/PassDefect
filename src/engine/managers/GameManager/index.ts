@@ -154,7 +154,7 @@ export class GameManager {
 
 		// Когда повышается уровень игрока
 		this.scene.events.on(GameEvents.LEVEL_UP_PLAYER, (newLevel: number) => {
-            this.scene.stateManager.setLevel(newLevel);
+            console.log(`Cool! You have reached level ${newLevel}`)
 		});
 	}
 

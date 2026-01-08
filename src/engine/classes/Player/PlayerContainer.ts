@@ -6,9 +6,9 @@ import {PlayerModel} from './PlayerModel';
 import {WeaponContainer} from '../Weapon/WeaponContainer';
 import {Helmet} from '../Helmet/Helmet';
 import {HELMETS_FOR_SKIN} from '../Helmet/constants';
-import { getPlayerLevel } from '../../utils/getPlayerLevel';
-import { PLAYER_LEVEL_PARAMS } from '../../constants/player';
-import { Z_INDEXES } from '../../constants/zindexes';
+import {getPlayerLevel} from '../../utils/getPlayerLevel';
+import {PLAYER_LEVEL_PARAMS} from '../../constants/player';
+import {Z_INDEXES} from '../../constants/zindexes';
 
 export class PlayerContainer extends Phaser.GameObjects.Container {
 	scene: MainScene;
@@ -133,6 +133,10 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
 		this.playSpawnAnimation();
 	}
 
+	updateLevelBar() {
+        this.scene.stateManager.setLevel(this.level);
+	};
+
 	updateHealthBar() {
 		this.scene.stateManager.setHealth(this.health);
 	}
@@ -160,6 +164,7 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
 		this.updateArmorBar();
 		this.updateBoltsBar();
 		this.updateScullsBar();
+		this.updateLevelBar();
 	}
 
 	/** Проверяем нужно ли поднять уровень */
@@ -211,6 +216,7 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
 		this.bolts = playerObject.bolts;
 		this.armor = playerObject.armor;
 		this.sculls = playerObject.sculls;
+		this.level = playerObject.level;
 		this.setPosition(playerObject.x, playerObject.y);
 		this.playSpawnAnimation();
 		this.updateAllBars();
