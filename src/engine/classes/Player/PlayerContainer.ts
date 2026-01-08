@@ -77,7 +77,8 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
 		this.velocity = 160;
 		this.currentDirection = PlayerDirections.RIGHT;
 		this.viewDirection = PlayerDirections.RIGHT;
-		this.weaponVariation = WeaponVariations.FLAME_GUN;
+		// this.weaponVariation = WeaponVariations.FLAME_GUN;
+		this.weaponVariation = WeaponVariations.SWORD;
  		this.playerAttacking = false;
 		this.damageCooldown = false;
 		this.flipX = true;
@@ -128,6 +129,7 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
 		});
 		this.scene.add.existing(this.weapon);
 		this.add(this.weapon);
+
 		this.playSpawnAnimation();
 	}
 
@@ -170,6 +172,7 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
 		}
 
 		this.level = newLevel;
+		this.playSpawnAnimation();
 		this.scene.events.emit(GameEvents.LEVEL_UP_PLAYER, newLevel);
 		const {maxHealth, maxBolts, maxArmor} = PLAYER_LEVEL_PARAMS[newLevel];
 		this.maxHealth = maxHealth;
@@ -179,6 +182,11 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
 		this.maxArmor = maxArmor;
 
 		this.updateAllBars();
+	}
+
+	switchWeapon(weapon: WeaponVariations) {
+		this.weaponVariation = weapon;
+		this.weapon.changeWeapon(weapon);
 	}
 
 	turnWeapon() {
@@ -372,6 +380,14 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
 				this.playerAttacking = false;
 				this.weaponHit = false;
 			}, [], this);
+		}
+
+		// Смена оружия
+		if (Phaser.Input.Keyboard.JustDown(cursors.shift)) {
+			const nextWeapon = this.weaponVariation === WeaponVariations.SWORD
+				? WeaponVariations.FLAME_GUN
+				: WeaponVariations.SWORD;
+			this.switchWeapon(nextWeapon);
 		}
 	}  
 }

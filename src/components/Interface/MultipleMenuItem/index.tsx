@@ -9,7 +9,13 @@ export const MultipleMenuItem = ({count, icon, maxCount}: {
     const items = [];
 
     for (let i = 1; i <= maxCount; i++) {
-        items.push(<StyledMenuIcon src={icon} $isEmpty={i > count} />)
+        items.push(
+            <StyledMenuIcon
+                key={i}
+                src={icon}
+                $isEmpty={i > count}
+            />
+        );
     }
 
     return (

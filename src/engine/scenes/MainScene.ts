@@ -40,6 +40,7 @@ export class MainScene extends Scene {
     monsters!: Phaser.Physics.Arcade.Group;
     blockers!: Phaser.Physics.Arcade.Group;
     spawners!: Phaser.Physics.Arcade.Group;
+    weaponBolts!: Phaser.Physics.Arcade.Group;
     score: number;
     cursors?: Phaser.Types.Input.Keyboard.CursorKeys;
 
@@ -139,6 +140,8 @@ export class MainScene extends Scene {
         this.blockers = this.physics.add.group().setDepth(Z_INDEXES.blockers);
         // Создаем группу для спавнеров
         this.spawners = this.physics.add.group().setDepth(Z_INDEXES.spawners);
+        // Создаем группу для снарядов оружия
+        this.weaponBolts = this.physics.add.group().setDepth(Z_INDEXES.player);
         // Включаем обновление дочерних элементов
         this.monsters.runChildUpdate = true;
 	}
@@ -284,7 +287,7 @@ export class MainScene extends Scene {
         this.physics.add.overlap(this.player, this.chests, this.collectChest, null, this);
         // Проверка коллизий между оружием игрока и монстрами
         // @ts-expect-error не понимает что коллбек нужного формата
-        this.physics.add.overlap(this.player.weapon.weaponBolt, this.monsters, this.weaponEnemyOverlap, null, this);
+        this.physics.add.overlap(this.weaponBolts, this.monsters, this.weaponEnemyOverlap, null, this);
         // Проверка коллизий между игроком и монстрами
         // @ts-expect-error не понимает что коллбек нужного формата
         this.physics.add.overlap(this.player, this.monsters, this.enemyOverlap, null, this);

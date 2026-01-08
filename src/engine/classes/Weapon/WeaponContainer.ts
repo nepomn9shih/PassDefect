@@ -11,8 +11,8 @@ export class WeaponContainer extends Phaser.GameObjects.Container {
 	scene: MainScene;
 	x: number;
 	y: number;
-	weapon: Weapon;
-	weaponBolt: WeaponBolt;
+	weapon!: Weapon;
+	weaponBolt!: WeaponBolt;
 	weaponVariation: WeaponVariations;
 	weaponBoltVariation: WeaponBoltsVariations;
 	owner: PlayerContainer;
@@ -44,7 +44,12 @@ export class WeaponContainer extends Phaser.GameObjects.Container {
 		// Добавляем оружие на сцену
 		this.scene.add.existing(this);
 
-		// Создаем оружие
+		this.createWeaponBolt();
+		this.createWeapon();
+	}
+
+	/** Создаем заряд оружия */
+	createWeaponBolt() {
 		this.weaponBolt = new WeaponBolt({
 			scene: this.scene,
 			x: WEAPON_BOLTS_OFFSET[this.weaponBoltVariation][this.owner.currentDirection].x,
@@ -54,10 +59,12 @@ export class WeaponContainer extends Phaser.GameObjects.Container {
 			direction: this.owner.currentDirection,
 			damage: this.damage
 		});
-		this.scene.add.existing(this.weaponBolt);
+		this.scene.weaponBolts.add(this.weaponBolt);
 		this.add(this.weaponBolt);
+	}
 
-		// Создаем оружие
+	/** Создаем изображение оружия в руках игрока */
+	createWeapon() {
 		this.weapon = new Weapon({
 			scene: this.scene,
 			x: WEAPON_OFFSET[this.weaponVariation][this.owner.currentDirection].x,
@@ -84,23 +91,23 @@ export class WeaponContainer extends Phaser.GameObjects.Container {
 		if (
 			this.owner.currentDirection === PlayerDirections.LEFT
 		) {
-			this.weaponBolt.setAngle(0).setFlipX(true);
+			this.weaponBolt.setAngle(0).setFlipX(true).setFlipY(false);
 			this.weapon.setAngle(0).setFlipX(true).setFlipY(false);
 		} 
 		if (this.owner.currentDirection === PlayerDirections.RIGHT_UP) {
-			this.weaponBolt.setAngle(270).setFlipX(false);
+			this.weaponBolt.setAngle(270).setFlipX(false).setFlipY(false);
 			this.weapon.setAngle(270).setFlipX(false).setFlipY(false);
 		}
 		if (this.owner.currentDirection === PlayerDirections.LEFT_UP) {
-			this.weaponBolt.setAngle(270).setFlipX(false);
+			this.weaponBolt.setAngle(270).setFlipX(false).setFlipY(true)
 			this.weapon.setAngle(270).setFlipX(false).setFlipY(true);
 		}
 		if (this.owner.currentDirection === PlayerDirections.RIGHT_DOWN) {
-			this.weaponBolt.setAngle(90).setFlipX(false);
+			this.weaponBolt.setAngle(90).setFlipX(false).setFlipY(false);
 			this.weapon.setAngle(90).setFlipX(false).setFlipY(false);
 		}
 		if (this.owner.currentDirection === PlayerDirections.LEFT_DOWN) {
-			this.weaponBolt.setAngle(90).setFlipX(false);
+			this.weaponBolt.setAngle(90).setFlipX(false).setFlipY(true)
 			this.weapon.setAngle(90).setFlipX(false).setFlipY(true);
 		}
 	}
@@ -119,5 +126,23 @@ export class WeaponContainer extends Phaser.GameObjects.Container {
 		this.weaponBolt.alpha = 0;
 		// Меняет текстуру оружия на обычную
 		this.weapon.setFrame(WEAPON_DEFAULT_FRAME);
+	}
+
+	/** Смена оружия на другое */
+	changeWeapon(newWeapon: WeaponVariations) {
+		if (newWeapon !== this.weaponVariation) {
+			// Пересоздаем оружие
+			this.weaponVariation = newWeapon;
+			this.damage = WEAPONS_CONFIG[this.weaponVariation].damage;
+			this.shotCost = WEAPONS_CONFIG[this.weaponVariation].shotCost;
+			this.attackTime = WEAPONS_CONFIG[this.weaponVariation].attackTime;
+			this.weaponBoltVariation = WEAPON_BOLTS_FOR_WEAPON[this.weaponVariation];
+
+			this.weapon.destroy();
+			this.weaponBolt.destroy();
+
+			this.createWeaponBolt();
+			this.createWeapon();
+		}
 	}
 }
