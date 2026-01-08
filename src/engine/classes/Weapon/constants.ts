@@ -4,7 +4,7 @@ import type {WeaponData} from "./types";
 
 export const WEAPON_INITIAL_SCALE = 0.7;
 
-export const WEAPON_BOLTS_INITIAL_SCALE = 0.8;
+export const WEAPON_BOLTS_INITIAL_SCALE = 0.7;
 
 export const WEAPON_DEFAULT_FRAME = '01';
 export const WEAPON_ATTACK_FRAME = '02';

@@ -1,4 +1,5 @@
-import {setArmor, setBolts, setLevel, setMoney, setPlayerHealth, setSculls, setZoom} from '../../../reducers/slices';
+import {setActiveWeapon, setArmor, setBolts, setLevel, setMoney, setPlayerHealth, setSculls, setZoom} from '../../../reducers/slices';
+import type { WeaponVariations } from '../../enums';
 import {MainScene} from '../../scenes/MainScene';
 import type {StateManagerProps} from './types';
 
@@ -37,5 +38,9 @@ export class StateManager {
 	
 	setBolts(bolts: number) {
 		this.scene.store.dispatch(setBolts(bolts));
+	}
+
+	setActiveWeapon(weapon: WeaponVariations) {
+		this.scene.store.dispatch(setActiveWeapon(weapon));
 	}
 }

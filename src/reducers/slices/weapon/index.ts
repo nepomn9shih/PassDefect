@@ -7,19 +7,23 @@ const weaponSlice = createSlice({
 	name: 'weapon',
 	initialState: {
 		weapons: {
+			[WeaponVariations.SWORD]: true,
             [WeaponVariations.FLAME_GUN]: true,
-            [WeaponVariations.SWORD]: false
         },
-        active: WeaponVariations.FLAME_GUN
+        active: WeaponVariations.SWORD
 	} as WeaponState,
 	reducers: {
 		addWeapon(state, {payload}: PayloadAction<WeaponVariations>) {
             state.weapons[payload] = true;
+		},
+		setActiveWeapon(state, {payload}: PayloadAction<WeaponVariations>) {
+            state.active = payload;
 		}
 	}
 });
 
 export const {
-	addWeapon
+	addWeapon,
+	setActiveWeapon
 } = weaponSlice.actions;
 export const weaponReducer = weaponSlice.reducer;

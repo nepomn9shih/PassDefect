@@ -15,5 +15,5 @@ export const MenuItem = ({count, icon, maxCount}: {
                 {value}
             </StyledMenuValue>
         </StyledMenuItem>
-    )
-}
+    );
+};

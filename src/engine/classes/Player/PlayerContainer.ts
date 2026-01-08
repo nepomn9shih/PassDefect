@@ -192,6 +192,7 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
 	switchWeapon(weapon: WeaponVariations) {
 		this.weaponVariation = weapon;
 		this.weapon.changeWeapon(weapon);
+		this.scene.stateManager.setActiveWeapon(weapon);
 	}
 
 	turnWeapon() {

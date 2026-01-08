@@ -1,12 +1,14 @@
 import {StyledLayout} from './styles'
 import {TopBar} from './TopBar';
-import {BottomBar} from './BottomBar';
+import {BottomLeftBar} from './BottomLeftBar';
+import {BottomRightBar} from './BottomRightBar';
 
 export const Interface = () => {
     return (
         <StyledLayout>
             <TopBar />
-            <BottomBar />
+            <BottomLeftBar />
+            <BottomRightBar />
         </StyledLayout>
-    )
-}
+    );
+};
