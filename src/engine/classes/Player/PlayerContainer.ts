@@ -74,7 +74,7 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
 		this.sculls = sculls;
 		this.updateAllBars();
 		// Скорость при движении игрока
-		this.velocity = 160;
+		this.velocity = PLAYER_LEVEL_PARAMS[this.level].velocity;
 		this.currentDirection = PlayerDirections.RIGHT;
 		this.viewDirection = PlayerDirections.RIGHT;
 		// this.weaponVariation = WeaponVariations.FLAME_GUN;
@@ -179,12 +179,13 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
 		this.level = newLevel;
 		this.playSpawnAnimation();
 		this.scene.events.emit(GameEvents.LEVEL_UP_PLAYER, newLevel);
-		const {maxHealth, maxBolts, maxArmor} = PLAYER_LEVEL_PARAMS[newLevel];
+		const {maxHealth, maxBolts, maxArmor, velocity} = PLAYER_LEVEL_PARAMS[newLevel];
 		this.maxHealth = maxHealth;
 		this.health = maxHealth;
 		this.maxBolts = maxBolts;
 		this.bolts = maxBolts;
 		this.maxArmor = maxArmor;
+		this.velocity = velocity;
 
 		this.updateAllBars();
 	}
