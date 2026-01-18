@@ -13,9 +13,8 @@ export const StyledRightBar = styled.div`
 `;
 
 export const StyledBoltsBar = styled.div`
-    height: 40px;
     color: #000;
-    background-color: rgba(255, 255, 255, 0.4);
+    background-color: rgba(255, 255, 255, 0.6);
     border-radius: 10px;
     display: flex;
     align-items: center;
@@ -32,9 +31,9 @@ export const StyledWeaponLogo = styled.img<{$isActive: boolean}>`
     height: 40px;
     width: 80px;
     padding: 6px;
-    background-color: ${({$isActive}) => $isActive ? 'rgba(255, 255, 255, 0.4)' : '#282a31'};
+    background-color: ${({$isActive}) => $isActive ? 'rgba(255, 255, 255, 0.6)' : '#282a31'};
     object-fit: contain;
     border-radius: 10px;
-    border: 2px solid ${({$isActive}) => $isActive ? 'goldenrod' : 'rgba(255, 255, 255, 0.4)'};
+    border: 2px solid ${({$isActive}) => $isActive ? 'goldenrod' : 'rgba(255, 255, 255, 0.6)'};
     filter: grayscale(${({$isActive}) => $isActive ? '0' : '1'});
 `;
