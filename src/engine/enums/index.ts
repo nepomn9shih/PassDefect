@@ -17,7 +17,8 @@ export enum ObjectLayersNames {
 
 export enum SceneNames {
     MAIN = 'MainScene',
-    BOOT = 'BootScene'
+    BOOT = 'BootScene',
+    CONTROLS = 'ControlsScene'
 }
 
 export enum WeaponVariations {
@@ -37,6 +38,14 @@ export enum PlayerDirections {
     LEFT_UP = 'left-up',
     RIGHT_DOWN = 'right-down',
     LEFT_DOWN = 'left-down'
+}
+
+export enum ButtonVariations {
+    UP = 'up',
+    DOWN = 'down',
+    LEFT = 'left',
+    RIGHT = 'right',
+    ATTACK = 'attack'
 }
 
 export enum PlayerSkinVariations {
@@ -66,7 +75,8 @@ export enum AtlasesKeys {
     PICK_UP_OBJECTS = 'pick-up',
     SWAMP_PLANET_LEVEL_MAP = 'swamp-planet',
     SPAWNERS = 'spawners',
-    MAP_OBJECTS = 'map-objects'
+    MAP_OBJECTS = 'map-objects',
+    CONTROLS = 'controls'
 }
 
 export enum PlayerAnimation {

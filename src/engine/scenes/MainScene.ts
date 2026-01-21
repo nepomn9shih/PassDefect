@@ -4,6 +4,7 @@ import {Scene} from 'phaser';
 import {GameMap} from '../classes/Map';
 import {
     AtlasesKeys,
+    ButtonVariations,
     ChestVariations,
     GameEvents,
     LevelMaps,
@@ -25,7 +26,7 @@ import {SpawnerImage} from '../classes/Spawner/SpawnerImage';
 import {MapObject} from '../classes/MapObject';
 import type {WeaponBolt} from '../classes/Weapon/WeaponBolt';
 import {StateManager} from '../managers/StateManager';
-import { Z_INDEXES } from '../constants/zindexes';
+import {Z_INDEXES} from '../constants/zindexes';
 
 export class MainScene extends Scene {
     store: Store<AllGameState, Action<string>>;
@@ -61,8 +62,7 @@ export class MainScene extends Scene {
         this.createGroups();
         this.createCameraManager();
         this.createGameManager();
-        // this.createInput();
-        this.cursors= this?.input?.keyboard?.createCursorKeys();
+        this.createControls();
     }
 
     createMap() {
@@ -74,6 +74,19 @@ export class MainScene extends Scene {
 			mapLayerName: MapLayersNames.MAP,
             blockedLayerName: MapLayersNames.BLOCKER,
 		});
+	}
+
+    createControls() {
+        this.cursors = this?.input?.keyboard?.createCursorKeys();
+
+        // Подключаем сцену с управлением
+        this.scene.launch(SceneNames.CONTROLS);
+        this.scene.get(SceneNames.CONTROLS).events.on(GameEvents.MOBILE_BUTTON_DOWN, (buttonVariation: ButtonVariations) => {
+            this.player.buttonDown(buttonVariation);
+        }, this);
+        this.scene.get(SceneNames.CONTROLS).events.on(GameEvents.MOBILE_BUTTON_UP, (buttonVariation: ButtonVariations) => {
+            this.player.buttonUp(buttonVariation);
+        }, this);
 	}
 
     createPlayer(playerObject: PlayerModel) {

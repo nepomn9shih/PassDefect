@@ -5,10 +5,16 @@ import armorIconImage from '../../../assets/armor-logo.png';
 import {usePlayer} from '../../../reducers/selectors';
 import {MenuItem} from '../MenuItem';
 import {PLAYER_LEVEL_PARAMS} from '../../../engine/constants/player';
-import {StyledHealthBar, StyledLevelBar, StyledResourcesBar, StyledTopBar, StyledWrapper} from './styles';
+import {
+    StyledHealthBar,
+    StyledLevelBar,
+    StyledResourcesBar,
+    StyledPlayerBar,
+    StyledWrapper
+} from './styles';
 import {MultipleMenuItem} from '../MultipleMenuItem';
 
-export const TopLeftBar = () => {
+export const PlayerBar = () => {
     const {money, sculls, level, health, armor} = usePlayer();
     const {maxHealth, maxArmor} = PLAYER_LEVEL_PARAMS[level];
     const {levelUp} = PLAYER_LEVEL_PARAMS[level];
@@ -17,7 +23,7 @@ export const TopLeftBar = () => {
     const maxSculls = level === maxLevel ? 0 : levelUp;
 
     return (
-        <StyledTopBar>
+        <StyledPlayerBar>
             <StyledLevelBar>
                 {level}
             </StyledLevelBar>
@@ -46,6 +52,6 @@ export const TopLeftBar = () => {
                     />
                 </StyledHealthBar>
             </StyledWrapper>
-        </StyledTopBar>
+        </StyledPlayerBar>
     );
 };

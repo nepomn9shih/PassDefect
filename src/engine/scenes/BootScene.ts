@@ -14,6 +14,7 @@ import {PLAYER_ATLASES} from '../assets/player';
 import {OBJECTS_ATLASES} from '../assets/objects';
 import type {GameStore} from '../types';
 import {WEAPON_ATLASES} from '../assets/weapon';
+import {INTERFACE_ATLASES} from '../assets/interface';
 
 export class BootScene extends Scene {
     store: GameStore;
@@ -66,6 +67,14 @@ export class BootScene extends Scene {
                 `${key}`,
                 MONSTERS_ATLASES[key].imgUrl,
                 MONSTERS_ATLASES[key].jsonUrl
+            );
+		});
+
+		Object.keys(INTERFACE_ATLASES).forEach((key) => {
+            this.load.atlas(
+                `${key}`,
+                INTERFACE_ATLASES[key].imgUrl,
+                INTERFACE_ATLASES[key].jsonUrl
             );
 		});
 

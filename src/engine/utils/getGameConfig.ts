@@ -1,5 +1,5 @@
 import {Scene} from 'phaser';
-// import GesturesPlugin from 'phaser3-rex-plugins/plugins/gestures-plugin.js';
+import GesturesPlugin from 'phaser3-rex-plugins/plugins/gestures-plugin.js';
 import type {Types} from 'phaser';
 
 import {GAME_PASS_DEFECT_ID} from '../constants';
@@ -27,11 +27,11 @@ export const getGameConfig = (scenes: Scene[]): Types.Core.GameConfig => ({
     maxTextures: -1,
     pixelArt: true,
     roundPixels: true,
-    // plugins: {
-    //     scene: [{
-    //         key: 'rexGestures',
-    //         plugin: GesturesPlugin,
-    //         mapping: 'rexGestures'
-    //     }]
-    // }
+    plugins: {
+        scene: [{
+            key: 'rexGestures',
+            plugin: GesturesPlugin,
+            mapping: 'rexGestures'
+        }]
+    }
 });

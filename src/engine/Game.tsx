@@ -1,20 +1,34 @@
 import {useEffect, useState} from 'react';
 import Phaser from 'phaser';
-import {useStore} from 'react-redux';
+import {useDispatch, useStore} from 'react-redux';
 
 import {GAME_PASS_DEFECT_ID} from './constants';
 import {getGameConfig} from './utils/getGameConfig';
-import {BootScene, MainScene} from './scenes';
+import {BootScene, MainScene, ControlsScene} from './scenes';
 import type {AllGameState} from '../reducers/types';
+import {useIsMobile} from '../hooks/useIsMobile';
+import {setIsMobile, setIsTouchDevice} from '../reducers/slices';
+import { isTouchDevice } from '../utils/isTouchDevice';
 
 export const Game = () => {
     const [, setGame] = useState<Phaser.Game>();
     const store = useStore<AllGameState>();
+    const isMobile = useIsMobile();
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        dispatch(setIsMobile(isMobile));
+    }, [dispatch, isMobile]);
+
+    useEffect(() => {
+        dispatch(setIsTouchDevice(isTouchDevice()));
+    }, [dispatch]);
 
     useEffect(() => {
         const scenes: Phaser.Scene[] = [
             new BootScene(store),
-            new MainScene(store)
+            new MainScene(store),
+            new ControlsScene(store)
         ];
 
         const config = getGameConfig(scenes);

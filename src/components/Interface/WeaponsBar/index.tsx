@@ -1,6 +1,6 @@
 import {
     StyledBoltsBar,
-    StyledRightBar,
+    StyledWeaponsBar,
     StyledWeaponLogo,
     StyledWeaponSwitcher
 } from './styles';
@@ -12,7 +12,7 @@ import {MultipleMenuItem} from '../MultipleMenuItem';
 import {PLAYER_LEVEL_PARAMS} from '../../../engine/constants/player';
 import {WeaponVariations} from '../../../engine/enums';
 
-export const BottomRightBar = () => {
+export const WeaponsBar = () => {
     const {bolts, level} = usePlayer();
     const {active, weapons} = useWeapon();
     const {maxBolts} = PLAYER_LEVEL_PARAMS[level];
@@ -20,16 +20,7 @@ export const BottomRightBar = () => {
     const isFlameGun = active === WeaponVariations.FLAME_GUN;
 
     return (
-        <StyledRightBar>
-            {isFlameGun && (
-                <StyledBoltsBar>
-                    <MultipleMenuItem
-                        count={bolts}
-                        maxCount={maxBolts}
-                        icon={boltIconImage}
-                    />
-                </StyledBoltsBar>
-            )}
+        <StyledWeaponsBar>
             <StyledWeaponSwitcher>
                 {weapons[WeaponVariations.SWORD] && (
                     <StyledWeaponLogo
@@ -44,6 +35,15 @@ export const BottomRightBar = () => {
                     />
                 )}
             </StyledWeaponSwitcher>
-        </StyledRightBar> 
+            {isFlameGun && (
+                <StyledBoltsBar>
+                    <MultipleMenuItem
+                        count={bolts}
+                        maxCount={maxBolts}
+                        icon={boltIconImage}
+                    />
+                </StyledBoltsBar>
+            )}
+        </StyledWeaponsBar> 
     );
 };

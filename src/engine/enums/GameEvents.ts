@@ -11,5 +11,7 @@ export enum GameEvents {
     DESTROY_MONSTER = 'destroy-monster',
     PICK_UP_CHEST = 'pick-up-chest',
     UPDATE_SCORE = 'update-score',
-    LEVEL_UP_PLAYER = 'level-up-player'
+    LEVEL_UP_PLAYER = 'level-up-player',
+    MOBILE_BUTTON_DOWN = 'mobile-button-down',
+    MOBILE_BUTTON_UP = 'mobile-button-up'
 }

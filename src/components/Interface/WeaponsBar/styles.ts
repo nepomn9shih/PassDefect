@@ -1,15 +1,15 @@
 import styled from 'styled-components';
 
-export const StyledRightBar = styled.div`
+export const StyledWeaponsBar = styled.div`
     position: fixed;
-    bottom: 0;
+    top: 0;
     right: 0;
     display: flex;
     flex-direction: column;
     align-items: end;
     gap: 10px;
     margin-right: 20px;
-    margin-bottom: 20px;
+    margin-top: 20px;
 `;
 
 export const StyledBoltsBar = styled.div`

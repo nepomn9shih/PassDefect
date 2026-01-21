@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-export const StyledTopBar = styled.div`
+export const StyledPlayerBar = styled.div`
     position: fixed;
     top: 20px;
     left: 40px;

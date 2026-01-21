@@ -1,6 +1,6 @@
 import type {PlayerContainerProps} from './types';
 import {MainScene} from '../../scenes/MainScene';
-import {GameEvents, PlayerAnimation, PlayerDirections, PlayerSkinVariations, WeaponVariations} from '../../enums';
+import {ButtonVariations, GameEvents, PlayerAnimation, PlayerDirections, PlayerSkinVariations, WeaponVariations} from '../../enums';
 import {Player} from './Player';
 import {PlayerModel} from './PlayerModel';
 import {WeaponContainer} from '../Weapon/WeaponContainer';
@@ -39,6 +39,7 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
 	maxArmor: number;
 	// если true то игрока только что ударили и пока нельзя ударить снова
 	damageCooldown: boolean;
+	buttonPressed: Record<ButtonVariations, boolean>;
 
 	constructor({
 		scene,
@@ -97,6 +98,13 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
 		this.scene.add.existing(this);
 		// Настраиваем что камера следует за игроком
 		this.scene.cameras.main.startFollow(this);
+		this.buttonPressed = {
+			[ButtonVariations.LEFT]: false,
+			[ButtonVariations.RIGHT]: false,
+			[ButtonVariations.UP]: false,
+			[ButtonVariations.DOWN]: false,
+			[ButtonVariations.ATTACK]: false
+		};
 
 		// создаем спрайт игрока
 		this.player = new Player({
@@ -132,6 +140,14 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
 
 		this.playSpawnAnimation();
 	}
+
+	buttonDown(buttonVariation: ButtonVariations) {
+		this.buttonPressed[buttonVariation] = true;
+	};
+
+	buttonUp(buttonVariation: ButtonVariations) {
+		this.buttonPressed[buttonVariation] = false;
+	};
 
 	updateLevelBar() {
         this.scene.stateManager.setLevel(this.level);
@@ -322,6 +338,11 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
 			&& cursors.right.isUp
 			&& cursors.up.isUp
 			&& cursors.down.isUp
+			// Управление на мобилке
+			&& !this.buttonPressed[ButtonVariations.LEFT]
+			&& !this.buttonPressed[ButtonVariations.RIGHT]
+			&& !this.buttonPressed[ButtonVariations.UP]
+			&& !this.buttonPressed[ButtonVariations.DOWN]
 		) {
 			if (this.playerMoving) {
 				this.playerMoving = false;
@@ -334,14 +355,14 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
 			}
 		}
 
-		if (cursors.left.isDown) {
+		if (cursors.left.isDown || this.buttonPressed[ButtonVariations.LEFT]) {
 			// @ts-expect-error так как TS не понимает что это не StaticBody
 			this.body?.setVelocityX(-this.velocity);
 			this.currentDirection = PlayerDirections.LEFT;
 			this.viewDirection = PlayerDirections.LEFT;
 			this.player.flipX = true;
 			this.helmet.flipX = true;
-		} else if (cursors.right.isDown) {
+		} else if (cursors.right.isDown || this.buttonPressed[ButtonVariations.RIGHT]) {
 			// @ts-expect-error так как TS не понимает что это не StaticBody
 			this.body.setVelocityX(this.velocity);
 			this.currentDirection = PlayerDirections.RIGHT;
@@ -349,13 +370,13 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
 			this.player.flipX = false;
 			this.helmet.flipX = false;
 		}
-		if (cursors.up.isDown) {
+		if (cursors.up.isDown || this.buttonPressed[ButtonVariations.UP]) {
 			// @ts-expect-error так как TS не понимает что это не StaticBody
 			this.body.setVelocityY(-this.velocity);
 			this.currentDirection = this.viewDirection === PlayerDirections.RIGHT
 				? PlayerDirections.RIGHT_UP
 				: PlayerDirections.LEFT_UP;
-		} else if (cursors.down.isDown) {
+		} else if (cursors.down.isDown || this.buttonPressed[ButtonVariations.DOWN]) {
 			// @ts-expect-error так как TS не понимает что это не StaticBody
 			this.body.setVelocityY(this.velocity);
 			this.currentDirection = this.viewDirection === PlayerDirections.RIGHT
@@ -370,7 +391,15 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
 		}
 
 		// Разрешает игроку атаковать
- 		if (Phaser.Input.Keyboard.JustDown(cursors.space) && !this.playerAttacking) {
+ 		if (
+			(
+				// Кнопка пробел на клавиатуре
+				Phaser.Input.Keyboard.JustDown(cursors.space)
+				// Кнопка атаки на тачскрине мобилке
+				|| this.buttonPressed[ButtonVariations.ATTACK]
+			)
+			&& !this.playerAttacking
+		) {
 			// Если недостаточно патронов для выстрела, то не атакуем
 			if (this.bolts < this.weapon.shotCost) {
 				return;

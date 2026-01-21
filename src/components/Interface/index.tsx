@@ -1,7 +1,6 @@
 import {StyledImage, StyledLayout, StyledNotPortraitWarning} from './styles'
-import {TopLeftBar} from './TopLeftBar';
-import {BottomLeftBar} from './BottomLeftBar';
-import {BottomRightBar} from './BottomRightBar';
+import {PlayerBar} from './PlayerBar';
+import {WeaponsBar} from './WeaponsBar';
 import {useIsMobile} from '../../hooks/useIsMobile';
 import {useIsPortrait} from '../../hooks/useIsPortrait';
 import rotateLogo from '../../assets/rotate-logo.png';
@@ -21,9 +20,8 @@ export const Interface = () => {
 
     return (
         <StyledLayout>
-            <TopLeftBar />
-            <BottomLeftBar />
-            <BottomRightBar />
+            <PlayerBar />
+            <WeaponsBar />
         </StyledLayout>
     );
 };
