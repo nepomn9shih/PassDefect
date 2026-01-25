@@ -36,4 +36,5 @@ export const StyledWeaponLogo = styled.img<{$isActive: boolean}>`
     border-radius: 10px;
     border: 2px solid ${({$isActive}) => $isActive ? 'goldenrod' : 'rgba(255, 255, 255, 0.6)'};
     filter: grayscale(${({$isActive}) => $isActive ? '0' : '1'});
+    cursor: pointer;
 `;

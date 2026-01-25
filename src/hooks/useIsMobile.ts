@@ -1,7 +1,9 @@
 import {useState, useEffect} from 'react';
 
+import {MOBILE_BREAKPOINT} from '../constants/breakpoints';
+
 /** Определение мобилка ли это */
-export const useIsMobile = (breakpoint = 768) => {
+export const useIsMobile = (breakpoint = MOBILE_BREAKPOINT) => {
     const [isMobile, setIsMobile] = useState(false);
 
     useEffect(() => {

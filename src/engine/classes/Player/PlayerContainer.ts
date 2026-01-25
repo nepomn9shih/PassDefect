@@ -78,8 +78,7 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
 		this.velocity = PLAYER_LEVEL_PARAMS[this.level].velocity;
 		this.currentDirection = PlayerDirections.RIGHT;
 		this.viewDirection = PlayerDirections.RIGHT;
-		// this.weaponVariation = WeaponVariations.FLAME_GUN;
-		this.weaponVariation = WeaponVariations.SWORD;
+		this.weaponVariation = this.scene.state.weapon.active;
  		this.playerAttacking = false;
 		this.damageCooldown = false;
 		this.flipX = true;
@@ -209,7 +208,6 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
 	switchWeapon(weapon: WeaponVariations) {
 		this.weaponVariation = weapon;
 		this.weapon.changeWeapon(weapon);
-		this.scene.stateManager.setActiveWeapon(weapon);
 	}
 
 	turnWeapon() {
@@ -425,6 +423,7 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
 				? WeaponVariations.FLAME_GUN
 				: WeaponVariations.SWORD;
 			this.switchWeapon(nextWeapon);
+			this.scene.stateManager.setActiveWeapon(nextWeapon);
 		}
 	}  
 }

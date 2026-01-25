@@ -44,11 +44,14 @@ export class MainScene extends Scene {
     weaponBolts!: Phaser.Physics.Arcade.Group;
     score: number;
     cursors?: Phaser.Types.Input.Keyboard.CursorKeys;
+    storeUnsubscribe: () => void;
 
     constructor(store: Store<AllGameState, Action<string>>) {
         super(SceneNames.MAIN);
         this.store = store;
         this.state = store.getState();
+        this.storeUnsubscribe = () => null;
+
         // потом брать из стейта
         this.playerSkin = PlayerSkinVariations.KNIGHT;
         this.score = 0;
@@ -142,6 +145,15 @@ export class MainScene extends Scene {
 
     createStateManager() {
 		this.stateManager = new StateManager({scene: this});
+
+        // Подписываемся на изменение стора и соханяем колбек для отписки
+        this.storeUnsubscribe = this.store.subscribe(() => {
+            this.state = this.store.getState();
+            // Переключить на активное оружие из нового стейта
+            this.player?.switchWeapon(this.state.weapon.active);
+        });
+        // При уничтожении сцены вызываем коллбек отписки
+        this.events.on('destroy', () => {this.storeUnsubscribe()}, this);
 	}
 
     createGroups() {
