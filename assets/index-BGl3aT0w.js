@@ -110,7 +110,7 @@ return new `+this.key+`();
     width: 16px;
     object-fit: contain;
 
-    @media (min-width: ${Ea}px) {
+    @media (min-width: ${Ea}px) and (not (pointer: coarse)) {
         height: 30px;
         width: 30px;
     }
@@ -121,7 +121,7 @@ return new `+this.key+`();
     display: flex;
     align-items: center;
 
-    @media (min-width: ${Ea}px) {
+    @media (min-width: ${Ea}px) and (not (pointer: coarse)) {
         font-size: 18px;
         height: 30px;
     }
@@ -143,7 +143,7 @@ return new `+this.key+`();
     padding-left: 40px;
     background-color: rgba(255, 255, 255, 0.8);
 
-    @media (min-width: ${Ea}px) {
+    @media (min-width: ${Ea}px) and (not (pointer: coarse)) {
         gap: 16px;
     }
 `,SC=Fe.div`
@@ -181,7 +181,7 @@ return new `+this.key+`();
     object-fit: contain;
     filter: grayscale(${({$isEmpty:O})=>O?1:0});
 
-    @media (min-width: ${Ea}px) {
+    @media (min-width: ${Ea}px) and (not (pointer: coarse)) {
         height: 30px;
         width: 30px;
     }
@@ -217,7 +217,7 @@ return new `+this.key+`();
     filter: grayscale(${({$isActive:O})=>O?"0":"1"});
     cursor: pointer;
 
-    @media (min-width: ${Ea}px) {
+    @media (min-width: ${Ea}px) and (not (pointer: coarse)) {
         height: 40px;
         width: 80px;
     }
