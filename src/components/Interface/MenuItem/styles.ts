@@ -14,7 +14,7 @@ export const StyledMenuIcon = styled.img`
     width: 16px;
     object-fit: contain;
 
-    @media (min-width: ${LITTLE_DESKTOP_BREAKPOINT}px) {
+    @media (min-width: ${LITTLE_DESKTOP_BREAKPOINT}px) and (not (pointer: coarse)) {
         height: 30px;
         width: 30px;
     }
@@ -27,7 +27,7 @@ export const StyledMenuValue = styled.div`
     display: flex;
     align-items: center;
 
-    @media (min-width: ${LITTLE_DESKTOP_BREAKPOINT}px) {
+    @media (min-width: ${LITTLE_DESKTOP_BREAKPOINT}px) and (not (pointer: coarse)) {
         font-size: 18px;
         height: 30px;
     }

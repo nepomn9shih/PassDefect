@@ -22,7 +22,7 @@ export const StyledResourcesBar = styled.div`
     padding-left: 40px;
     background-color: rgba(255, 255, 255, 0.8);
 
-    @media (min-width: ${LITTLE_DESKTOP_BREAKPOINT}px) {
+    @media (min-width: ${LITTLE_DESKTOP_BREAKPOINT}px) and (not (pointer: coarse)) {
         gap: 16px;
     }
 `;

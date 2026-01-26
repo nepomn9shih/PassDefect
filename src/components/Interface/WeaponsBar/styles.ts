@@ -39,7 +39,7 @@ export const StyledWeaponLogo = styled.img<{$isActive: boolean}>`
     filter: grayscale(${({$isActive}) => $isActive ? '0' : '1'});
     cursor: pointer;
 
-    @media (min-width: ${LITTLE_DESKTOP_BREAKPOINT}px) {
+    @media (min-width: ${LITTLE_DESKTOP_BREAKPOINT}px) and (not (pointer: coarse)) {
         height: 40px;
         width: 80px;
     }
