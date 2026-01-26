@@ -1,3 +1,4 @@
+import {LITTLE_DESKTOP_BREAKPOINT} from './../../../constants/breakpoints';
 import styled from 'styled-components';
 
 export const StyledWeaponsBar = styled.div`
@@ -28,8 +29,8 @@ export const StyledWeaponSwitcher = styled.div`
 `;
 
 export const StyledWeaponLogo = styled.img<{$isActive: boolean}>`
-    height: 40px;
-    width: 80px;
+    height: 20px;
+    width: 40px;
     padding: 6px;
     background-color: ${({$isActive}) => $isActive ? 'rgba(255, 255, 255, 0.6)' : '#282a31'};
     object-fit: contain;
@@ -37,4 +38,9 @@ export const StyledWeaponLogo = styled.img<{$isActive: boolean}>`
     border: 2px solid ${({$isActive}) => $isActive ? 'goldenrod' : 'rgba(255, 255, 255, 0.6)'};
     filter: grayscale(${({$isActive}) => $isActive ? '0' : '1'});
     cursor: pointer;
+
+    @media (min-width: ${LITTLE_DESKTOP_BREAKPOINT}px) {
+        height: 40px;
+        width: 80px;
+    }
 `;

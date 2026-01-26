@@ -1,5 +1,7 @@
 import styled from 'styled-components';
 
+import {LITTLE_DESKTOP_BREAKPOINT} from '../../../constants/breakpoints';
+
 export const StyledPlayerBar = styled.div`
     position: fixed;
     top: 20px;
@@ -15,10 +17,14 @@ export const StyledPlayerBar = styled.div`
 export const StyledResourcesBar = styled.div`
     display: flex;
     align-items: center;
-    gap: 16px;
+    gap: 2px;
     padding: 0 10px;
     padding-left: 40px;
     background-color: rgba(255, 255, 255, 0.8);
+
+    @media (min-width: ${LITTLE_DESKTOP_BREAKPOINT}px) {
+        gap: 16px;
+    }
 `;
 
 export const StyledLevelBar = styled.div`
@@ -41,7 +47,6 @@ export const StyledHealthBar = styled.div`
     display: flex;
     align-items: center;
     padding-left: 40px;
-    gap: 16px;
     box-sizing: border-box;
     background-color: rgba(255, 255, 255, 0.6);
 `;
