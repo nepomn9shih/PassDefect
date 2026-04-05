@@ -1,33 +1,37 @@
 import {MapObject} from './../../classes/MapObject/index';
-import {ChestModel} from '../../classes/ChestModel';
-import {MonsterModel} from '../../classes/MonsterModel';
-import {PlayerModel} from '../../classes/Player/PlayerModel';
-import {Spawner} from '../../classes/Spawner';
-import {SpawnerImage} from '../../classes/Spawner/SpawnerImage';
-import {SPAWNER_PROPERTY_NAME} from '../../constants';
 import {
+	ChestVariations,
 	GameEvents,
 	MapObjectVariations,
 	ObjectLayersNames,
-	SpawnerImageVariations,
-	SpawnObjects
+	SpawnerImageVariations
 } from '../../enums';
 import {MainScene} from '../../scenes';
-import {getTiledProperty} from '../../utils/getTiledProperty';
 import type {GameManagerProps} from './types';
 import {MAP_OBJECTS_STUB} from '../../constants/map-objects';
 import {getRandomNumber} from '../../utils/getRandomNumber';
-import {CHEST_SPAWN_INTERVAL, MONSTER_SPAWN_INTERVAL} from './constants';
-import type {AddObject} from '../../classes/Spawner/types';
+import type { ChestModel } from '../../classes/ChestModel';
+import type { MonsterModel } from '../../classes/MonsterModel';
+import { PlayerModel } from '../../classes/Player/PlayerModel';
+import type { Spawner } from '../../classes/Spawner';
+import { SpawnerImage } from '../../classes/Spawner/SpawnerImage';
+import { getTiledProperty } from '../../utils/getTiledProperty';
+import { SPAWNER_PROPERTY_NAME } from '../../constants';
+import type { Chest } from '../../classes/ChestModel/Chest';
+import type { PlayerContainer } from '../../classes/Player/PlayerContainer';
 
+/**
+ * Менеджер отвечающий за основные процессы игры
+ * и хранящий данные о спавнерах, игроке, монстрах и сундуках
+ * */
 export class GameManager {
 	scene: MainScene;
 	mapData: Phaser.Tilemaps.ObjectLayer[];
 	spawners: Record<string, Spawner>;
 	spawnersImages: Record<string, SpawnerImage>;
 	chests: Record<string, ChestModel>;
-	monsters: Record<string, MonsterModel>;
-	players: Record<string, PlayerModel>;
+    monsters: Record<string, MonsterModel>;
+    players: Record<string, PlayerModel>;
 	playerLocations: (number)[][];
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	chestLocations: Record<any, (number | undefined)[][]>;
@@ -53,8 +57,6 @@ export class GameManager {
 		this.drawMapObjects();
 		this.parseMapData();
 		this.setupEventListener();
-		this.setupSpawners();
-		this.spawnPlayer();
 	}
 
 	parseMapData() {
@@ -99,7 +101,7 @@ export class GameManager {
 			}
 		});
 	}
-
+	
 	setupEventListener() {
 		// Когда поднимаем сундук
 		this.scene.events.on(GameEvents.PICK_UP_CHEST, (chestId: string) => {
@@ -131,6 +133,16 @@ export class GameManager {
 				this.scene.events.emit(GameEvents.REMOVE_CHEST, chestId);
 			}
 		});
+
+		// Когда убираем сундук
+		this.scene.events.on(GameEvents.REMOVE_CHEST, (chestId: string) => {
+            const chests = this.scene.chests.getChildren() as Chest[];
+            chests.forEach((chest) => {
+                if (chest.id === chestId) {
+                    chest.makeInactive();
+                }
+            });
+        });
 
 		// Когда монстр убит
 		this.scene.events.on(GameEvents.DESTROY_MONSTER, (monsterId: string) => {
@@ -193,66 +205,44 @@ export class GameManager {
 		this.spawnersImages[spawner.id] = spawner;
 	}
 
-	setupSpawners() {	
-		let spawner: Spawner;
-
-		// Создаем спавнер сундука
-		Object.keys(this.chestLocations).forEach((key) => {
-			const config = {
-				spawnInterval: CHEST_SPAWN_INTERVAL,
-				limit: 1,
-				id: `chest-${key}`,
-				spawnerType: SpawnObjects.CHEST
-			};
-
-			spawner = new Spawner({
-				scene: this.scene,
-				config,
-				spawnLocations: this.chestLocations[key], 
-				addObject: this.addChest.bind(this) as AddObject, 
-				deleteObject: this.deleteChest.bind(this)
-			});
-	
-			this.spawners[spawner.id] = spawner;
-		});
-
-		// Создаем спавнер монстров
-		Object.keys(this.monsterLocations).forEach((key) => {
-			const config = {
-				spawnInterval: MONSTER_SPAWN_INTERVAL,
-				limit: 1,
-				id: `monster-${key}`,
-				spawnerType: SpawnObjects.MONSTER
-			};
-			
-			spawner = new Spawner({
-				scene: this.scene,
-				config,
-				spawnLocations: this.monsterLocations[key],
-				addObject: this.addMonster.bind(this) as AddObject,
-				deleteObject: this.deleteMonster.bind(this)
-			});
-
-			this.spawners[spawner.id] = spawner;
-		});
-	}
-
-	spawnPlayer() {
-		const player = new PlayerModel(this.playerLocations);
-		this.players[player.id] = player;
-		
-		this.scene.events.emit(GameEvents.SPAWN_PLAYER, player);	
-	}
-
 	addChest(chestId: string, chest: ChestModel) {
 		this.chests[chestId] = chest;
-
 		this.scene.events.emit(GameEvents.SPAWN_CHEST, chest);
 	}
 
 	deleteChest(chestId: string) {
 		delete this.chests[chestId];
 	}
+
+	collectChest(player: PlayerContainer, chest: Chest) {
+		// this.goldPickupAudio.play();
+
+		// Если у игрока полная броня то не подбираем сундук
+		if (
+			chest.variation === ChestVariations.ARMOR 
+				&& player.armor === player.maxArmor
+		) {
+			return;
+		}
+
+		// Если у игрока полная обойма потронов то не подбираем сундук
+		if (
+			chest.variation === ChestVariations.BOLTS
+				&& player.bolts === player.maxBolts
+		) {
+			return;
+		}
+
+		// Если у игрока полное здоровье то не подбираем сундук
+		if (
+			chest.variation === ChestVariations.HEART
+				&& player.health === player.maxHealth
+		) {
+			return;
+		}
+
+		this.scene.events.emit(GameEvents.PICK_UP_CHEST, chest.id, player.id);
+	}	
 	
 	addMonster(monsterId: string, monster: MonsterModel) {
 		this.monsters[monsterId] = monster;
@@ -262,4 +252,15 @@ export class GameManager {
 	deleteMonster(monsterId: string) {
 		delete this.monsters[monsterId];
 	}
+
+	addPlayer() {
+		const player = new PlayerModel(this.scene.gameManager.playerLocations);
+		this.players[player.id] = player;
+		this.scene.events.emit(GameEvents.SPAWN_PLAYER, player);	
+	}
+
+	// Удаляем блокеры которые накладываются на спавнеры
+    deleteBlocker(_spawner: SpawnerImage, blocker: MapObject) {
+        blocker.destroy();
+    }
 }

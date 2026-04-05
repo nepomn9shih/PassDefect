@@ -3,9 +3,7 @@ import {Scene} from 'phaser';
 
 import {GameMap} from '../classes/Map';
 import {
-    AtlasesKeys,
     ButtonVariations,
-    ChestVariations,
     GameEvents,
     LevelMaps,
     MapLayersNames,
@@ -16,17 +14,11 @@ import type {AllGameState} from '../../reducers/types';
 import {CameraManager} from '../managers/CameraManager';
 import {PlayerContainer} from '../classes/Player/PlayerContainer';
 import {GameManager} from '../managers/GameManager';
-import {ChestModel} from '../classes/ChestModel';
-import {Chest} from '../classes/ChestModel/Chest';
-import {MonsterModel} from '../classes/MonsterModel';
 import {MonsterContainer} from '../classes/MonsterModel/MonsterContainer';
-import {getRandomMonsterVariation} from '../utils/getRandomMonsterVariation';
-import {PlayerModel} from '../classes/Player/PlayerModel';
-import {SpawnerImage} from '../classes/Spawner/SpawnerImage';
-import {MapObject} from '../classes/MapObject';
 import type {WeaponBolt} from '../classes/Weapon/WeaponBolt';
 import {StateManager} from '../managers/StateManager';
 import {Z_INDEXES} from '../constants/zindexes';
+import { SpawnManager } from '../managers/SpawnManager';
 
 export class MainScene extends Scene {
     store: Store<AllGameState, Action<string>>;
@@ -37,6 +29,7 @@ export class MainScene extends Scene {
     cameraManager!: CameraManager;
     gameManager!: GameManager;
     stateManager!: StateManager;
+    spawnManager!: SpawnManager;
     chests!: Phaser.Physics.Arcade.Group;
     monsters!: Phaser.Physics.Arcade.Group;
     blockers!: Phaser.Physics.Arcade.Group;
@@ -65,6 +58,8 @@ export class MainScene extends Scene {
         this.createGroups();
         this.createCameraManager();
         this.createGameManager();
+        // createGroups должно отработать позже createGameManager
+        this.createSpawnManager();
         this.createControls();
     }
 
@@ -92,56 +87,20 @@ export class MainScene extends Scene {
         }, this);
 	}
 
-    createPlayer(playerObject: PlayerModel) {
-        this.player = new PlayerContainer({
-            scene: this,
-            x: playerObject.x,
-            y: playerObject.y,
-            skin: this.playerSkin,
-            level: playerObject.level,
-            health: playerObject.health,
-            maxHealth: playerObject.maxHealth,
-            gold: playerObject.gold,
-            bolts: playerObject.bolts,
-            maxBolts: playerObject.maxBolts,
-            armor: playerObject.armor,
-            maxArmor: playerObject.maxArmor,
-            id: playerObject.id,
-            sculls: playerObject.sculls
-        });
-    }
-
     createCameraManager() {
 		this.cameraManager = new CameraManager({scene: this});
 		this.cameraManager.setup();
 	}
 
+    createSpawnManager() {
+        this.spawnManager = new SpawnManager({scene: this});
+        this.spawnManager.setup();
+    }
+
     createGameManager() {
-        this.events.on(GameEvents.SPAWN_PLAYER, (playerObject: PlayerModel) => {
-            this.createPlayer(playerObject);
-            this.addCollisions();
-        });
-
-        this.events.on(GameEvents.SPAWN_CHEST, (chest: ChestModel) => {
-            this.spawnChest(chest);
-        });
-
-        this.events.on(GameEvents.SPAWN_MONSTER, (monster: MonsterModel) => {
-            this.spawnMonster(monster);
-        });
-
-        this.events.on(GameEvents.REMOVE_CHEST, (chestId: string) => {
-            const chests = this.chests.getChildren() as Chest[];
-            chests.forEach((chest) => {
-                if (chest.id === chestId) {
-                    chest.makeInactive();
-                }
-            });
-        });   
-
-		this.gameManager = new GameManager({scene: this, mapData: this.map.map!.objects});
-		this.gameManager.setup();
-	}
+        this.gameManager = new GameManager({scene: this, mapData: this.map.map!.objects});
+        this.gameManager.setup();
+    }
 
     createStateManager() {
 		this.stateManager = new StateManager({scene: this});
@@ -171,103 +130,6 @@ export class MainScene extends Scene {
         this.monsters.runChildUpdate = true;
 	}
 
-    spawnChest(chestObject: ChestModel) {
-        let chest: Chest = this.chests.getFirstDead();
-
-        if (!chest) {
-            chest = new Chest({
-                scene: this,
-                x: chestObject.x,
-                y: chestObject.y,
-                key: AtlasesKeys.PICK_UP_OBJECTS,
-                variation: chestObject.variation,
-                coins: chestObject.gold,
-                hearts: chestObject.hearts,
-                bolts: chestObject.bolts,
-                armor: chestObject.armor,
-                id: chestObject.id
-            });
-
-            // Добавляем сундук к группе сундуков
-            this.chests.add(chest);
-            chest.setCollideWorldBounds(true);
-        } else {
-            chest.coins = chestObject.gold;
-            chest.hearts = chestObject.hearts;
-            chest.bolts = chestObject.bolts;
-            chest.armor = chestObject.armor;
-            chest.variation = chestObject.variation;
-            chest.id = chestObject.id;
-            // Обновляет картинку так как вариация могла измениться
-            chest.updateChest();
-            chest.setPosition(chestObject.x, chestObject.y);
-            chest.makeActive();
-        }
-    }
-
-    spawnMonster(monsterObject: MonsterModel) {
-        let monster: MonsterContainer = this.monsters.getFirstDead();
-    
-        if (!monster) {
-            const variation = getRandomMonsterVariation();
-
-            monster = new MonsterContainer({
-                scene: this,
-                x: monsterObject.x,
-                y: monsterObject.y,
-                variation,
-                id: monsterObject.id,
-                health: monsterObject.health,
-                maxHealth: monsterObject.maxHealth,
-                sculls: monsterObject.sculls,
-                gold: monsterObject.gold
-            });
-
-            this.monsters.add(monster);
-        } else {
-            monster.id = monsterObject.id;
-            monster.health = monsterObject.health;
-            monster.maxHealth = monsterObject.maxHealth;
-            monster.sculls = monsterObject.sculls;
-            monster.gold = monsterObject.gold;
-            monster.monster.setTexture(monsterObject.variation);
-            monster.setPosition(monsterObject.x, monsterObject.y);
-            monster.makeActive();
-        }
-
-        monster.playSpawnAnimation();
-    }
-
-    collectChest(player: PlayerContainer, chest: Chest) {
-        // this.goldPickupAudio.play();
-
-        // Если у игрока полная броня то не подбираем сундук
-        if (
-            chest.variation === ChestVariations.ARMOR 
-                && player.armor === player.maxArmor
-        ) {
-            return;
-        }
-
-        // Если у игрока полная обойма потронов то не подбираем сундук
-        if (
-            chest.variation === ChestVariations.BOLTS
-                && player.bolts === player.maxBolts
-        ) {
-            return;
-        }
-
-        // Если у игрока полное здоровье то не подбираем сундук
-        if (
-            chest.variation === ChestVariations.HEART
-                && player.health === player.maxHealth
-        ) {
-            return;
-        }
-
-        this.events.emit(GameEvents.PICK_UP_CHEST, chest.id, player.id);
-    }
-
     weaponEnemyOverlap(weapon: WeaponBolt, enemy: MonsterContainer) {
         if (this.player.playerAttacking && !this.player.weaponHit) {
             this.player.weaponHit = true;
@@ -284,11 +146,6 @@ export class MainScene extends Scene {
 
             this.events.emit(GameEvents.HIT_PLAYER, enemy.id);
         }
-    }
-
-    // Удаляем блокеры которые накладываются на спавнеры
-    deleteBlocker(_spawner: SpawnerImage, blocker: MapObject) {
-        blocker.destroy();
     }
 
     addCollisions() {
@@ -308,8 +165,14 @@ export class MainScene extends Scene {
         this.physics.add.collider(this.spawners, this.blockers);
         
         // Проверка коллизий между игроком и сундуками
-        // @ts-expect-error не понимает что коллбек нужного формата
-        this.physics.add.overlap(this.player, this.chests, this.collectChest, null, this);
+        this.physics.add.overlap(
+            this.player,
+            this.chests,
+            // @ts-expect-error не понимает что коллбек нужного формата
+            this.gameManager.collectChest,
+            null,
+            this.gameManager
+        );
         // Проверка коллизий между оружием игрока и монстрами
         // @ts-expect-error не понимает что коллбек нужного формата
         this.physics.add.overlap(this.weaponBolts, this.monsters, this.weaponEnemyOverlap, null, this);
@@ -317,8 +180,14 @@ export class MainScene extends Scene {
         // @ts-expect-error не понимает что коллбек нужного формата
         this.physics.add.overlap(this.player, this.monsters, this.enemyOverlap, null, this);
         // Проверка коллизий между спавнером и блокерами
-        // @ts-expect-error не понимает что коллбек нужного формата
-        this.physics.add.overlap(this.spawners, this.blockers, this.deleteBlocker, null, this);
+        this.physics.add.overlap(
+            this.spawners,
+            this.blockers,
+            // @ts-expect-error не понимает что коллбек нужного формата
+            this.gameManager.deleteBlocker,
+            null,
+            this.gameManager
+        );
     }
 
     update() {
