@@ -23,7 +23,7 @@ export class MonsterContainer extends Phaser.GameObjects.Container {
     monsterAttacking: boolean;
     moveMonsterInterval: NodeJS.Timeout | null = null;
     flipX: boolean;
-    player: false;
+    player?: false;
 
     constructor({
         scene,

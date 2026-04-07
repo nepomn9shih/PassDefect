@@ -30,7 +30,7 @@ export type MonsterContainerProps = Pick<MonsterModelProps, 'x' | 'y' | 'variati
     scene: MainScene;
     id: string;
     maxHealth: number;
-    player: false;
+    player?: false;
 };
 
 export type MonsterProps = {
