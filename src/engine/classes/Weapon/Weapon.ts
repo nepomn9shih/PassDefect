@@ -1,6 +1,6 @@
 import type {WeaponProps} from './types';
 import {MainScene} from '../../scenes/MainScene';
-import {PlayerDirections, WeaponVariations} from '../../enums';
+import {MoveDirections, WeaponVariations} from '../../enums';
 import {WEAPON_INITIAL_SCALE} from './constants';
 
 export class Weapon extends Phaser.Physics.Arcade.Sprite {
@@ -8,7 +8,7 @@ export class Weapon extends Phaser.Physics.Arcade.Sprite {
 	x: number;
 	y: number;
 	variation: WeaponVariations;
-	direction: PlayerDirections;
+	direction: MoveDirections;
 
 	constructor({
 		scene,
@@ -34,7 +34,7 @@ export class Weapon extends Phaser.Physics.Arcade.Sprite {
 		this.alpha = 1;
 	}
 
-	setDirection(direction: PlayerDirections) {
+	setDirection(direction: MoveDirections) {
 		this.direction = direction;
 	}
 }

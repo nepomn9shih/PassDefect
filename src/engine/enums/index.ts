@@ -31,7 +31,7 @@ export enum WeaponBoltsVariations {
     SWORD_BOLT = 'sword-bolt'
 }
 
-export enum PlayerDirections {
+export enum MoveDirections {
     RIGHT = 'right',
     LEFT = 'left',
     RIGHT_UP = 'right-up',

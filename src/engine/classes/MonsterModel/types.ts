@@ -1,4 +1,4 @@
-import {MonstersVariations} from '../../enums';
+import {MonstersVariations, WeaponVariations} from '../../enums';
 import {MainScene} from '../../scenes';
 
 export type MonsterModelProps = {
@@ -15,9 +15,13 @@ export type MonsterModelProps = {
     },
     sight: number;
     speed: number;
+    weaponVariation: WeaponVariations;
 }
 
-export type MonsterParams = Pick<MonsterModelProps, 'health' | 'attack' | 'sight' | 'speed' | 'sculls'> & {
+export type MonsterParams = Pick<
+    MonsterModelProps,
+    'health' | 'attack' | 'sight' | 'speed' | 'sculls' | 'weaponVariation'
+> & {
     minGold: number;
     maxGold: number;
 }
@@ -26,6 +30,7 @@ export type MonsterContainerProps = Pick<MonsterModelProps, 'x' | 'y' | 'variati
     scene: MainScene;
     id: string;
     maxHealth: number;
+    player: false;
 };
 
 export type MonsterProps = {

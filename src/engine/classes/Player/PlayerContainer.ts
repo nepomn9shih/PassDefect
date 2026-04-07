@@ -1,6 +1,6 @@
 import type {PlayerContainerProps} from './types';
 import {MainScene} from '../../scenes/MainScene';
-import {ButtonVariations, GameEvents, PlayerAnimation, PlayerDirections, PlayerSkinVariations, WeaponVariations} from '../../enums';
+import {ButtonVariations, GameEvents, PlayerAnimation, MoveDirections, PlayerSkinVariations, WeaponVariations} from '../../enums';
 import {Player} from './Player';
 import {PlayerModel} from './PlayerModel';
 import {WeaponContainer} from '../Weapon/WeaponContainer';
@@ -23,8 +23,8 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
 	gold: number;
     id: string;
 	player: Player;
-	currentDirection: PlayerDirections;
-	viewDirection: PlayerDirections.LEFT | PlayerDirections.RIGHT;
+	currentDirection: MoveDirections;
+	viewDirection: MoveDirections.LEFT | MoveDirections.RIGHT;
 	playerAttacking: boolean;
 	playerMoving: boolean = false;
 	flipX: boolean;
@@ -76,8 +76,8 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
 		this.updateAllBars();
 		// Скорость при движении игрока
 		this.velocity = PLAYER_LEVEL_PARAMS[this.level].velocity;
-		this.currentDirection = PlayerDirections.RIGHT;
-		this.viewDirection = PlayerDirections.RIGHT;
+		this.currentDirection = MoveDirections.RIGHT;
+		this.viewDirection = MoveDirections.RIGHT;
 		this.weaponVariation = this.scene.state.weapon.active;
  		this.playerAttacking = false;
 		this.damageCooldown = false;
@@ -356,30 +356,30 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
 		if (cursors.left.isDown || this.buttonPressed[ButtonVariations.LEFT]) {
 			// @ts-expect-error так как TS не понимает что это не StaticBody
 			this.body?.setVelocityX(-this.velocity);
-			this.currentDirection = PlayerDirections.LEFT;
-			this.viewDirection = PlayerDirections.LEFT;
+			this.currentDirection = MoveDirections.LEFT;
+			this.viewDirection = MoveDirections.LEFT;
 			this.player.flipX = true;
 			this.helmet.flipX = true;
 		} else if (cursors.right.isDown || this.buttonPressed[ButtonVariations.RIGHT]) {
 			// @ts-expect-error так как TS не понимает что это не StaticBody
 			this.body.setVelocityX(this.velocity);
-			this.currentDirection = PlayerDirections.RIGHT;
-			this.viewDirection = PlayerDirections.RIGHT;
+			this.currentDirection = MoveDirections.RIGHT;
+			this.viewDirection = MoveDirections.RIGHT;
 			this.player.flipX = false;
 			this.helmet.flipX = false;
 		}
 		if (cursors.up.isDown || this.buttonPressed[ButtonVariations.UP]) {
 			// @ts-expect-error так как TS не понимает что это не StaticBody
 			this.body.setVelocityY(-this.velocity);
-			this.currentDirection = this.viewDirection === PlayerDirections.RIGHT
-				? PlayerDirections.RIGHT_UP
-				: PlayerDirections.LEFT_UP;
+			this.currentDirection = this.viewDirection === MoveDirections.RIGHT
+				? MoveDirections.RIGHT_UP
+				: MoveDirections.LEFT_UP;
 		} else if (cursors.down.isDown || this.buttonPressed[ButtonVariations.DOWN]) {
 			// @ts-expect-error так как TS не понимает что это не StaticBody
 			this.body.setVelocityY(this.velocity);
-			this.currentDirection = this.viewDirection === PlayerDirections.RIGHT
-				? PlayerDirections.RIGHT_DOWN
-				: PlayerDirections.LEFT_DOWN;
+			this.currentDirection = this.viewDirection === MoveDirections.RIGHT
+				? MoveDirections.RIGHT_DOWN
+				: MoveDirections.LEFT_DOWN;
 		}
 
 		this.turnWeapon();

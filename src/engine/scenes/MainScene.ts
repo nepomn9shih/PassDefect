@@ -35,6 +35,7 @@ export class MainScene extends Scene {
     blockers!: Phaser.Physics.Arcade.Group;
     spawners!: Phaser.Physics.Arcade.Group;
     weaponBolts!: Phaser.Physics.Arcade.Group;
+    enemyWeaponBolts!: Phaser.Physics.Arcade.Group;
     score: number;
     cursors?: Phaser.Types.Input.Keyboard.CursorKeys;
     storeUnsubscribe: () => void;
@@ -126,11 +127,13 @@ export class MainScene extends Scene {
         this.spawners = this.physics.add.group().setDepth(Z_INDEXES.spawners);
         // Создаем группу для снарядов оружия
         this.weaponBolts = this.physics.add.group().setDepth(Z_INDEXES.player);
+        // Создаем группу для снарядов оружия врагов
+        this.enemyWeaponBolts = this.physics.add.group().setDepth(Z_INDEXES.monsters);
         // Включаем обновление дочерних элементов
         this.monsters.runChildUpdate = true;
 	}
 
-    weaponEnemyOverlap(weapon: WeaponBolt, enemy: MonsterContainer) {
+    playerWeaponWithEnemyOverlap(weapon: WeaponBolt, enemy: MonsterContainer) {
         if (this.player.playerAttacking && !this.player.weaponHit) {
             this.player.weaponHit = true;
 
@@ -140,11 +143,15 @@ export class MainScene extends Scene {
         }
     }
 
-    enemyOverlap(player: PlayerContainer, enemy: MonsterContainer) {
-        if (!this.player.damageCooldown && this.player.health) {
-            player.loseHealth(enemy.makeDamage());
+    enemyWeaponWithPlayerOverlap(player: PlayerContainer, weapon: WeaponBolt) {
+        if (
+            Boolean(weapon.alpha)
+            && !this.player.damageCooldown
+            && this.player.health
+        ) {
+            player.loseHealth(weapon.damage);
 
-            this.events.emit(GameEvents.HIT_PLAYER, enemy.id);
+            this.events.emit(GameEvents.HIT_PLAYER);
         }
     }
 
@@ -163,6 +170,10 @@ export class MainScene extends Scene {
         this.physics.add.collider(this.monsters, this.blockers);
         // Проверка коллизий между спавнерами и слоем заблоченных объектов
         this.physics.add.collider(this.spawners, this.blockers);
+        // Проверка коллизий между монстром и игроком
+        this.physics.add.collider(this.monsters, this.player);
+        // Проверка коллизий между монстром и монстром
+        this.physics.add.collider(this.monsters, this.monsters);
         
         // Проверка коллизий между игроком и сундуками
         this.physics.add.overlap(
@@ -175,10 +186,10 @@ export class MainScene extends Scene {
         );
         // Проверка коллизий между оружием игрока и монстрами
         // @ts-expect-error не понимает что коллбек нужного формата
-        this.physics.add.overlap(this.weaponBolts, this.monsters, this.weaponEnemyOverlap, null, this);
-        // Проверка коллизий между игроком и монстрами
+        this.physics.add.overlap(this.weaponBolts, this.monsters, this.playerWeaponWithEnemyOverlap, null, this);
+        // Проверка коллизий между игроком и оружием монстров
         // @ts-expect-error не понимает что коллбек нужного формата
-        this.physics.add.overlap(this.player, this.monsters, this.enemyOverlap, null, this);
+        this.physics.add.overlap(this.player, this.enemyWeaponBolts, this.enemyWeaponWithPlayerOverlap, null, this);
         // Проверка коллизий между спавнером и блокерами
         this.physics.add.overlap(
             this.spawners,

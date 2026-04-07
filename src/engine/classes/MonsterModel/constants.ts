@@ -1,4 +1,4 @@
-import {MonstersVariations} from '../../enums';
+import {MonstersVariations, WeaponVariations} from '../../enums';
 import type {MonsterParams} from './types';
 
 export const MONSTERS_PARAMS: Record<MonstersVariations, MonsterParams> = {
@@ -12,7 +12,8 @@ export const MONSTERS_PARAMS: Record<MonstersVariations, MonsterParams> = {
         speed: 40,
         sculls: 1,
         minGold: 10,
-        maxGold: 20
+        maxGold: 20,
+        weaponVariation: WeaponVariations.SWORD
     }
 };
 
@@ -24,3 +25,5 @@ export const HEALTH_BAR_CONFIG = {
 export const MONSTER_STEP = 32;
 
 export const MONSTER_INITIAL_SCALE = 0.5;
+
+export const MAX_VERTICAL_DISTANCE_TO_CHANGE_DIRECTION = 20;

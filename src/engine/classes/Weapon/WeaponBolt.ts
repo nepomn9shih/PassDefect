@@ -1,5 +1,5 @@
 import {MainScene} from '../../scenes/MainScene';
-import {PlayerDirections, WeaponBoltsVariations} from '../../enums';
+import {MoveDirections, WeaponBoltsVariations} from '../../enums';
 import {WEAPON_BOLTS_INITIAL_SCALE} from './constants';
 import type {WeaponBoltProps} from './types';
 
@@ -8,7 +8,7 @@ export class WeaponBolt extends Phaser.Physics.Arcade.Sprite {
 	x: number;
 	y: number;
 	variation: WeaponBoltsVariations;
-	direction: PlayerDirections;
+	direction: MoveDirections;
 	damage: number;
 
 	constructor({
@@ -37,7 +37,7 @@ export class WeaponBolt extends Phaser.Physics.Arcade.Sprite {
 		this.alpha = 0;
 	}
 
-	setDirection(direction: PlayerDirections) {
+	setDirection(direction: MoveDirections) {
 		this.direction = direction;
 	}
 }

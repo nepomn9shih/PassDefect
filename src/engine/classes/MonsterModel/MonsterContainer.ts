@@ -1,9 +1,10 @@
 import {getRandomNumber} from './../../utils/getRandomNumber';
-import {GameEvents, MonsterAnimation, MonstersVariations} from '../../enums';
-import {HEALTH_BAR_CONFIG, MONSTER_INITIAL_SCALE, MONSTERS_PARAMS} from './constants';
+import {GameEvents, MonsterAnimation, MonstersVariations, MoveDirections, WeaponVariations} from '../../enums';
+import {HEALTH_BAR_CONFIG, MAX_VERTICAL_DISTANCE_TO_CHANGE_DIRECTION, MONSTER_INITIAL_SCALE, MONSTERS_PARAMS} from './constants';
 import type {MonsterContainerProps} from './types';
 import {Monster} from './Monster';
 import {MainScene} from '../../scenes';
+import {WeaponContainer} from '../Weapon/WeaponContainer';
 
 export class MonsterContainer extends Phaser.GameObjects.Container {
     scene: MainScene;
@@ -15,9 +16,14 @@ export class MonsterContainer extends Phaser.GameObjects.Container {
     healthBar: Phaser.GameObjects.Graphics;
     variation: MonstersVariations;
     monster: Monster;
+    currentDirection: MoveDirections;
+    weapon: WeaponContainer;
+    weaponVariation: WeaponVariations;
     velocity: number;
+    monsterAttacking: boolean;
     moveMonsterInterval: NodeJS.Timeout | null = null;
     flipX: boolean;
+    player: false;
 
     constructor({
         scene,
@@ -33,6 +39,8 @@ export class MonsterContainer extends Phaser.GameObjects.Container {
         super(scene, x, y);
         this.scene = scene;
         this.id = id;
+        // Чтобы понимать что это не игрок при создании оружия
+        this.player = false;
         this.variation = variation;
          // Задаем размеры контейнера
  		this.setSize(36, 46);
@@ -42,6 +50,9 @@ export class MonsterContainer extends Phaser.GameObjects.Container {
         this.gold = gold;
         this.healthBar = this.scene.add.graphics();
         this.velocity = 10;
+        this.monsterAttacking = false;
+        this.weaponVariation = MONSTERS_PARAMS[this.variation].weaponVariation;
+        this.currentDirection = MoveDirections.RIGHT;
         this.flipX = true;
 
         this.scene.physics.world.enable(this);
@@ -56,6 +67,18 @@ export class MonsterContainer extends Phaser.GameObjects.Container {
             frame: '01'
         });
         this.add(this.monster);
+
+        // Создаем оружие
+		this.weapon = new WeaponContainer({
+			scene: this.scene,
+			x: 0,
+			y: 0,
+			weaponVariation: this.weaponVariation,
+			owner: this
+		});
+		this.scene.add.existing(this.weapon);
+		this.add(this.weapon);
+
         this.playSpawnAnimation();
 
         this.scene.time.delayedCall(1000, () => {
@@ -133,10 +156,35 @@ export class MonsterContainer extends Phaser.GameObjects.Container {
         }
     }
 
-    makeDamage() {
-        const {min, max} = MONSTERS_PARAMS[this.variation].attack;
+    turnWeapon() {
+		this.weapon.turnWeapon();
+	}
 
-        return getRandomNumber(min, max);
+    makeAttack() {
+        this.monsterAttacking = true;
+        this.weapon.setAttackMode();
+		this.scene.time.delayedCall(this.weapon.attackTime, () => {
+			this.weapon.setDefaultMode();
+            this.monsterAttacking = false;
+		}, [], this);
+    }
+
+    /** Проверяем, что игрок в зоне досягаемости оружия и атакуем */
+    checkToMakeAttack() {
+        if (
+            this.health > 0
+                && !this.monsterAttacking
+                && !this.scene.player.damageCooldown
+        ) {
+            const distance = Phaser.Math.Distance.Between(
+                this.x, this.y,
+                this.scene.player.x, this.scene.player.y
+            );
+
+            if (distance < this.weapon.distance) {
+                this.makeAttack();
+            }
+        }
     }
 
     makeActive() {
@@ -188,38 +236,50 @@ export class MonsterContainer extends Phaser.GameObjects.Container {
         switch (randomPosition) {
             case 1: {
                 this.goRight();
+                this.currentDirection = MoveDirections.RIGHT;
                 break;
             }
             case 2: {
                 this.goLeft();
+                this.currentDirection = MoveDirections.LEFT;
                 break;
             }
             case 3: {
                 this.goDown();
+                this.currentDirection = this.monster.flipX
+                    ? MoveDirections.LEFT_DOWN
+                    : MoveDirections.RIGHT_DOWN;
                 break;
             }
             case 4: {
                 this.goTop();
+                this.currentDirection = this.monster.flipX
+                    ? MoveDirections.LEFT_UP
+                    : MoveDirections.RIGHT_UP;
                 break;
             }
             case 5: {
                 this.goRight();
                 this.goDown();
+                this.currentDirection = MoveDirections.RIGHT_DOWN;
                 break;
             }
             case 6: {
                 this.goRight();
                 this.goTop();
+                this.currentDirection = MoveDirections.RIGHT_UP;
                 break;
             }
             case 7: {
                 this.goLeft();
                 this.goDown();
+                this.currentDirection = MoveDirections.LEFT_DOWN;
                 break;
             }
             case 8: {
                 this.goLeft();
                 this.goTop();
+                this.currentDirection = MoveDirections.LEFT_UP;
                 break;
             }
             default:
@@ -242,6 +302,27 @@ export class MonsterContainer extends Phaser.GameObjects.Container {
                     // если игрок в поле зрения монстра, то монстр преследует игрока
                     this.scene.physics.moveToObject(this, this.scene.player, MONSTERS_PARAMS[this.variation].speed);
                     this.monster.flipX = this.scene.player.x < this.x;
+                    const dx = this.scene.player.x - this.x;
+                    const dy = this.scene.player.y - this.y;
+                    const absDy = Math.abs(dy);
+                    if (dx > 0) {
+                        if (absDy < MAX_VERTICAL_DISTANCE_TO_CHANGE_DIRECTION) {
+                            this.currentDirection = MoveDirections.RIGHT
+                        } else {
+                            this.currentDirection =  dy > 0
+                                ? MoveDirections.RIGHT_DOWN
+                                : MoveDirections.RIGHT_UP;
+                        }
+                    }
+                    if (dx < 0) {
+                        if (absDy < MAX_VERTICAL_DISTANCE_TO_CHANGE_DIRECTION) {
+                            this.currentDirection = MoveDirections.LEFT
+                        } else {
+                            this.currentDirection = dy > 0
+                                ? MoveDirections.LEFT_DOWN
+                                : MoveDirections.LEFT_UP;
+                        }
+                    }
                 }    
             }
         }, 1000);
@@ -249,5 +330,7 @@ export class MonsterContainer extends Phaser.GameObjects.Container {
 
     update() {
         this.updateHealthBar();
+        this.turnWeapon();
+        this.checkToMakeAttack();
     }
 }

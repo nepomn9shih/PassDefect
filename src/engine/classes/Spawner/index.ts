@@ -77,7 +77,8 @@ export class Spawner {
             speed,
             sculls,
             minGold,
-            maxGold
+            maxGold,
+            weaponVariation
         } = MONSTERS_PARAMS[variation];
 
         const monster = new MonsterModel({
@@ -90,7 +91,8 @@ export class Spawner {
             attack,
             sight,
             speed,
-            sculls
+            sculls,
+            weaponVariation
         });
 
         this.objectsCreated.push(monster);

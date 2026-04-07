@@ -1,11 +1,12 @@
 import {MainScene} from '../../scenes/MainScene';
-import {PlayerDirections, WeaponBoltsVariations, WeaponVariations} from '../../enums';
+import {MoveDirections, WeaponBoltsVariations, WeaponVariations} from '../../enums';
 import {Weapon} from './Weapon';
 import {WeaponBolt} from './WeaponBolt';
 import {WEAPON_ATTACK_FRAME, WEAPON_BOLTS_FOR_WEAPON, WEAPON_BOLTS_OFFSET, WEAPON_DEFAULT_FRAME, WEAPON_OFFSET} from './constants';
 import {WEAPONS_CONFIG} from './constants';
 import type {WeaponContainerProps} from './types';
 import type {PlayerContainer} from '../Player/PlayerContainer';
+import type { MonsterContainer } from '../MonsterModel/MonsterContainer';
 
 export class WeaponContainer extends Phaser.GameObjects.Container {
 	scene: MainScene;
@@ -15,10 +16,11 @@ export class WeaponContainer extends Phaser.GameObjects.Container {
 	weaponBolt!: WeaponBolt;
 	weaponVariation: WeaponVariations;
 	weaponBoltVariation: WeaponBoltsVariations;
-	owner: PlayerContainer;
+	owner: PlayerContainer | MonsterContainer;
 	damage: number;
 	shotCost: number;
 	attackTime: number;
+	distance: number;
 
 	constructor({
 		scene,
@@ -37,6 +39,7 @@ export class WeaponContainer extends Phaser.GameObjects.Container {
 		this.damage = WEAPONS_CONFIG[this.weaponVariation].damage;
 		this.shotCost = WEAPONS_CONFIG[this.weaponVariation].shotCost;
 		this.attackTime = WEAPONS_CONFIG[this.weaponVariation].attackTime;
+		this.distance = WEAPONS_CONFIG[this.weaponVariation].distance;
 		 // Задаем размеры контейнера
  		this.setSize(36, 46);
 		// Подключаем оружие в физику
@@ -59,7 +62,11 @@ export class WeaponContainer extends Phaser.GameObjects.Container {
 			direction: this.owner.currentDirection,
 			damage: this.damage
 		});
-		this.scene.weaponBolts.add(this.weaponBolt);
+		if (this.owner.player) {
+			this.scene.weaponBolts.add(this.weaponBolt);
+		} else {
+			this.scene.enemyWeaponBolts.add(this.weaponBolt);
+		}	
 		this.add(this.weaponBolt);
 	}
 
@@ -83,30 +90,30 @@ export class WeaponContainer extends Phaser.GameObjects.Container {
 		this.weapon.setY(WEAPON_OFFSET[this.weaponVariation][this.owner.currentDirection].y);
 
 		if (
-			this.owner.currentDirection === PlayerDirections.RIGHT
+			this.owner.currentDirection === MoveDirections.RIGHT
 		) {
 			this.weaponBolt.setAngle(0).setFlipX(false);
 			this.weapon.setAngle(0).setFlipX(false).setFlipY(false);
 		}
 		if (
-			this.owner.currentDirection === PlayerDirections.LEFT
+			this.owner.currentDirection === MoveDirections.LEFT
 		) {
 			this.weaponBolt.setAngle(0).setFlipX(true).setFlipY(false);
 			this.weapon.setAngle(0).setFlipX(true).setFlipY(false);
 		} 
-		if (this.owner.currentDirection === PlayerDirections.RIGHT_UP) {
+		if (this.owner.currentDirection === MoveDirections.RIGHT_UP) {
 			this.weaponBolt.setAngle(270).setFlipX(false).setFlipY(false);
 			this.weapon.setAngle(270).setFlipX(false).setFlipY(false);
 		}
-		if (this.owner.currentDirection === PlayerDirections.LEFT_UP) {
+		if (this.owner.currentDirection === MoveDirections.LEFT_UP) {
 			this.weaponBolt.setAngle(270).setFlipX(false).setFlipY(true)
 			this.weapon.setAngle(270).setFlipX(false).setFlipY(true);
 		}
-		if (this.owner.currentDirection === PlayerDirections.RIGHT_DOWN) {
+		if (this.owner.currentDirection === MoveDirections.RIGHT_DOWN) {
 			this.weaponBolt.setAngle(90).setFlipX(false).setFlipY(false);
 			this.weapon.setAngle(90).setFlipX(false).setFlipY(false);
 		}
-		if (this.owner.currentDirection === PlayerDirections.LEFT_DOWN) {
+		if (this.owner.currentDirection === MoveDirections.LEFT_DOWN) {
 			this.weaponBolt.setAngle(90).setFlipX(false).setFlipY(true)
 			this.weapon.setAngle(90).setFlipX(false).setFlipY(true);
 		}
@@ -128,6 +135,12 @@ export class WeaponContainer extends Phaser.GameObjects.Container {
 		this.weapon.setFrame(WEAPON_DEFAULT_FRAME);
 	}
 
+	/** Исчезновение оружия */
+	destroyWeapon() {
+		this.weapon.destroy();
+		this.weaponBolt.destroy();
+	}
+
 	/** Смена оружия на другое */
 	changeWeapon(newWeapon: WeaponVariations) {
 		if (newWeapon !== this.weaponVariation) {
@@ -138,8 +151,7 @@ export class WeaponContainer extends Phaser.GameObjects.Container {
 			this.attackTime = WEAPONS_CONFIG[this.weaponVariation].attackTime;
 			this.weaponBoltVariation = WEAPON_BOLTS_FOR_WEAPON[this.weaponVariation];
 
-			this.weapon.destroy();
-			this.weaponBolt.destroy();
+			this.destroyWeapon();
 
 			this.createWeaponBolt();
 			this.createWeapon();

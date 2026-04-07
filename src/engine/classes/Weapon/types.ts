@@ -1,5 +1,6 @@
-import {PlayerDirections, WeaponBoltsVariations, WeaponVariations} from '../../enums';
+import {MoveDirections, WeaponBoltsVariations, WeaponVariations} from '../../enums';
 import {MainScene} from '../../scenes/MainScene';
+import type { MonsterContainer } from '../MonsterModel/MonsterContainer';
 import type {PlayerContainer} from '../Player/PlayerContainer';
 
 export type WeaponContainerProps = {
@@ -7,7 +8,7 @@ export type WeaponContainerProps = {
 	x: number;
 	y: number;
 	weaponVariation: WeaponVariations;
-	owner: PlayerContainer;
+	owner: PlayerContainer | MonsterContainer;
 };
 
 export type WeaponProps = {
@@ -16,7 +17,7 @@ export type WeaponProps = {
 	y: number;
     variation: WeaponVariations;
 	frame?: string;
-	direction: PlayerDirections;
+	direction: MoveDirections;
 };
 
 export type WeaponBoltProps = {
@@ -25,7 +26,7 @@ export type WeaponBoltProps = {
 	y: number;
     variation: WeaponBoltsVariations;
 	frame?: string;
-	direction: PlayerDirections;
+	direction: MoveDirections;
 	damage: number;
 };
 
@@ -33,4 +34,5 @@ export type WeaponData = {
 	damage: number;
     shotCost: number;
 	attackTime: number;
+	distance: number;
 }
