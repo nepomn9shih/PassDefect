@@ -15,12 +15,12 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
 	x: number;
 	y: number;
 	skin: PlayerSkinVariations = PlayerSkinVariations.KNIGHT;
-	sculls: number;
-	level: number;
-	velocity: number;
-	health: number;
-    maxHealth: number;
-	gold: number;
+	sculls!: number;
+	level!: number;
+	velocity!: number;
+	health!: number;
+    maxHealth!: number;
+	gold!: number;
     id: string;
 	player: Player;
 	currentDirection: MoveDirections;
@@ -33,49 +33,29 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
 	helmet: Helmet;
 	weaponVariation: WeaponVariations;
 	weaponHit: boolean = false;
-	bolts: number;
-	maxBolts: number;
-	armor: number;
-	maxArmor: number;
+	bolts!: number;
+	maxBolts!: number;
+	armor!: number;
+	maxArmor!: number;
 	// если true то игрока только что ударили и пока нельзя ударить снова
 	damageCooldown: boolean;
 	buttonPressed: Record<ButtonVariations, boolean>;
 
 	constructor({
 		scene,
-		x,
-		y,
 		skin,
 		frame = '01',
-		health,
-		maxHealth,
-		gold,
-		id,
-		bolts,
-		maxBolts,
-		armor,
-		maxArmor,
-		sculls,
-		level
+		playerObject
 	}: PlayerContainerProps) {
-		super(scene, x, y);
+		super(scene, playerObject.x, playerObject.y);
 		this.scene = scene;
-		this.x = x;
-		this.y = y;
+		this.x = playerObject.x;
+		this.y = playerObject.y;
 
-		this.level = level;
-		this.health = health;
- 		this.maxHealth = maxHealth;
-		this.gold = gold;
- 		this.id = id;
-		this.bolts = bolts;
-		this.maxBolts = maxBolts;
-		this.armor = armor;
-		this.maxArmor = maxArmor;
-		this.sculls = sculls;
+		this.id = playerObject.id;
+		this.applyPlayerParams(playerObject);
 		this.updateAllBars();
-		// Скорость при движении игрока
-		this.velocity = PLAYER_LEVEL_PARAMS[this.level].velocity;
+
 		this.currentDirection = MoveDirections.RIGHT;
 		this.viewDirection = MoveDirections.RIGHT;
 		this.weaponVariation = this.scene.state.weapon.active;
@@ -226,15 +206,35 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
 		this.player.playAnimation(PlayerAnimation.SPAWN);
 	}
 
-	respawn(playerObject: PlayerModel) {
+	/** Единая точка копирования параметров игрока из модели: используется и при создании, и при респавне */
+	applyPlayerParams(playerObject: PlayerModel) {
+		this.level = playerObject.level;
 		this.health = playerObject.health;
+		this.maxHealth = playerObject.maxHealth;
 		this.gold = playerObject.gold;
 		this.bolts = playerObject.bolts;
+		this.maxBolts = playerObject.maxBolts;
 		this.armor = playerObject.armor;
+		this.maxArmor = playerObject.maxArmor;
 		this.sculls = playerObject.sculls;
-		this.level = playerObject.level;
+		// Скорость при движении игрока
+		this.velocity = PLAYER_LEVEL_PARAMS[this.level].velocity;
+	}
+
+	respawn(playerObject: PlayerModel) {
+		this.applyPlayerParams(playerObject);
+		this.setActive(true);
+		this.damageCooldown = false;
+		this.currentDirection = MoveDirections.RIGHT;
+		this.viewDirection = MoveDirections.RIGHT;
+		this.player.flipX = false;
+		this.helmet.flipX = false;
 		this.setPosition(playerObject.x, playerObject.y);
 		this.playSpawnAnimation();
+		this.helmet.updateHelmet();
+		// После смерти сбрасываем оружие на дефолтное и синхронизируем стейт
+		this.switchWeapon(WeaponVariations.SWORD);
+		this.scene.stateManager.setActiveWeapon(WeaponVariations.SWORD);
 		this.updateAllBars();
 	}
 

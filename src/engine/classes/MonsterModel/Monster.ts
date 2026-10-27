@@ -2,7 +2,7 @@ import type {MonsterProps} from './types';
 import {MainScene} from '../../scenes/MainScene';
 import {MonsterAnimation, MonstersVariations} from '../../enums';
 import {MONSTER_INITIAL_SCALE} from './constants';
-import {getMonsterAnimations} from './getMonsterAnimations';
+import {getMonsterAnimationKey, getMonsterAnimations} from './getMonsterAnimations';
 
 export class Monster extends Phaser.Physics.Arcade.Sprite {
     scene: MainScene;
@@ -40,11 +40,14 @@ export class Monster extends Phaser.Physics.Arcade.Sprite {
         const animations = getMonsterAnimations(this);
         const animationNames = Object.keys(animations) as MonsterAnimation[];
         animationNames.forEach((animation) => {
-            this.anims.create(animations[animation])
+            const {key} = animations[animation];
+            if (key && !this.anims.exists(key)) {
+                this.anims.create(animations[animation]);
+            }
         });
     }
 
     playAnimation(animation: MonsterAnimation) {
-        this.anims.play(animation);
+        this.anims.play(getMonsterAnimationKey(this.variation, animation));
     }
 }

@@ -2,17 +2,18 @@ import {getRandomNumber} from './../../utils/getRandomNumber';
 import {GameEvents, MonsterAnimation, MonstersVariations, MoveDirections, WeaponVariations} from '../../enums';
 import {HEALTH_BAR_CONFIG, MAX_VERTICAL_DISTANCE_TO_CHANGE_DIRECTION, MONSTER_INITIAL_SCALE, MONSTER_MOVE_INTERVAL, MONSTERS_PARAMS} from './constants';
 import type {MonsterContainerProps} from './types';
+import type {MonsterModel} from './index';
 import {Monster} from './Monster';
 import {MainScene} from '../../scenes';
 import {WeaponContainer} from '../Weapon/WeaponContainer';
 
 export class MonsterContainer extends Phaser.GameObjects.Container {
     scene: MainScene;
-    id: string;
-    health: number;
-    maxHealth: number;
-    sculls: number;
-    gold: number;
+    id!: string;
+    health!: number;
+    maxHealth!: number;
+    sculls!: number;
+    gold!: number;
     healthBar: Phaser.GameObjects.Graphics;
     variation: MonstersVariations;
     monster: Monster;
@@ -23,30 +24,20 @@ export class MonsterContainer extends Phaser.GameObjects.Container {
     monsterAttacking: boolean;
     flipX: boolean;
     player?: false;
+    moveTimer: Phaser.Time.TimerEvent;
 
     constructor({
         scene,
-        x,
-        y,
-        variation,
-        id,
-        health,
-        maxHealth,
-        sculls,
-        gold
+        monsterObject
     }: MonsterContainerProps) {
-        super(scene, x, y);
+        super(scene, monsterObject.x, monsterObject.y);
         this.scene = scene;
-        this.id = id;
         // Чтобы понимать что это не игрок при создании оружия
         this.player = false;
-        this.variation = variation;
          // Задаем размеры контейнера
  		this.setSize(36, 46);
-        this.health = health;
-        this.maxHealth = maxHealth;
-        this.sculls = sculls;
-        this.gold = gold;
+        this.variation = monsterObject.variation;
+        this.applyMonsterParams(monsterObject);
         this.healthBar = this.scene.add.graphics();
         this.velocity = 10;
         this.monsterAttacking = false;
@@ -62,7 +53,7 @@ export class MonsterContainer extends Phaser.GameObjects.Container {
             scene: this.scene,
             x: 0,
             y: 0,
-            variation,
+            variation: this.variation,
             frame: '01'
         });
         this.add(this.monster);
@@ -80,8 +71,22 @@ export class MonsterContainer extends Phaser.GameObjects.Container {
 
         this.playSpawnAnimation();
 
+        // Таймер движения монстра: создаётся один раз и ставится на паузу, пока монстр неактивен
+        this.moveTimer = this.scene.time.addEvent({
+            delay: MONSTER_MOVE_INTERVAL,
+            loop: true,
+            callback: () => {
+                if (this.health > 0) {
+                    this.updateMovement();
+                }
+            }
+        });
+        this.moveTimer.paused = true;
+
         this.scene.time.delayedCall(1000, () => {
-            this.moveMonster();
+            if (this.health > 0) {
+                this.moveTimer.paused = false;
+            }
         }, [], this);
     }
 
@@ -190,6 +195,7 @@ export class MonsterContainer extends Phaser.GameObjects.Container {
         this.setActive(true);
         this.setVisible(true);
         this.updateHealthBar();
+        this.moveTimer.paused = false;
 
         if(this.body) {
             //@ts-expect-error ts не определяет нужный body
@@ -200,6 +206,7 @@ export class MonsterContainer extends Phaser.GameObjects.Container {
     makeInactive() {
         this.setActive(false);
         this.setVisible(false);
+        this.moveTimer.paused = true;
 
         if(this.body) {
             //@ts-expect-error ts не определяет нужный body
@@ -286,50 +293,61 @@ export class MonsterContainer extends Phaser.GameObjects.Container {
         };
     };
     
-    moveMonster() {
-        // Phaser-таймер вместо setInterval: работает на игровом цикле и сам останавливается при destroy сцены
-        this.scene.time.addEvent({
-            delay: MONSTER_MOVE_INTERVAL,
-            loop: true,
-            callback: () => {
-                if (this.health > 0) {
-                    const distance = Phaser.Math.Distance.Between(
-                        this.x, this.y,
-                        this.scene.player.x, this.scene.player.y
-                    );
+    /** Единая точка копирования параметров монстра из модели: используется и при создании, и при реюзе из пула */
+    applyMonsterParams(monsterObject: MonsterModel) {
+        this.id = monsterObject.id;
+        this.health = monsterObject.health;
+        this.maxHealth = monsterObject.maxHealth;
+        this.sculls = monsterObject.sculls;
+        this.gold = monsterObject.gold;
+    }
 
-                    if (distance > MONSTERS_PARAMS[this.variation].sight) {
-                        // если игрок не в поле зрения монстра, то монстр рандомно бродит
-                        this.randomlyMove();
-                    } else {
-                        // если игрок в поле зрения монстра, то монстр преследует игрока
-                        this.scene.physics.moveToObject(this, this.scene.player, MONSTERS_PARAMS[this.variation].speed);
-                        this.monster.flipX = this.scene.player.x < this.x;
-                        const dx = this.scene.player.x - this.x;
-                        const dy = this.scene.player.y - this.y;
-                        const absDy = Math.abs(dy);
-                        if (dx > 0) {
-                            if (absDy < MAX_VERTICAL_DISTANCE_TO_CHANGE_DIRECTION) {
-                                this.currentDirection = MoveDirections.RIGHT
-                            } else {
-                                this.currentDirection = dy > 0
-                                    ? MoveDirections.RIGHT_DOWN
-                                    : MoveDirections.RIGHT_UP;
-                            }
-                        }
-                        if (dx < 0) {
-                            if (absDy < MAX_VERTICAL_DISTANCE_TO_CHANGE_DIRECTION) {
-                                this.currentDirection = MoveDirections.LEFT
-                            } else {
-                                this.currentDirection = dy > 0
-                                    ? MoveDirections.LEFT_DOWN
-                                    : MoveDirections.LEFT_UP;
-                            }
-                        }
-                    }
+    /** Обновляем вариацию монстра при переиспользовании из пула */
+    resetVariation(variation: MonstersVariations) {
+        this.variation = variation;
+        this.monster.variation = variation;
+        this.monster.setTexture(variation);
+
+        const weaponVariation = MONSTERS_PARAMS[variation].weaponVariation;
+        this.weaponVariation = weaponVariation;
+        this.weapon.changeWeapon(weaponVariation);
+    }
+
+    updateMovement() {
+        const distance = Phaser.Math.Distance.Between(
+            this.x, this.y,
+            this.scene.player.x, this.scene.player.y
+        );
+
+        if (distance > MONSTERS_PARAMS[this.variation].sight) {
+            // если игрок не в поле зрения монстра, то монстр рандомно бродит
+            this.randomlyMove();
+        } else {
+            // если игрок в поле зрения монстра, то монстр преследует игрока
+            this.scene.physics.moveToObject(this, this.scene.player, MONSTERS_PARAMS[this.variation].speed);
+            this.monster.flipX = this.scene.player.x < this.x;
+            const dx = this.scene.player.x - this.x;
+            const dy = this.scene.player.y - this.y;
+            const absDy = Math.abs(dy);
+            if (dx > 0) {
+                if (absDy < MAX_VERTICAL_DISTANCE_TO_CHANGE_DIRECTION) {
+                    this.currentDirection = MoveDirections.RIGHT
+                } else {
+                    this.currentDirection = dy > 0
+                        ? MoveDirections.RIGHT_DOWN
+                        : MoveDirections.RIGHT_UP;
                 }
             }
-        });
+            if (dx < 0) {
+                if (absDy < MAX_VERTICAL_DISTANCE_TO_CHANGE_DIRECTION) {
+                    this.currentDirection = MoveDirections.LEFT
+                } else {
+                    this.currentDirection = dy > 0
+                        ? MoveDirections.LEFT_DOWN
+                        : MoveDirections.LEFT_UP;
+                }
+            }
+        }
     }
 
     update() {

@@ -43,6 +43,9 @@ export class Button extends Phaser.Physics.Arcade.Sprite {
         this.on('pointerup', this.pointerUpHandler, this);
         this.on('pointerout', this.pointerUpHandler, this);
         this.scene.events.on(UPDATE_MOBILE_CONTROLS_EVENT_NAME, this.updateXY, this);
+        this.once('destroy', () => {
+            this.scene.events.off(UPDATE_MOBILE_CONTROLS_EVENT_NAME, this.updateXY, this);
+        });
     }
 
     pointerDownHandler() {

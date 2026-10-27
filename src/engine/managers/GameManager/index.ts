@@ -103,71 +103,83 @@ export class GameManager {
 	}
 	
 	setupEventListener() {
+		this.scene.events.on(GameEvents.PICK_UP_CHEST, this.onPickUpChest, this);
+		this.scene.events.on(GameEvents.REMOVE_CHEST, this.onRemoveChest, this);
+		this.scene.events.on(GameEvents.DESTROY_MONSTER, this.onDestroyMonster, this);
+		this.scene.events.on(GameEvents.RESPAWN_PLAYER, this.onRespawnPlayer, this);
+		this.scene.events.on(GameEvents.LEVEL_UP_PLAYER, this.onLevelUpPlayer, this);
+
+		this.scene.events.once('shutdown', () => {
+			this.scene.events.off(GameEvents.PICK_UP_CHEST, this.onPickUpChest, this);
+			this.scene.events.off(GameEvents.REMOVE_CHEST, this.onRemoveChest, this);
+			this.scene.events.off(GameEvents.DESTROY_MONSTER, this.onDestroyMonster, this);
+			this.scene.events.off(GameEvents.RESPAWN_PLAYER, this.onRespawnPlayer, this);
+			this.scene.events.off(GameEvents.LEVEL_UP_PLAYER, this.onLevelUpPlayer, this);
+		});
+	}
+
+	onPickUpChest(chestId: string) {
 		// Когда поднимаем сундук
-		this.scene.events.on(GameEvents.PICK_UP_CHEST, (chestId: string) => {
-			if (this.chests[chestId]) {
-				const {gold, hearts, bolts, armor} = this.chests[chestId];
+		if (this.chests[chestId]) {
+			const {gold, hearts, bolts, armor} = this.chests[chestId];
 
-				if (gold) {
-					// Добавляем валюту игроку
-					this.scene.player.getGold(gold);
-				}
-
-				if (hearts) {
-					// Обновляем жизни в интерфейсе
-					this.scene.player.healHealth(hearts);
-				}
-
-				if (bolts) {
-					// Обновляем снаряды в интерфейсе
-					this.scene.player.getBolts(bolts);
-				}
-
-				if (armor) {
-					// Обновляем броню в интерфейсе
-					this.scene.player.getArmor(armor);
-				}
-				
-				// Удаляем сундук
-				this.spawners[this.chests[chestId].spawnerId].removeObject(chestId);
-				this.scene.events.emit(GameEvents.REMOVE_CHEST, chestId);
-			}
-		});
-
-		// Когда убираем сундук
-		this.scene.events.on(GameEvents.REMOVE_CHEST, (chestId: string) => {
-            const chests = this.scene.chests.getChildren() as Chest[];
-            chests.forEach((chest) => {
-                if (chest.id === chestId) {
-                    chest.makeInactive();
-                }
-            });
-        });
-
-		// Когда монстр убит
-		this.scene.events.on(GameEvents.DESTROY_MONSTER, (monsterId: string) => {
-			if (this.monsters[monsterId]) {
-				// Добавляем награды за убийство врага
-				const {sculls, gold} = this.monsters[monsterId];
-				this.scene.stateManager.setSculls(sculls);
-				this.scene.stateManager.setGold(gold);
-				this.scene.player.getSculls(sculls);
+			if (gold) {
+				// Добавляем валюту игроку
 				this.scene.player.getGold(gold);
+			}
 
-				this.spawners[this.monsters[monsterId].spawnerId].removeObject(monsterId);
+			if (hearts) {
+				// Обновляем жизни в интерфейсе
+				this.scene.player.healHealth(hearts);
+			}
+
+			if (bolts) {
+				// Обновляем снаряды в интерфейсе
+				this.scene.player.getBolts(bolts);
+			}
+
+			if (armor) {
+				// Обновляем броню в интерфейсе
+				this.scene.player.getArmor(armor);
+			}
+			
+			// Удаляем сундук
+			this.spawners[this.chests[chestId].spawnerId].removeObject(chestId);
+			this.scene.events.emit(GameEvents.REMOVE_CHEST, chestId);
+		}
+	}
+
+	onRemoveChest(chestId: string) {
+		// Когда убираем сундук
+		const chests = this.scene.chests.getChildren() as Chest[];
+		chests.forEach((chest) => {
+			if (chest.id === chestId) {
+				chest.makeInactive();
 			}
 		});
+	}
 
+	onDestroyMonster(monsterId: string) {
+		// Когда монстр убит
+		if (this.monsters[monsterId]) {
+			// Добавляем награды за убийство врага
+			const {sculls, gold} = this.monsters[monsterId];
+			this.scene.player.getSculls(sculls);
+			this.scene.player.getGold(gold);
+
+			this.spawners[this.monsters[monsterId].spawnerId].removeObject(monsterId);
+		}
+	}
+
+	onRespawnPlayer(playerId: string) {
 		// Когда происходит респавн игрока
-		this.scene.events.on(GameEvents.RESPAWN_PLAYER, (playerId: string) => {
-            this.players[playerId].respawn();
-			this.scene.player.respawn(this.players[playerId]);
-		});
+		this.players[playerId].respawn();
+		this.scene.player.respawn(this.players[playerId]);
+	}
 
+	onLevelUpPlayer(newLevel: number) {
 		// Когда повышается уровень игрока
-		this.scene.events.on(GameEvents.LEVEL_UP_PLAYER, (newLevel: number) => {
-            console.log(`Cool! You have reached level ${newLevel}`)
-		});
+		console.log(`Cool! You have reached level ${newLevel}`)
 	}
 
 	// Отрисовать count одинаковых объектов типа variation

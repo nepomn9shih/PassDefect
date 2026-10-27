@@ -75,24 +75,36 @@ export class CameraManager {
 	}
 
 	setupEventListener() {	
-		this.scene.events.on(ZOOM_EVENT_NAME, () => {
-			// отправляем в стейт новое значение зума
-			this.scene.stateManager.setZoom(this.scene.cameras.main.zoom);
+		this.scene.events.on(ZOOM_EVENT_NAME, this.onZoom, this);
+		this.scene.events.on(RESCALE_EVENT_NAME, this.onRescale, this);
+	}
 
-			rescaleHandler(this.scene);
-		});
+	onZoom() {
+		// отправляем в стейт новое значение зума
+		this.scene.stateManager.setZoom(this.scene.cameras.main.zoom);
 
-		this.scene.events.on(RESCALE_EVENT_NAME, () => {
-			rescaleHandler(this.scene);
-		});
+		rescaleHandler(this.scene);
+	}
+
+	onRescale() {
+		rescaleHandler(this.scene);
+	}
+
+	onWindowResize() {
+		this.scene.events.emit(RESCALE_EVENT_NAME);
 	}
 
 	setup() {
-		window.addEventListener('resize', () => {
-			this.scene.events.emit(RESCALE_EVENT_NAME);
-		});
+		// Phaser ScaleManager вместо window.addEventListener: сам очищается и синхронизирован с игрой
+		this.scene.scale.on(Phaser.Scale.Events.RESIZE, this.onWindowResize, this);
 		rescaleHandler(this.scene);
 		this.setupCamera();
 		this.setupEventListener();
+
+		this.scene.events.once('shutdown', () => {
+			this.scene.scale.off(Phaser.Scale.Events.RESIZE, this.onWindowResize, this);
+			this.scene.events.off(ZOOM_EVENT_NAME, this.onZoom, this);
+			this.scene.events.off(RESCALE_EVENT_NAME, this.onRescale, this);
+		});
 	}
 }

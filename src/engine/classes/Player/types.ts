@@ -1,5 +1,6 @@
 import {PlayerSkinVariations} from '../../enums';
 import {MainScene} from '../../scenes/MainScene';
+import type {PlayerModel} from './PlayerModel';
 
 export type PlayerProps = {
 	scene: MainScene;
@@ -9,15 +10,7 @@ export type PlayerProps = {
 	frame?: string;
 };
 
-export type PlayerContainerProps = PlayerProps & {
-	level: number;
-	health: number;
-	gold: number;
-    maxHealth: number;
-	bolts: number;
-	maxBolts: number;
-	armor: number;
-	maxArmor: number;
-	sculls: number;
-    id: string;
+export type PlayerContainerProps = Pick<PlayerProps, 'scene' | 'skin'> & {
+	frame?: string;
+	playerObject: PlayerModel;
 };

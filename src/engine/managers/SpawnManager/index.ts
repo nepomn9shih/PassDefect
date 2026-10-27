@@ -8,7 +8,6 @@ import { Spawner } from "../../classes/Spawner";
 import type { AddObject } from "../../classes/Spawner/types";
 import { AtlasesKeys, GameEvents, SpawnObjects } from "../../enums";
 import type { MainScene } from "../../scenes";
-import { getRandomMonsterVariation } from "../../utils/getRandomMonsterVariation";
 import { CHEST_SPAWN_INTERVAL, MONSTER_SPAWN_INTERVAL } from "./constants";
 import type { SpawnManagerProps } from "./types";
 
@@ -24,21 +23,32 @@ export class SpawnManager {
         this.setupEvents();
         this.setupSpawners();
         this.scene.gameManager.addPlayer();
+        // Коллизии настраиваются один раз: игрок переиспользуется при респавне
+        this.scene.addCollisions();
     }
 
     setupEvents() {
-        this.scene.events.on(GameEvents.SPAWN_PLAYER, (playerObject: PlayerModel) => {
-            this.createPlayer(playerObject);
-            this.scene.addCollisions();
+        this.scene.events.on(GameEvents.SPAWN_PLAYER, this.onSpawnPlayer, this);
+        this.scene.events.on(GameEvents.SPAWN_CHEST, this.onSpawnChest, this);
+        this.scene.events.on(GameEvents.SPAWN_MONSTER, this.onSpawnMonster, this);
+
+        this.scene.events.once('shutdown', () => {
+            this.scene.events.off(GameEvents.SPAWN_PLAYER, this.onSpawnPlayer, this);
+            this.scene.events.off(GameEvents.SPAWN_CHEST, this.onSpawnChest, this);
+            this.scene.events.off(GameEvents.SPAWN_MONSTER, this.onSpawnMonster, this);
         });
-        
-        this.scene.events.on(GameEvents.SPAWN_CHEST, (chest: ChestModel) => {
-            this.spawnChest(chest);
-        });
-        
-        this.scene.events.on(GameEvents.SPAWN_MONSTER, (monster: MonsterModel) => {
-            this.spawnMonster(monster);
-        });
+    }
+
+    onSpawnPlayer(playerObject: PlayerModel) {
+        this.createPlayer(playerObject);
+    }
+
+    onSpawnChest(chest: ChestModel) {
+        this.spawnChest(chest);
+    }
+
+    onSpawnMonster(monster: MonsterModel) {
+        this.spawnMonster(monster);
     }
 
     setupSpawners() {	
@@ -123,28 +133,15 @@ export class SpawnManager {
         let monster: MonsterContainer = this.scene.monsters.getFirstDead();
         
         if (!monster) {
-            const variation = getRandomMonsterVariation();
-    
             monster = new MonsterContainer({
                 scene: this.scene,
-                x: monsterObject.x,
-                y: monsterObject.y,
-                variation,
-                id: monsterObject.id,
-                health: monsterObject.health,
-                maxHealth: monsterObject.maxHealth,
-                sculls: monsterObject.sculls,
-                gold: monsterObject.gold
+                monsterObject
             });
     
             this.scene.monsters.add(monster);
         } else {
-            monster.id = monsterObject.id;
-            monster.health = monsterObject.health;
-            monster.maxHealth = monsterObject.maxHealth;
-            monster.sculls = monsterObject.sculls;
-            monster.gold = monsterObject.gold;
-            monster.monster.setTexture(monsterObject.variation);
+            monster.applyMonsterParams(monsterObject);
+            monster.resetVariation(monsterObject.variation);
             monster.setPosition(monsterObject.x, monsterObject.y);
             monster.makeActive();
         }
@@ -153,21 +150,16 @@ export class SpawnManager {
     }
 
     createPlayer(playerObject: PlayerModel) {
+        // Игрок переиспользуется, чтобы не накапливать объекты и коллайдеры при респавне
+        if (this.scene.player) {
+            this.scene.player.respawn(playerObject);
+            return;
+        }
+
         this.scene.player = new PlayerContainer({
             scene: this.scene,
-            x: playerObject.x,
-            y: playerObject.y,
             skin: this.scene.playerSkin,
-            level: playerObject.level,
-            health: playerObject.health,
-            maxHealth: playerObject.maxHealth,
-            gold: playerObject.gold,
-            bolts: playerObject.bolts,
-            maxBolts: playerObject.maxBolts,
-            armor: playerObject.armor,
-            maxArmor: playerObject.maxArmor,
-            id: playerObject.id,
-            sculls: playerObject.sculls
+            playerObject
         });
     }
 }

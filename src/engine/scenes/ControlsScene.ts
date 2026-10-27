@@ -16,8 +16,14 @@ export class ControlsScene extends Scene {
     create() {
         this.mobileControls = new MobileControls({scene: this});
 
-        window.addEventListener('resize', () => {
-            this.events.emit(UPDATE_MOBILE_CONTROLS_EVENT_NAME);
+        // Phaser ScaleManager вместо window.addEventListener: сам очищается и синхронизирован с игрой
+        this.scale.on(Phaser.Scale.Events.RESIZE, this.onResize, this);
+        this.events.once('shutdown', () => {
+            this.scale.off(Phaser.Scale.Events.RESIZE, this.onResize, this);
         });
+    }
+
+    onResize() {
+        this.events.emit(UPDATE_MOBILE_CONTROLS_EVENT_NAME);
     }
 }

@@ -40,7 +40,10 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
 		const animations = getPlayerAnimations(this);
 		const animationsNames = Object.keys(animations) as PlayerAnimation[];
 		animationsNames.forEach((animation: PlayerAnimation) => {
-			this.anims.create(animations[animation])
+			const {key} = animations[animation];
+			if (key && !this.anims.exists(key)) {
+				this.anims.create(animations[animation]);
+			}
 		});
 	}
 

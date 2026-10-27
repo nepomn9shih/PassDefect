@@ -80,13 +80,23 @@ export class MainScene extends Scene {
 
         // Подключаем сцену с управлением
         this.scene.launch(SceneNames.CONTROLS);
-        this.scene.get(SceneNames.CONTROLS).events.on(GameEvents.MOBILE_BUTTON_DOWN, (buttonVariation: ButtonVariations) => {
-            this.player.buttonDown(buttonVariation);
-        }, this);
-        this.scene.get(SceneNames.CONTROLS).events.on(GameEvents.MOBILE_BUTTON_UP, (buttonVariation: ButtonVariations) => {
-            this.player.buttonUp(buttonVariation);
-        }, this);
+        const controlsScene = this.scene.get(SceneNames.CONTROLS);
+        controlsScene.events.on(GameEvents.MOBILE_BUTTON_DOWN, this.onMobileButtonDown, this);
+        controlsScene.events.on(GameEvents.MOBILE_BUTTON_UP, this.onMobileButtonUp, this);
+
+        this.events.once('shutdown', () => {
+            controlsScene.events.off(GameEvents.MOBILE_BUTTON_DOWN, this.onMobileButtonDown, this);
+            controlsScene.events.off(GameEvents.MOBILE_BUTTON_UP, this.onMobileButtonUp, this);
+        });
 	}
+
+    onMobileButtonDown(buttonVariation: ButtonVariations) {
+        this.player.buttonDown(buttonVariation);
+    }
+
+    onMobileButtonUp(buttonVariation: ButtonVariations) {
+        this.player.buttonUp(buttonVariation);
+    }
 
     createCameraManager() {
 		this.cameraManager = new CameraManager({scene: this});
@@ -108,12 +118,15 @@ export class MainScene extends Scene {
 
         // Подписываемся на изменение стора и соханяем колбек для отписки
         this.storeUnsubscribe = this.store.subscribe(() => {
+            const previousWeapon = this.state.weapon.active;
             this.state = this.store.getState();
-            // Переключить на активное оружие из нового стейта
-            this.player?.switchWeapon(this.state.weapon.active);
+            // Переключить на активное оружие только если оно изменилось
+            if (this.state.weapon.active !== previousWeapon) {
+                this.player?.switchWeapon(this.state.weapon.active);
+            }
         });
-        // При уничтожении сцены вызываем коллбек отписки
-        this.events.on('destroy', () => {this.storeUnsubscribe()}, this);
+        // При завершении сцены вызываем коллбек отписки
+        this.events.once('shutdown', () => {this.storeUnsubscribe()});
 	}
 
     createGroups() {
