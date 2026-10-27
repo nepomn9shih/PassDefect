@@ -226,15 +226,14 @@ export class GameManager {
 		delete this.chests[chestId];
 	}
 
-	collectChest(player: PlayerContainer, chest: Chest) {
-		// this.goldPickupAudio.play();
-
+	/** processCallback: проверяем, что сундук может быть подобран игроком */
+	canCollectChest(player: PlayerContainer, chest: Chest) {
 		// Если у игрока полная броня то не подбираем сундук
 		if (
 			chest.variation === ChestVariations.ARMOR 
 				&& player.armor === player.maxArmor
 		) {
-			return;
+			return false;
 		}
 
 		// Если у игрока полная обойма потронов то не подбираем сундук
@@ -242,7 +241,7 @@ export class GameManager {
 			chest.variation === ChestVariations.BOLTS
 				&& player.bolts === player.maxBolts
 		) {
-			return;
+			return false;
 		}
 
 		// Если у игрока полное здоровье то не подбираем сундук
@@ -250,9 +249,16 @@ export class GameManager {
 			chest.variation === ChestVariations.HEART
 				&& player.health === player.maxHealth
 		) {
-			return;
+			return false;
 		}
 
+		return true;
+	}
+
+	collectChest(player: PlayerContainer, chest: Chest) {
+		// this.goldPickupAudio.play();
+
+		// Гварды проверяются в processCallback canCollectChest
 		this.scene.events.emit(GameEvents.PICK_UP_CHEST, chest.id, player.id);
 	}	
 	

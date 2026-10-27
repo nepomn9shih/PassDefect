@@ -39,6 +39,8 @@ export class MonsterContainer extends Phaser.GameObjects.Container {
         this.variation = monsterObject.variation;
         this.applyMonsterParams(monsterObject);
         this.healthBar = this.scene.add.graphics();
+        // healthBar — ребёнок контейнера: следует за монстром без перерисовки каждый кадр
+        this.add(this.healthBar);
         this.velocity = 10;
         this.monsterAttacking = false;
         this.weaponVariation = MONSTERS_PARAMS[this.variation].weaponVariation;
@@ -111,19 +113,20 @@ export class MonsterContainer extends Phaser.GameObjects.Container {
 
     createHealthBar() {
         const {height, width} = HEALTH_BAR_CONFIG;
+        // Координаты относительные: healthBar рисуется внутри контейнера
         this.healthBar.fillStyle(0xe3e4ab, 1);
         // Подложка шкалы здоровья
         this.healthBar.fillRect(
-            this.x - width / 2,
-            this.y - this.height * MONSTER_INITIAL_SCALE - 2 * height,
+            -width / 2,
+            -this.height * MONSTER_INITIAL_SCALE - 2 * height,
             width,
             height
         );
         // Шкала здоровья
         this.healthBar.fillStyle(0x5f010a, 1);
         this.healthBar.fillRect(
-            this.x - width / 2,
-            this.y - this.height * MONSTER_INITIAL_SCALE - 2 * height,
+            -width / 2,
+            -this.height * MONSTER_INITIAL_SCALE - 2 * height,
             width * (this.health / this.maxHealth), 
             height
         );
@@ -199,7 +202,7 @@ export class MonsterContainer extends Phaser.GameObjects.Container {
 
         if(this.body) {
             //@ts-expect-error ts не определяет нужный body
-            this.body.checkCollision.none = false;
+            this.body.enable = true;
         }
     }
 
@@ -210,7 +213,7 @@ export class MonsterContainer extends Phaser.GameObjects.Container {
 
         if(this.body) {
             //@ts-expect-error ts не определяет нужный body
-            this.body.checkCollision.none = true;
+            this.body.enable = false;
         }
     }
 
@@ -351,7 +354,6 @@ export class MonsterContainer extends Phaser.GameObjects.Container {
     }
 
     update() {
-        this.updateHealthBar();
         this.turnWeapon();
         this.checkToMakeAttack();
     }

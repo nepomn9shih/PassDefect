@@ -6,6 +6,7 @@ import {
 	MIN_ZOOM,
 	ZOOM_STEP
 } from '../../constants/zoom';
+import {RESCALE_DEBOUNCE_MS} from '../../constants/pools';
 import {MainScene} from '../../scenes/MainScene';
 import {rescaleHandler} from '../../utils/rescaleHandler';
 import type {CameraManagerProps} from './types';
@@ -13,6 +14,7 @@ import {RESCALE_EVENT_NAME, ZOOM_EVENT_NAME} from '../../constants/events';
 
 export class CameraManager {
 	scene: MainScene;
+	rescaleDelay?: Phaser.Time.TimerEvent;
 
 	constructor({scene}: CameraManagerProps) {
 		this.scene = scene;
@@ -81,9 +83,8 @@ export class CameraManager {
 
 	onZoom() {
 		// отправляем в стейт новое значение зума
+		// rescale здесь не нужен: зум не меняет размер окна, рескейл был бы no-op
 		this.scene.stateManager.setZoom(this.scene.cameras.main.zoom);
-
-		rescaleHandler(this.scene);
 	}
 
 	onRescale() {
@@ -91,7 +92,15 @@ export class CameraManager {
 	}
 
 	onWindowResize() {
-		this.scene.events.emit(RESCALE_EVENT_NAME);
+		// Дебаунс: при перетаскивании окна RESIZE стреляет на каждый кадр
+		if (this.rescaleDelay) {
+			return;
+		}
+
+		this.rescaleDelay = this.scene.time.delayedCall(RESCALE_DEBOUNCE_MS, () => {
+			this.rescaleDelay = undefined;
+			this.scene.events.emit(RESCALE_EVENT_NAME);
+		});
 	}
 
 	setup() {
@@ -102,6 +111,7 @@ export class CameraManager {
 		this.setupEventListener();
 
 		this.scene.events.once('shutdown', () => {
+			this.rescaleDelay?.remove();
 			this.scene.scale.off(Phaser.Scale.Events.RESIZE, this.onWindowResize, this);
 			this.scene.events.off(ZOOM_EVENT_NAME, this.onZoom, this);
 			this.scene.events.off(RESCALE_EVENT_NAME, this.onRescale, this);

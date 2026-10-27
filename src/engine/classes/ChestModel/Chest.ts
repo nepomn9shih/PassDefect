@@ -36,10 +36,19 @@ export class Chest extends Phaser.Physics.Arcade.Sprite {
     makeActive() {
         this.setActive(true);
         this.setVisible(true);
+
+        if (this.body) {
+            this.body.enable = true;
+        }
     }
 
     makeInactive() {
         this.setActive(false);
         this.setVisible(false);
+
+        // Выключенное тело не участвует в физике: дешевле, чем пересоздание сундука
+        if (this.body) {
+            this.body.enable = false;
+        }
     }
 }

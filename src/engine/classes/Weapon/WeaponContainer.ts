@@ -17,6 +17,7 @@ export class WeaponContainer extends Phaser.GameObjects.Container {
 	weaponVariation: WeaponVariations;
 	weaponBoltVariation: WeaponBoltsVariations;
 	owner: PlayerContainer | MonsterContainer;
+	lastDirection: MoveDirections;
 	damage: number;
 	shotCost: number;
 	attackTime: number;
@@ -34,6 +35,7 @@ export class WeaponContainer extends Phaser.GameObjects.Container {
 		this.x = x;
 		this.y = y;
 		this.owner = owner;
+		this.lastDirection = owner.currentDirection;
 		this.weaponVariation = weaponVariation;
 		this.weaponBoltVariation = WEAPON_BOLTS_FOR_WEAPON[this.weaponVariation];
 		this.damage = WEAPONS_CONFIG[this.weaponVariation].damage;
@@ -49,6 +51,8 @@ export class WeaponContainer extends Phaser.GameObjects.Container {
 
 		this.createWeaponBolt();
 		this.createWeapon();
+		// Разворачиваем оружие под текущее направление: create* задают только смещения
+		this.applyDirection();
 	}
 
 	/** Создаем заряд оружия */
@@ -83,7 +87,19 @@ export class WeaponContainer extends Phaser.GameObjects.Container {
 		this.add(this.weapon);
 	}
 
+	/** Поворачиваем оружие только при смене направления движения владельца */
 	turnWeapon() {
+		if (this.lastDirection === this.owner.currentDirection) {
+			return;
+		}
+
+		this.applyDirection();
+	}
+
+	/** Применяет смещения, углы и отражения оружия под текущее направление владельца */
+	applyDirection() {
+		this.lastDirection = this.owner.currentDirection;
+
 		this.weaponBolt.setX(WEAPON_BOLTS_OFFSET[this.weaponBoltVariation][this.owner.currentDirection].x);
 		this.weaponBolt.setY(WEAPON_BOLTS_OFFSET[this.weaponBoltVariation][this.owner.currentDirection].y);
 		this.weapon.setX(WEAPON_OFFSET[this.weaponVariation][this.owner.currentDirection].x);
@@ -121,16 +137,26 @@ export class WeaponContainer extends Phaser.GameObjects.Container {
 
 	/** Переводит оружие в атакующий режим */
 	setAttackMode() {
-		// Делает снаряд видимым
+		// Делает снаряд видимым и включает его тело для проверки коллизий
 		this.weaponBolt.alpha = 1;
+
+		if (this.weaponBolt.body) {
+			this.weaponBolt.body.enable = true;
+		}
+
 		// Меняет текстуру оружия на атакующую
 		this.weapon.setFrame(WEAPON_ATTACK_FRAME);
 	}
 
 	/** Переводит оружие в обычный режим */
 	setDefaultMode() {
-		// Делает снаряд невидимым
+		// Делает снаряд невидимым и выключает его тело: не тратим проверку коллизий
 		this.weaponBolt.alpha = 0;
+
+		if (this.weaponBolt.body) {
+			this.weaponBolt.body.enable = false;
+		}
+
 		// Меняет текстуру оружия на обычную
 		this.weapon.setFrame(WEAPON_DEFAULT_FRAME);
 	}
@@ -155,6 +181,8 @@ export class WeaponContainer extends Phaser.GameObjects.Container {
 
 			this.createWeaponBolt();
 			this.createWeapon();
+			// Ориентация оружия под текущее направление владельца
+			this.applyDirection();
 		}
 	}
 }

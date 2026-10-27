@@ -1,1 +1,1 @@
-This is a HTML5 game about space made with PhaserJS
+This is a HTML5 action-RPG made with PhaserJS

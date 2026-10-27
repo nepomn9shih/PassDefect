@@ -18,6 +18,7 @@ import {MonsterContainer} from '../classes/MonsterModel/MonsterContainer';
 import type {WeaponBolt} from '../classes/Weapon/WeaponBolt';
 import {StateManager} from '../managers/StateManager';
 import {Z_INDEXES} from '../constants/zindexes';
+import {CHESTS_POOL_MAX_SIZE, MONSTERS_POOL_MAX_SIZE} from '../constants/pools';
 import { SpawnManager } from '../managers/SpawnManager';
 
 export class MainScene extends Scene {
@@ -32,7 +33,7 @@ export class MainScene extends Scene {
     spawnManager!: SpawnManager;
     chests!: Phaser.Physics.Arcade.Group;
     monsters!: Phaser.Physics.Arcade.Group;
-    blockers!: Phaser.Physics.Arcade.Group;
+    blockers!: Phaser.Physics.Arcade.StaticGroup;
     spawners!: Phaser.Physics.Arcade.Group;
     weaponBolts!: Phaser.Physics.Arcade.Group;
     enemyWeaponBolts!: Phaser.Physics.Arcade.Group;
@@ -130,12 +131,12 @@ export class MainScene extends Scene {
 	}
 
     createGroups() {
-		// Создаем группу для сундуков
-		this.chests = this.physics.add.group().setDepth(Z_INDEXES.chests);
-        // Создаем группу для монстров
-        this.monsters = this.physics.add.group().setDepth(Z_INDEXES.monsters);
-        // Создаем группу для блокеров
-        this.blockers = this.physics.add.group().setDepth(Z_INDEXES.blockers);
+		// Создаем группу для сундуков: пул с ограничением размера
+		this.chests = this.physics.add.group({maxSize: CHESTS_POOL_MAX_SIZE}).setDepth(Z_INDEXES.chests);
+        // Создаем группу для монстров: пул с ограничением размера
+        this.monsters = this.physics.add.group({maxSize: MONSTERS_POOL_MAX_SIZE}).setDepth(Z_INDEXES.monsters);
+        // Создаем группу для блокеров: статические тела дешевле в обработке
+        this.blockers = this.physics.add.staticGroup().setDepth(Z_INDEXES.blockers);
         // Создаем группу для спавнеров
         this.spawners = this.physics.add.group().setDepth(Z_INDEXES.spawners);
         // Создаем группу для снарядов оружия
@@ -156,16 +157,20 @@ export class MainScene extends Scene {
         }
     }
 
-    enemyWeaponWithPlayerOverlap(player: PlayerContainer, weapon: WeaponBolt) {
-        if (
+    /** processCallback: проверяем, что игрок может получить урон */
+    canPlayerBeHit(player: PlayerContainer, weapon: WeaponBolt) {
+        return (
             Boolean(weapon.alpha)
-            && !this.player.damageCooldown
-            && this.player.health
-        ) {
-            player.loseHealth(weapon.damage);
+            && !player.damageCooldown
+            && Boolean(player.health)
+        );
+    }
 
-            this.events.emit(GameEvents.HIT_PLAYER);
-        }
+    enemyWeaponWithPlayerOverlap(player: PlayerContainer, weapon: WeaponBolt) {
+        // Гварды вынесены в processCallback canPlayerBeHit
+        player.loseHealth(weapon.damage);
+
+        this.events.emit(GameEvents.HIT_PLAYER);
     }
 
     addCollisions() {
@@ -188,21 +193,21 @@ export class MainScene extends Scene {
         // Проверка коллизий между монстром и монстром
         this.physics.add.collider(this.monsters, this.monsters);
         
-        // Проверка коллизий между игроком и сундуками
+        // Проверка коллизий между игроком и сундуками: processCallback отсеивает не подходящие сундуки
         this.physics.add.overlap(
             this.player,
             this.chests,
             // @ts-expect-error не понимает что коллбек нужного формата
             this.gameManager.collectChest,
-            null,
+            this.gameManager.canCollectChest,
             this.gameManager
         );
         // Проверка коллизий между оружием игрока и монстрами
         // @ts-expect-error не понимает что коллбек нужного формата
         this.physics.add.overlap(this.weaponBolts, this.monsters, this.playerWeaponWithEnemyOverlap, null, this);
-        // Проверка коллизий между игроком и оружием монстров
+        // Проверка коллизий между игроком и оружием монстров: processCallback отсеивает неактивные снаряды
         // @ts-expect-error не понимает что коллбек нужного формата
-        this.physics.add.overlap(this.player, this.enemyWeaponBolts, this.enemyWeaponWithPlayerOverlap, null, this);
+        this.physics.add.overlap(this.player, this.enemyWeaponBolts, this.enemyWeaponWithPlayerOverlap, this.canPlayerBeHit, this);
         // Проверка коллизий между спавнером и блокерами
         this.physics.add.overlap(
             this.spawners,

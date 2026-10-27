@@ -15,12 +15,10 @@ export class MapObject extends Phaser.Physics.Arcade.Sprite {
         this.id = `${variation}-${generateUUIDv4()}`;
         this.isBlocker = MAP_OBJECTS_BLOCKERS.includes(variation);
 
-        // Включение физики
-        this.scene.physics.world.enable(this);
+        // Включение физики: статическое тело — блокеры неподвижны и дешевле в обработке
+        this.scene.physics.add.existing(this, true);
         // Добавление картинки объекта на сцену
         this.scene.add.existing(this);
-        this.setImmovable(true);
-        this.setPushable(false);
 
         if (this.isBlocker) {
             this.scene.blockers.add(this);

@@ -30,6 +30,10 @@ export class WeaponBolt extends Phaser.Physics.Arcade.Sprite {
 
 		// Подключаем оружие в физику
 		this.scene.physics.world.enable(this);
+		// В дефолтном режиме тело выключено: включается в setAttackMode
+		if (this.body) {
+			this.body.enable = false;
+		}
 		// Делаем чтобы не двигали другие объекты
 		this.setImmovable(true);
 		// Настраиваем размер
