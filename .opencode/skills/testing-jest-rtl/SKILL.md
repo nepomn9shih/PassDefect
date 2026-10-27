@@ -18,6 +18,7 @@ description: Тестирование в проекте PassDefect с Jest и Re
 - Использовать `data-testid` только тогда, когда семантические методы поиска неприменимы.
 - Организовывать тесты по принципу Given-When-Then (или Arrange-Act-Assert).
 - Использовать `describe` блоки для группировки тестов по функциональности.
+- Писать описания тестов (`it`, `test`) на английском языке, начиная со слова `should` (например, `it('should return min when Math.random() returns 0', ...)`).
 - Изолировать тесты — каждый тест должен быть независимым.
 - Размещать тесты в папке `tests` рядом с тестируемым кодом (например, `src/utils/tests/isTouchDevice.test.ts`, `components/Button/tests/Button.test.tsx`).
 - Использовать `jest.fn()` и `jest.mock()`, а не `vi.fn()` или `vi.mock()`, поскольку проект использует Jest, а не Vitest.
