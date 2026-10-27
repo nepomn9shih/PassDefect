@@ -19,7 +19,7 @@ export class Spawner {
     addObject: AddObject;
     deleteObject: (id: string) => void;
     objectsCreated: (ChestModel | MonsterModel)[];
-    interval?: NodeJS.Timeout;
+    timer?: Phaser.Time.TimerEvent;
 
     constructor({scene, config, spawnLocations, addObject, deleteObject}: SpawnerProps) {
         this.id = config.id;
@@ -36,11 +36,16 @@ export class Spawner {
     }
 
     start() {
-        this.interval = setInterval(() => {
-            if (this.objectsCreated.length < this.limit) {
-                this.spawnObject();
+        // Phaser-таймер вместо setInterval: работает на игровом цикле и сам останавливается при destroy сцены
+        this.timer = this.scene.time.addEvent({
+            delay: this.spawnInterval,
+            loop: true,
+            callback: () => {
+                if (this.objectsCreated.length < this.limit) {
+                    this.spawnObject();
+                }
             }
-        }, this.spawnInterval);
+        });
     }
 
     spawnObject() {

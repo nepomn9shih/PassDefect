@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react';
+import {useEffect, useRef} from 'react';
 import Phaser from 'phaser';
 import {useDispatch, useStore} from 'react-redux';
 
@@ -11,7 +11,7 @@ import {setIsMobile, setIsTouchDevice} from '../reducers/slices';
 import { isTouchDevice } from '../utils/isTouchDevice';
 
 export const Game = () => {
-    const [, setGame] = useState<Phaser.Game>();
+    const gameRef = useRef<Phaser.Game | null>(null);
     const store = useStore<AllGameState>();
     const isMobile = useIsMobile();
     const dispatch = useDispatch();
@@ -32,17 +32,14 @@ export const Game = () => {
         ];
 
         const config = getGameConfig(scenes);
-        const _game = new Phaser.Game(config);
-
-        // eslint-disable-next-line
-        setGame(_game);
+        const game = new Phaser.Game(config);
+        gameRef.current = game;
 
         return (): void => {
-            _game.destroy(true);
-            setGame(undefined);
+            game.destroy(true);
+            gameRef.current = null;
         }
-    // eslint-disable-next-line
-    }, []);
+    }, [store]);
 
     return <div id={GAME_PASS_DEFECT_ID} />;
 };

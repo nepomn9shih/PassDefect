@@ -5,20 +5,14 @@ import type {PlayerState} from '../slices/player/types';
 import type {WeaponState} from '../slices/weapon/types';
 import type {GameState} from '../slices/game/types';
 
-export const usePlayer = (): PlayerState => {
-	const selector = ({player}: AllGameState) => player;
+export const selectPlayer = ({player}: AllGameState): PlayerState => player;
 
-	return useSelector(selector);
-};
+export const selectWeapon = ({weapon}: AllGameState): WeaponState => weapon;
 
-export const useWeapon = (): WeaponState => {
-	const selector = ({weapon}: AllGameState) => weapon;
+export const selectGame = ({game}: AllGameState): GameState => game;
 
-	return useSelector(selector);
-};
+export const usePlayer = (): PlayerState => useSelector(selectPlayer);
 
-export const useGame = (): GameState => {
-	const selector = ({game}: AllGameState) => game;
+export const useWeapon = (): WeaponState => useSelector(selectWeapon);
 
-	return useSelector(selector);
-};
+export const useGame = (): GameState => useSelector(selectGame);

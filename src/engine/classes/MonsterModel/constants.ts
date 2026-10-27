@@ -26,4 +26,6 @@ export const MONSTER_STEP = 32;
 
 export const MONSTER_INITIAL_SCALE = 0.5;
 
+export const MONSTER_MOVE_INTERVAL = 1000;
+
 export const MAX_VERTICAL_DISTANCE_TO_CHANGE_DIRECTION = 20;

@@ -1,6 +1,6 @@
 import {getRandomNumber} from './../../utils/getRandomNumber';
 import {GameEvents, MonsterAnimation, MonstersVariations, MoveDirections, WeaponVariations} from '../../enums';
-import {HEALTH_BAR_CONFIG, MAX_VERTICAL_DISTANCE_TO_CHANGE_DIRECTION, MONSTER_INITIAL_SCALE, MONSTERS_PARAMS} from './constants';
+import {HEALTH_BAR_CONFIG, MAX_VERTICAL_DISTANCE_TO_CHANGE_DIRECTION, MONSTER_INITIAL_SCALE, MONSTER_MOVE_INTERVAL, MONSTERS_PARAMS} from './constants';
 import type {MonsterContainerProps} from './types';
 import {Monster} from './Monster';
 import {MainScene} from '../../scenes';
@@ -21,7 +21,6 @@ export class MonsterContainer extends Phaser.GameObjects.Container {
     weaponVariation: WeaponVariations;
     velocity: number;
     monsterAttacking: boolean;
-    moveMonsterInterval: NodeJS.Timeout | null = null;
     flipX: boolean;
     player?: false;
 
@@ -288,44 +287,49 @@ export class MonsterContainer extends Phaser.GameObjects.Container {
     };
     
     moveMonster() {
-        this.moveMonsterInterval = setInterval(() => {
-            if (this.health > 0) {
-                const distance = Phaser.Math.Distance.Between(
-                    this.x, this.y,
-                    this.scene.player.x, this.scene.player.y
-                );
+        // Phaser-таймер вместо setInterval: работает на игровом цикле и сам останавливается при destroy сцены
+        this.scene.time.addEvent({
+            delay: MONSTER_MOVE_INTERVAL,
+            loop: true,
+            callback: () => {
+                if (this.health > 0) {
+                    const distance = Phaser.Math.Distance.Between(
+                        this.x, this.y,
+                        this.scene.player.x, this.scene.player.y
+                    );
 
-                if (distance > MONSTERS_PARAMS[this.variation].sight) {
-                    // если игрок не в поле зрения монстра, то монстр рандомно бродит
-                    this.randomlyMove();
-                } else {
-                    // если игрок в поле зрения монстра, то монстр преследует игрока
-                    this.scene.physics.moveToObject(this, this.scene.player, MONSTERS_PARAMS[this.variation].speed);
-                    this.monster.flipX = this.scene.player.x < this.x;
-                    const dx = this.scene.player.x - this.x;
-                    const dy = this.scene.player.y - this.y;
-                    const absDy = Math.abs(dy);
-                    if (dx > 0) {
-                        if (absDy < MAX_VERTICAL_DISTANCE_TO_CHANGE_DIRECTION) {
-                            this.currentDirection = MoveDirections.RIGHT
-                        } else {
-                            this.currentDirection =  dy > 0
-                                ? MoveDirections.RIGHT_DOWN
-                                : MoveDirections.RIGHT_UP;
+                    if (distance > MONSTERS_PARAMS[this.variation].sight) {
+                        // если игрок не в поле зрения монстра, то монстр рандомно бродит
+                        this.randomlyMove();
+                    } else {
+                        // если игрок в поле зрения монстра, то монстр преследует игрока
+                        this.scene.physics.moveToObject(this, this.scene.player, MONSTERS_PARAMS[this.variation].speed);
+                        this.monster.flipX = this.scene.player.x < this.x;
+                        const dx = this.scene.player.x - this.x;
+                        const dy = this.scene.player.y - this.y;
+                        const absDy = Math.abs(dy);
+                        if (dx > 0) {
+                            if (absDy < MAX_VERTICAL_DISTANCE_TO_CHANGE_DIRECTION) {
+                                this.currentDirection = MoveDirections.RIGHT
+                            } else {
+                                this.currentDirection = dy > 0
+                                    ? MoveDirections.RIGHT_DOWN
+                                    : MoveDirections.RIGHT_UP;
+                            }
+                        }
+                        if (dx < 0) {
+                            if (absDy < MAX_VERTICAL_DISTANCE_TO_CHANGE_DIRECTION) {
+                                this.currentDirection = MoveDirections.LEFT
+                            } else {
+                                this.currentDirection = dy > 0
+                                    ? MoveDirections.LEFT_DOWN
+                                    : MoveDirections.LEFT_UP;
+                            }
                         }
                     }
-                    if (dx < 0) {
-                        if (absDy < MAX_VERTICAL_DISTANCE_TO_CHANGE_DIRECTION) {
-                            this.currentDirection = MoveDirections.LEFT
-                        } else {
-                            this.currentDirection = dy > 0
-                                ? MoveDirections.LEFT_DOWN
-                                : MoveDirections.LEFT_UP;
-                        }
-                    }
-                }    
+                }
             }
-        }, 1000);
+        });
     }
 
     update() {
