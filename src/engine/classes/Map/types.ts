@@ -1,6 +1,8 @@
+import type {Scene} from 'phaser';
+
 export type MapProps = {
 	/** Сцена в которой находится карта */
-	scene: any;
+	scene: Scene;
 	/** Назваие ключа Tiled JSON файла карты */
 	key: string;
 	/** Назваие ключа изображения тайлсета карты */

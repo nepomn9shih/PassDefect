@@ -12,6 +12,9 @@ description: Интеграция Phaser с React и Redux в проекте Pas
 - Держать инстанс `Phaser.Game` в `useRef` — не в `useState`: сеттер не используется, а ре-рендеры React не должны пересоздавать игру.
 - Сцены передавать в конфиг как готовые инстансы (`new BootScene(store)`, `new MainScene(store)`), ключи сцен — из `SceneNames` (`src/engine/enums`).
 - Хуки вроде `useIsMobile` вызывать в обёртке и складывать результат в Redux (`dispatch(setIsMobile(...))`), а не прокидывать напрямую в Phaser.
+- В dev-режиме React StrictMode вызывает `useEffect` дважды (создание → destroy → создание): убедиться, что пара create/`destroy(true)` не оставляет дублей — повторных канвасов, таймеров, подписок.
+- Автопауза при потере фокуса/свёрнутом табе: держать `pauseOnBlur: true` в конфиге и при необходимости обрабатывать `Phaser.Core.Events.BLUR`/`HIDDEN`.
+- Resize внутри Phaser слушать через `game.scale.on(Phaser.Scale.Events.RESIZE)` (ScaleManager), а не ручными `window.addEventListener`.
 
 ## Обмен состоянием (React ↔ Phaser)
 
@@ -25,3 +28,5 @@ description: Интеграция Phaser с React и Redux в проекте Pas
 - Использовать `useEffect` для жизненного цикла игры; `useCallback` — для колбэков, передаваемых в Phaser-сцены.
 - Избегать прямого доступа к React-состоянию из Phaser: использовать `store.subscribe()` или события.
 - Не монтировать `Phaser.Game` повторно при ре-рендере — `useRef` + пустые зависимости `useEffect`.
+- Подписки React на store вне компонентов (сервисы, менеджеры) при необходимости оформлять через `useSyncExternalStore` (React 19), а не ручные `effect`+`setState`.
+- Сохранения прогресса (если появятся) — в `localStorage` с версионирующим ключом (например, `passDefect:v1:save`); сериализовывать только нужные срезы Redux, не весь store.

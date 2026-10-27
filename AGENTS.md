@@ -18,6 +18,8 @@ Detальное описание стандартов вынесено в ски
 | `phaser-react-integration` | монтирование Phaser в React, обмен состоянием |
 | `redux-toolkit` | слайсы, thunks, состояние игры |
 | `testing-jest-rtl` | тесты на Jest + React Testing Library |
+| `add-monster-type` | добавить новый вид врага/монстра |
+| `add-weapon-type` | добавить новый вид оружия/снаряда |
 
 ## Работа AI-агента
 
