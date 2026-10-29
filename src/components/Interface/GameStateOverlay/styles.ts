@@ -29,7 +29,7 @@ export const StyledContainer = styled.div`
 
 export const StyledTitle = styled.div`
 	font-size: 32px;
-	font-weight: 700;
+	font-weight: bold;
 	color: #2A1227;
 `;
 

@@ -1,16 +1,19 @@
 import styled from 'styled-components';
 
-export const StyledButton = styled.button`
+import type {ButtonProps} from './types';
+
+export const StyledButton = styled.button<ButtonProps>`
 	padding: 8px 24px;
 	font-size: 20px;
 	color: white;
-	background: #2A1227;
+	background: ${({variation}) => variation};
 	border: none;
 	border-radius: 8px;
 	cursor: pointer;
 	width: 100%;
 
 	&:hover {
-		background: #3A273B;
+		/* Прозрачность вместо отдельного hover-цвета: работает с любым фоном */
+		opacity: 0.85;
 	}
 `;
