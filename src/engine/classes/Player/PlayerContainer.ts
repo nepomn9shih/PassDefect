@@ -28,7 +28,6 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
 	playerAttacking: boolean;
 	playerMoving: boolean = false;
 	flipX: boolean;
-	isHit: boolean;
 	weapon: WeaponContainer;
 	helmet: Helmet;
 	weaponVariation: WeaponVariations;
@@ -62,10 +61,8 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
  		this.playerAttacking = false;
 		this.damageCooldown = false;
 		this.flipX = true;
-		// попало ли оружие по цели
-		this.isHit = false;
-		 // Задаем размеры контейнера
- 		this.setSize(36, 46);
+		// Задаем размеры контейнера
+		this.setSize(36, 46);
 		// Подключаем игрока в физику
 		this.scene.physics.world.enable(this);
 		// Игрок не сможет зайти за карту
@@ -82,7 +79,9 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
 			[ButtonVariations.RIGHT]: false,
 			[ButtonVariations.UP]: false,
 			[ButtonVariations.DOWN]: false,
-			[ButtonVariations.ATTACK]: false
+			[ButtonVariations.ATTACK]: false,
+			// Пауза обрабатывается ControlsScene, игроку не передаётся
+			[ButtonVariations.PAUSE]: false
 		};
 
 		// создаем спрайт игрока
@@ -221,23 +220,6 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
 		this.velocity = PLAYER_LEVEL_PARAMS[this.level].velocity;
 	}
 
-	respawn(playerObject: PlayerModel) {
-		this.applyPlayerParams(playerObject);
-		this.setActive(true);
-		this.damageCooldown = false;
-		this.currentDirection = MoveDirections.RIGHT;
-		this.viewDirection = MoveDirections.RIGHT;
-		this.player.flipX = false;
-		this.helmet.flipX = false;
-		this.setPosition(playerObject.x, playerObject.y);
-		this.playSpawnAnimation();
-		this.helmet.updateHelmet();
-		// После смерти сбрасываем оружие на дефолтное и синхронизируем стейт
-		this.switchWeapon(WeaponVariations.SWORD);
-		this.scene.stateManager.setActiveWeapon(WeaponVariations.SWORD);
-		this.updateAllBars();
-	}
-
 	healHealth(hearts: number) {
 		const newHealth = this.health + hearts;
 
@@ -277,12 +259,16 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
 			this.updateHealthBar();
 
 			if (!this.health) {
-				this.scene.events.emit(GameEvents.DEATH_PLAYER, this.id);
 				this.setActive(false);
+				// Тело выключено: коллайдеры больше не толкают труп игрока
+				if (this.body) {
+					// @ts-expect-error так как TS не понимает что это не StaticBody
+					this.body.enable = false;
+				}
 				this.playDeathAnimation();
 				// Чтобы успела отыграть анимация смерти
 				this.scene.time.delayedCall(1000, () => {
-					this.scene.events.emit(GameEvents.RESPAWN_PLAYER, this.id);
+					this.scene.stateManager.setGameOver();
 				}, [], this);  
 			}
 		} else {
@@ -383,10 +369,6 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
 		}
 
 		this.turnWeapon();
-
-		if (this.playerAttacking) {
-			// что-то делаем во время атаки
-		}
 
 		// Разрешает игроку атаковать
  		if (

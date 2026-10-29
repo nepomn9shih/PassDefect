@@ -15,23 +15,14 @@ export class MapObject extends Phaser.Physics.Arcade.Sprite {
         this.id = `${variation}-${generateUUIDv4()}`;
         this.isBlocker = MAP_OBJECTS_BLOCKERS.includes(variation);
 
-        // Включение физики: статическое тело — блокеры неподвижны и дешевле в обработке
-        this.scene.physics.add.existing(this, true);
         // Добавление картинки объекта на сцену
         this.scene.add.existing(this);
 
+        // Физическое тело нужно только блокерам: декорация в физике не участвует
         if (this.isBlocker) {
+            // Статическое тело — блокеры неподвижны и дешевле в обработке
+            this.scene.physics.add.existing(this, true);
             this.scene.blockers.add(this);
         }
-    }
-
-    makeActive() {
-        this.setActive(true);
-        this.setVisible(true);
-    }
-
-    makeInactive() {
-        this.setActive(false);
-        this.setVisible(false);
     }
 }

@@ -29,3 +29,6 @@ export const MONSTER_INITIAL_SCALE = 0.5;
 export const MONSTER_MOVE_INTERVAL = 1000;
 
 export const MAX_VERTICAL_DISTANCE_TO_CHANGE_DIRECTION = 20;
+
+/** Отступ в пикселях, за границей которого AI монстра не обновляется */
+export const MONSTER_OFFSCREEN_MARGIN = 96;

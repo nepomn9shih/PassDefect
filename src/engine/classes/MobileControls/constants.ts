@@ -23,5 +23,9 @@ export const BUTTON_OFFSETS: Record<ButtonVariations, SimpleCoordinates> = {
     [ButtonVariations.ATTACK]: {
         x: -200,
         y: -180
+    },
+    [ButtonVariations.PAUSE]: {
+        x: -70,
+        y: 70
     }
 };

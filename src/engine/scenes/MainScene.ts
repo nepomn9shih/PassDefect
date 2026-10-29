@@ -11,6 +11,7 @@ import {
     SceneNames
 } from '../enums';
 import type {AllGameState} from '../../reducers/types';
+import {clearGameFlags} from '../../reducers/slices';
 import {CameraManager} from '../managers/CameraManager';
 import {PlayerContainer} from '../classes/Player/PlayerContainer';
 import {GameManager} from '../managers/GameManager';
@@ -37,7 +38,6 @@ export class MainScene extends Scene {
     spawners!: Phaser.Physics.Arcade.Group;
     weaponBolts!: Phaser.Physics.Arcade.Group;
     enemyWeaponBolts!: Phaser.Physics.Arcade.Group;
-    score: number;
     cursors?: Phaser.Types.Input.Keyboard.CursorKeys;
     storeUnsubscribe: () => void;
 
@@ -49,7 +49,6 @@ export class MainScene extends Scene {
 
         // потом брать из стейта
         this.playerSkin = PlayerSkinVariations.KNIGHT;
-        this.score = 0;
     }
 
     create() {
@@ -92,6 +91,11 @@ export class MainScene extends Scene {
 	}
 
     onMobileButtonDown(buttonVariation: ButtonVariations) {
+        // Паузу обрабатывает ControlsScene, игроку не передаётся
+        if (buttonVariation === ButtonVariations.PAUSE) {
+            return;
+        }
+
         this.player.buttonDown(buttonVariation);
     }
 
@@ -116,11 +120,30 @@ export class MainScene extends Scene {
 
     createStateManager() {
 		this.stateManager = new StateManager({scene: this});
+		// При рестарте сцены сбрасываем флаги паузы/гейм-овера/рестарта
+		this.store.dispatch(clearGameFlags());
 
         // Подписываемся на изменение стора и соханяем колбек для отписки
         this.storeUnsubscribe = this.store.subscribe(() => {
+            const previousGame = this.state.game;
             const previousWeapon = this.state.weapon.active;
             this.state = this.store.getState();
+
+            if (this.state.game.restartRequested) {
+                this.scene.restart();
+                return;
+            }
+
+            if (this.state.game.isPaused !== previousGame.isPaused) {
+                if (this.state.game.isPaused) {
+                    this.scene.pause();
+                } else {
+                    this.scene.resume();
+                }
+
+                return;
+            }
+
             // Переключить на активное оружие только если оно изменилось
             if (this.state.weapon.active !== previousWeapon) {
                 this.player?.switchWeapon(this.state.weapon.active);
@@ -152,8 +175,6 @@ export class MainScene extends Scene {
             this.player.weaponHit = true;
 
             enemy.loseHealth(weapon.damage);
-
-            this.events.emit(GameEvents.HIT_MONSTER, enemy.id);
         }
     }
 
@@ -169,8 +190,6 @@ export class MainScene extends Scene {
     enemyWeaponWithPlayerOverlap(player: PlayerContainer, weapon: WeaponBolt) {
         // Гварды вынесены в processCallback canPlayerBeHit
         player.loseHealth(weapon.damage);
-
-        this.events.emit(GameEvents.HIT_PLAYER);
     }
 
     addCollisions() {

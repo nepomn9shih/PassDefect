@@ -1,6 +1,6 @@
 import {getRandomNumber} from './../../utils/getRandomNumber';
 import {GameEvents, MonsterAnimation, MonstersVariations, MoveDirections, WeaponVariations} from '../../enums';
-import {HEALTH_BAR_CONFIG, MAX_VERTICAL_DISTANCE_TO_CHANGE_DIRECTION, MONSTER_INITIAL_SCALE, MONSTER_MOVE_INTERVAL, MONSTERS_PARAMS} from './constants';
+import {HEALTH_BAR_CONFIG, MAX_VERTICAL_DISTANCE_TO_CHANGE_DIRECTION, MONSTER_INITIAL_SCALE, MONSTER_MOVE_INTERVAL, MONSTER_OFFSCREEN_MARGIN, MONSTERS_PARAMS} from './constants';
 import type {MonsterContainerProps} from './types';
 import type {MonsterModel} from './index';
 import {Monster} from './Monster';
@@ -22,7 +22,6 @@ export class MonsterContainer extends Phaser.GameObjects.Container {
     weaponVariation: WeaponVariations;
     velocity: number;
     monsterAttacking: boolean;
-    flipX: boolean;
     player?: false;
     moveTimer: Phaser.Time.TimerEvent;
 
@@ -45,7 +44,6 @@ export class MonsterContainer extends Phaser.GameObjects.Container {
         this.monsterAttacking = false;
         this.weaponVariation = MONSTERS_PARAMS[this.variation].weaponVariation;
         this.currentDirection = MoveDirections.RIGHT;
-        this.flipX = true;
 
         this.scene.physics.world.enable(this);
         this.scene.add.existing(this);
@@ -78,7 +76,7 @@ export class MonsterContainer extends Phaser.GameObjects.Container {
             delay: MONSTER_MOVE_INTERVAL,
             loop: true,
             callback: () => {
-                if (this.health > 0) {
+                if (this.health > 0 && !this.isOffscreen()) {
                     this.updateMovement();
                 }
             }
@@ -180,6 +178,8 @@ export class MonsterContainer extends Phaser.GameObjects.Container {
     checkToMakeAttack() {
         if (
             this.health > 0
+                // По мёртвому игроку не атакуем
+                && this.scene.player.health > 0
                 && !this.monsterAttacking
                 && !this.scene.player.damageCooldown
         ) {
@@ -317,6 +317,13 @@ export class MonsterContainer extends Phaser.GameObjects.Container {
     }
 
     updateMovement() {
+        // Мёртвый игрок не является целью: монстры возвращаются к блужданию
+        if (!this.scene.player.health) {
+            this.randomlyMove();
+
+            return;
+        }
+
         const distance = Phaser.Math.Distance.Between(
             this.x, this.y,
             this.scene.player.x, this.scene.player.y
@@ -353,7 +360,23 @@ export class MonsterContainer extends Phaser.GameObjects.Container {
         }
     }
 
+    /** Монстр за пределами зоны видимости камеры: пропускаем AI и атаки */
+    isOffscreen() {
+        const view = this.scene.cameras.main.worldView;
+
+        return (
+            this.x < view.x - MONSTER_OFFSCREEN_MARGIN
+            || this.x > view.right + MONSTER_OFFSCREEN_MARGIN
+            || this.y < view.y - MONSTER_OFFSCREEN_MARGIN
+            || this.y > view.bottom + MONSTER_OFFSCREEN_MARGIN
+        );
+    }
+
     update() {
+        if (this.isOffscreen()) {
+            return;
+        }
+
         this.turnWeapon();
         this.checkToMakeAttack();
     }

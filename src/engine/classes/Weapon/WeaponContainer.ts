@@ -44,8 +44,6 @@ export class WeaponContainer extends Phaser.GameObjects.Container {
 		this.distance = WEAPONS_CONFIG[this.weaponVariation].distance;
 		 // Задаем размеры контейнера
  		this.setSize(36, 46);
-		// Подключаем оружие в физику
-		this.scene.physics.world.enable(this);
 		// Добавляем оружие на сцену
 		this.scene.add.existing(this);
 

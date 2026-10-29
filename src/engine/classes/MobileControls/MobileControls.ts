@@ -23,13 +23,15 @@ export class MobileControls extends Phaser.GameObjects.Container {
             [ButtonVariations.RIGHT]: null,
             [ButtonVariations.UP]: null,
             [ButtonVariations.DOWN]: null,
-            [ButtonVariations.ATTACK]: null
+            [ButtonVariations.ATTACK]: null,
+            [ButtonVariations.PAUSE]: null
         };
         this.createButton(ButtonVariations.LEFT);
         this.createButton(ButtonVariations.RIGHT);
         this.createButton(ButtonVariations.UP);
         this.createButton(ButtonVariations.DOWN);
         this.createButton(ButtonVariations.ATTACK);
+        this.createButton(ButtonVariations.PAUSE);
 
         // Задаем слой
         this.setDepth(Z_INDEXES.controls);

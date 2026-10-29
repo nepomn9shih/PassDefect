@@ -14,6 +14,14 @@ export const getButtonCoordinates = (
         }
     }
 
+    // Кнопка паузы закреплена в правом верхнем углу экрана
+    if (variation === ButtonVariations.PAUSE) {
+        return {
+            x: screenWidth + BUTTON_OFFSETS[variation].x,
+            y: BUTTON_OFFSETS[variation].y
+        }
+    }
+
     return {
             x: BUTTON_OFFSETS[variation].x,
             y: screenHeight + BUTTON_OFFSETS[variation].y

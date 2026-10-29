@@ -9,7 +9,10 @@ const gameSlice = createSlice({
 	initialState: {
 		zoom: INITIAL_ZOOM,
 		isMobile: false,
-		isTouchDevice: false
+		isTouchDevice: false,
+		isPaused: false,
+		isGameOver: false,
+		restartRequested: false
 	} as GameState,
 	reducers: {
 		setZoom(state, {payload}: PayloadAction<number>) {
@@ -20,6 +23,21 @@ const gameSlice = createSlice({
 		},
 		setIsTouchDevice(state, {payload}: PayloadAction<boolean>) {
 			state.isTouchDevice = payload;
+		},
+		setPaused(state, {payload}: PayloadAction<boolean>) {
+			state.isPaused = payload;
+		},
+		setGameOver(state) {
+			state.isGameOver = true;
+		},
+		requestRestart(state) {
+			state.restartRequested = true;
+		},
+		/** Сброс флагов паузы/гейм-овера/рестарта: сцена вызывает при рестарте */
+		clearGameFlags(state) {
+			state.isPaused = false;
+			state.isGameOver = false;
+			state.restartRequested = false;
 		}
 	}
 });
@@ -27,6 +45,10 @@ const gameSlice = createSlice({
 export const {
 	setZoom,
 	setIsMobile,
-	setIsTouchDevice
+	setIsTouchDevice,
+	setPaused,
+	setGameOver,
+	requestRestart,
+	clearGameFlags
 } = gameSlice.actions;
 export const gameReducer = gameSlice.reducer;

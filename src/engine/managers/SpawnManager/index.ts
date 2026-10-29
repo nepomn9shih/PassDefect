@@ -23,7 +23,6 @@ export class SpawnManager {
         this.setupEvents();
         this.setupSpawners();
         this.scene.gameManager.addPlayer();
-        // Коллизии настраиваются один раз: игрок переиспользуется при респавне
         this.scene.addCollisions();
     }
 
@@ -150,12 +149,7 @@ export class SpawnManager {
     }
 
     createPlayer(playerObject: PlayerModel) {
-        // Игрок переиспользуется, чтобы не накапливать объекты и коллайдеры при респавне
-        if (this.scene.player) {
-            this.scene.player.respawn(playerObject);
-            return;
-        }
-
+        // Игрок создаётся на всю жизнь сцены: после смерти — гейм-овер и рестарт
         this.scene.player = new PlayerContainer({
             scene: this.scene,
             skin: this.scene.playerSkin,

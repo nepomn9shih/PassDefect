@@ -1,4 +1,4 @@
-import {useEffect, useRef} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import Phaser from 'phaser';
 import {useDispatch, useStore} from 'react-redux';
 
@@ -12,7 +12,9 @@ import { isTouchDevice } from '../utils/isTouchDevice';
 
 export const Game = () => {
     const gameRef = useRef<Phaser.Game | null>(null);
-    const store = useStore<AllGameState>();
+    // store из useStore захватываем в useState: ссылка стабильна на весь жизненный цикл,
+    // и сцены Phaser не пересоздаются при перерендерах
+    const [store] = useState(useStore<AllGameState>());
     const isMobile = useIsMobile();
     const dispatch = useDispatch();
 

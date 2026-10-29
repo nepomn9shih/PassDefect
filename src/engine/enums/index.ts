@@ -45,7 +45,8 @@ export enum ButtonVariations {
     DOWN = 'down',
     LEFT = 'left',
     RIGHT = 'right',
-    ATTACK = 'attack'
+    ATTACK = 'attack',
+    PAUSE = 'pause'
 }
 
 export enum PlayerSkinVariations {

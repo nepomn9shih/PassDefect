@@ -37,7 +37,6 @@ export class GameManager {
 	chestLocations: Record<any, (number | undefined)[][]>;
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	monsterLocations: Record<any, (number | undefined)[][]>;
-	mapObjects: Record<string, MapObject>;
 
 	constructor({scene, mapData}: GameManagerProps) {
 		this.scene = scene;
@@ -50,7 +49,6 @@ export class GameManager {
 		this.playerLocations = [];
 		this.chestLocations = {};
 		this.monsterLocations = {};
-		this.mapObjects = {}
 	}
 
 	setup() {
@@ -106,14 +104,12 @@ export class GameManager {
 		this.scene.events.on(GameEvents.PICK_UP_CHEST, this.onPickUpChest, this);
 		this.scene.events.on(GameEvents.REMOVE_CHEST, this.onRemoveChest, this);
 		this.scene.events.on(GameEvents.DESTROY_MONSTER, this.onDestroyMonster, this);
-		this.scene.events.on(GameEvents.RESPAWN_PLAYER, this.onRespawnPlayer, this);
 		this.scene.events.on(GameEvents.LEVEL_UP_PLAYER, this.onLevelUpPlayer, this);
 
 		this.scene.events.once('shutdown', () => {
 			this.scene.events.off(GameEvents.PICK_UP_CHEST, this.onPickUpChest, this);
 			this.scene.events.off(GameEvents.REMOVE_CHEST, this.onRemoveChest, this);
 			this.scene.events.off(GameEvents.DESTROY_MONSTER, this.onDestroyMonster, this);
-			this.scene.events.off(GameEvents.RESPAWN_PLAYER, this.onRespawnPlayer, this);
 			this.scene.events.off(GameEvents.LEVEL_UP_PLAYER, this.onLevelUpPlayer, this);
 		});
 	}
@@ -171,12 +167,6 @@ export class GameManager {
 		}
 	}
 
-	onRespawnPlayer(playerId: string) {
-		// Когда происходит респавн игрока
-		this.players[playerId].respawn();
-		this.scene.player.respawn(this.players[playerId]);
-	}
-
 	onLevelUpPlayer(newLevel: number) {
 		// Когда повышается уровень игрока
 		console.log(`Cool! You have reached level ${newLevel}`)
@@ -185,14 +175,12 @@ export class GameManager {
 	// Отрисовать count одинаковых объектов типа variation
 	drawCountObjects(variation: MapObjectVariations, count: number) {
 		for (let i = 0; i < count; i++) {
-			const newObject = new MapObject({
+			new MapObject({
 				scene: this.scene,
 				x: getRandomNumber(0, this.scene.physics.world.bounds.width),
 				y: getRandomNumber(0, this.scene.physics.world.bounds.height),
 				variation
-			})
-	
-			this.mapObjects[newObject.id] = newObject;
+			});
 		}
 	}
 

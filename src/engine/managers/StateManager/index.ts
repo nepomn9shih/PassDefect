@@ -1,4 +1,16 @@
-import {setActiveWeapon, setArmor, setBolts, setLevel, setMoney, setPlayerHealth, setSculls, setZoom} from '../../../reducers/slices';
+import {
+	setActiveWeapon,
+	setArmor,
+	setBolts,
+	setGameOver as dispatchSetGameOver,
+	setLevel,
+	setMoney,
+	setPaused as dispatchSetPaused,
+	setPlayerHealth,
+	setSculls,
+	setZoom,
+	requestRestart as dispatchRequestRestart
+} from '../../../reducers/slices';
 import type { WeaponVariations } from '../../enums';
 import {MainScene} from '../../scenes/MainScene';
 import type {StateManagerProps} from './types';
@@ -42,5 +54,18 @@ export class StateManager {
 
 	setActiveWeapon(weapon: WeaponVariations) {
 		this.scene.store.dispatch(setActiveWeapon(weapon));
+	}
+
+	/** Управление паузой и гейм-овером */
+	setPaused(isPaused: boolean) {
+		this.scene.store.dispatch(dispatchSetPaused(isPaused));
+	}
+
+	setGameOver() {
+		this.scene.store.dispatch(dispatchSetGameOver());
+	}
+
+	requestRestart() {
+		this.scene.store.dispatch(dispatchRequestRestart());
 	}
 }
