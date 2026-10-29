@@ -1,11 +1,17 @@
 import styled from 'styled-components';
 
+import {LITTLE_DESKTOP_BREAKPOINT} from '../../../constants/breakpoints';
+
 export const StyledControlRow = styled.div`
 	display: flex;
-	gap: 16px;
+	gap: 12px;
 	align-items: center;
 	justify-content: space-between;
 	width: 100%;
+
+	@media (min-width: ${LITTLE_DESKTOP_BREAKPOINT}px) {
+		gap: 16px;
+	}
 `;
 
 export const StyledControlKey = styled.div`

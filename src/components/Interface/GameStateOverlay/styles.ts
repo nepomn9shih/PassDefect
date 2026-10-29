@@ -1,5 +1,7 @@
 import styled from 'styled-components';
 
+import {LITTLE_DESKTOP_BREAKPOINT} from '../../../constants/breakpoints';
+
 export const StyledOverlay = styled.div`
 	position: fixed;
 	top: 0;
@@ -21,15 +23,24 @@ export const StyledContainer = styled.div`
 	align-items: center;
 	text-align: center;
 	color: white;
-	font-size: 24px;
-	padding: 28px 32px 40px;
+	font-size: 20px;
+	padding: 16px 24px 24px;
 	background-color: #5C5443;
 	border-radius: 20px;
+
+	@media (min-width: ${LITTLE_DESKTOP_BREAKPOINT}px) {
+		font-size: 24px;
+		padding: 28px 32px 40px;
+	}	
 `;
 
 export const StyledTitle = styled.div`
-	font-size: 32px;
+	font-size: 24px;
 	font-weight: bold;
 	color: #2A1227;
+
+	@media (min-width: ${LITTLE_DESKTOP_BREAKPOINT}px) {
+		font-size: 32px;
+	}	
 `;
 

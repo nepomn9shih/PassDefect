@@ -3,7 +3,7 @@ import {MobileControls} from "../classes/MobileControls/MobileControls";
 import {ButtonVariations, GameEvents, SceneNames} from "../enums";
 import type {GameStore} from "../types";
 import {UPDATE_MOBILE_CONTROLS_EVENT_NAME} from "../constants/events";
-import {ESC_KEY_EVENT} from "../constants/keyboard";
+import {ESC_KEY_EVENT} from "../constants/events";
 import {setPaused} from "../../reducers/slices";
 
 export class ControlsScene extends Scene {
